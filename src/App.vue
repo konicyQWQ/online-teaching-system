@@ -1,16 +1,15 @@
 <template>
-  <a-layout>
-    <a-layout-header :style="{background: 'white', boxShadow: '0px 2px 10px 0 #ddd'}">
-      <navigation />
-    </a-layout-header>
-    <a-layout-content :style="{minHeight: '600px'}">
-      <router-view></router-view>
-    </a-layout-content>
-    <a-layout-footer>
-      <m-footer />
-    </a-layout-footer>
-  </a-layout>
-  <a-back-top :visibilityHeight="0"/>
+    <header>
+        <navigation />
+    </header>
+    <main>
+        <transition name="fade">
+            <router-view></router-view>
+        </transition>
+    </main>
+    <footer>
+        <m-footer />
+    </footer>
 </template>
 
 <script>
@@ -22,3 +21,20 @@ export default {
   components: { 'm-footer': footer, navigation }
 }
 </script>
+
+<style scoped>
+header {
+    height: 200px;
+    background: url("/header.png") no-repeat top/cover;
+}
+
+main {
+    padding: 2em 0;
+    min-height: 600px;
+    background: linear-gradient(to bottom right, #F6F6F6, #F8F8F8);
+}
+
+footer {
+    background: linear-gradient(to bottom right, #fff, #fefefe);
+}
+</style>

@@ -1,69 +1,68 @@
 <template>
-  <a-row class="background">
-    <a-col :span="10">
-      <a-card :style="{ background: 'rgba(0, 0, 0, .4)', padding: '36px 72px', height: '400px' }"
-              :bordered="false">
-        <h1 class="intro-title">在线教育</h1>
-        <p class="intro-content">在线教育即e-Learning，或称远程教育、在线学习，现行概念中一般指的是一种基于网络的学习行为，与网络培训概念相似。</p>
-      </a-card>
-    </a-col>
-    <a-col :span="14">
-      <a-card :tab-list="tabList"
-              :active-tab-key="tabKey"
-              @tabChange="key => tabKey = key"
-              :style="{ height: '400px' }">
-        <component :is="component[tabKey]"></component>
-      </a-card>
-    </a-col>
-  </a-row>
+    <two-col :right="false">
+        <template v-slot:left>
+            <a-card class="ant-card-shadow" title="登录">
+                <a-row type="flex" align="middle">
+                    <a-col :span="12">
+                        <a-form :model="form" :labelCol="{ span: 4 }" :wrapperCol="{ span: 14 }">
+                            <a-form-item label="用户名">
+                                <a-input v-model:value="form.username" placeholder="用户名">
+                                    <template v-slot:prefix><UserOutlined /></template>
+                                </a-input>
+                            </a-form-item>
+                            <a-form-item label="密码">
+                                <a-input-password v-model:value="form.password"  placeholder="密码">
+                                    <template v-slot:prefix><LockOutlined /></template>
+                                </a-input-password>
+                            </a-form-item>
+                            <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+                                <a-checkbox v-model:checked="form.rememberMe">
+                                    记住我
+                                </a-checkbox>
+                                <a-button style="float: right" type="primary" @click="handleLogin">
+                                    登录
+                                </a-button>
+                            </a-form-item>
+                        </a-form>
+                    </a-col>
+                    <a-col :span="12">
+
+                    </a-col>
+                </a-row>
+            </a-card>
+        </template>
+    </two-col>
 </template>
 
 <script>
-import loginForm from '../components/loginform.vue'
-import registerForm from "../components/registerForm.vue";
+import twoCol from "../components/two-col.vue";
+import { UserOutlined, LockOutlined } from "@ant-design/icons-vue"
+import { reactive } from "vue"
+import { login } from "../axios/user.js";
 
 export default {
-  name: 'login',
-  data() {
-    return {
-      tabList: [ {key: 'login', tab: '登录'},
-                 {key: 'register', tab: '注册'} ],
-      tabKey: 'login',
-      component: {
-        login: 'loginForm',
-        register: 'registerForm'
-      }
+    name: 'login',
+    components: {
+        'two-col': twoCol,
+        UserOutlined,
+        LockOutlined
+    },
+    setup() {
+        let form = reactive({
+            username: '',
+            password: '',
+            rememberMe: true
+        })
+
+        let handleLogin = () => {
+            login(form);
+        }
+
+        return { form, handleLogin }
     }
-  },
-  components: {
-    loginForm,
-    registerForm
-  }
 }
 </script>
 
 <style scoped>
-
-.background {
-  padding: 100px 244px;
-  min-height: 600px;
-}
-
-.intro-title {
-  color: white;
-  font-size: 1.6em;
-}
-
-.intro-content {
-  color: white;
-  font-size: 1.3em;
-  font-weight: 300;
-}
-
-@media screen and (max-width: 1200px) {
-  .background {
-    padding: 100px 0;
-  }
-}
 
 </style>

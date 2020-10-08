@@ -1,80 +1,92 @@
 <template>
-  <a-menu v-model:selectedKeys="current"
-          mode="horizontal"
-          :style="{lineHeight: '63px'}">
-    <a-menu-item key="/">
-      <router-link to="/">
-        LOGO图
-      </router-link>
-    </a-menu-item>
-    <a-menu-item key="public">
-      <router-link to="/public"><BarcodeOutlined />公开课程</router-link>
-    </a-menu-item>
-    <a-menu-item key="help">
-      <router-link to="/help"><QuestionOutlined />帮助</router-link>
-    </a-menu-item>
-    <a-menu-item :disabled="true">
-      <a-input-search
-          v-model:value="value"
-          placeholder="程序设计方法学"
-          enter-button
-          @search="onSearch"
-          :style="{ marginTop: '15px', width: '300px' }"
-          />
-    </a-menu-item>
-    <!--如果已经登录，显示头像-->
-    <a-sub-menu v-if="isLogin" :style="{float: 'right'}">
-      <template v-slot:title>
-        <a-badge :count="1"><a-avatar></a-avatar></a-badge>
-      </template>
-      <a-menu-item-group title="个人信息">
-        <a-menu-item key="user">
-          <router-link to="/user">个人主页</router-link>
-        </a-menu-item>
-        <a-menu-item key="user/courses">
-          <router-link to="/user/courses">我的课程</router-link>
-        </a-menu-item>
-      </a-menu-item-group>
-      <a-menu-item-group title="其他操作">
-        <a-menu-item @click="">
-          退出登录
-        </a-menu-item>
-      </a-menu-item-group>
-    </a-sub-menu>
-    <!--如果没有登录，显示登录-->
-    <a-menu-item v-else :style="{float: 'right'}" key="login">
-      <router-link to="/login">登录/注册</router-link>
-    </a-menu-item>
-  </a-menu>
+    <nav :class="['nav', {'nav-active': scrollTop > 0}]">
+        <a class="logo"><img src="/logo.png"></a>
+        <router-link to="/">学在浙大</router-link>
+        <router-link to="/public">公开课程</router-link>
+        <router-link to="/help">帮助</router-link>
+        <span :style="{ flex: 1 }"></span>
+        <router-link to="/login" v-if="true">登录</router-link>
+        <a v-if="true">注册</a>
+    </nav>
 </template>
 
 <script>
-import { BarcodeOutlined, QuestionOutlined  } from '@ant-design/icons-vue'
+import { ref, onMounted } from 'vue'
 
 export default {
-  name: 'topNavigation',
-  components: {
-    BarcodeOutlined,
-    QuestionOutlined
-  },
-  data() {
-    return {
-      current: ['/'],
-      value: ''
+    name: 'navigation',
+    setup() {
+        let scrollTop = ref(0)
+        onMounted(() => {
+            window.addEventListener('scroll', () => {
+                scrollTop.value = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+            })
+        })
+        return { scrollTop }
     }
-  },
-  methods: {
-    onSearch() {
-
-    }
-  },
-  watch: {
-    '$route.path'(newVal) {
-      if(newVal.search(/user\/courses/) !== -1)
-        this.current = ['user/courses']
-      else
-        this.current = [newVal.split('/')[1] || '/']
-    }
-  }
 }
 </script>
+
+<style lang="scss" scoped>
+.nav {
+    display: flex;
+    align-items: center;
+    padding: 0 10em;
+    position: fixed;
+    left: 0; right: 0;
+    transition: all .3s ease;
+    z-index: 10;
+
+    @media screen and (max-width: 800px) {
+        padding: 0;
+    }
+
+    a {
+        line-height: 50px;
+        padding: 0 1em;
+        border: 3px solid transparent;
+        color: white;
+        transition: all .3s ease;
+
+        &:hover {
+            background: var(--hover-background);
+            border-top-color: var(--hover-color);
+        }
+
+        &.router-link-active, &.router-link-exact-active {
+            border-top-color: var(--choose-color);
+        }
+
+        &.logo {
+            padding: 0;
+
+            img {
+                width: 0;
+                height: 50px;
+                opacity: 0;
+                transition: all .3s ease;
+            }
+        }
+    }
+
+    &:hover, &.nav-active {
+        background: #fff;
+        box-shadow: var(--shadow);
+
+        a {
+            color: #333;
+        }
+    }
+
+    &.nav-active {
+        a.logo {
+            padding: 0 1em;
+
+            img {
+                width: 50px;
+                opacity: 1;
+            }
+        }
+    }
+}
+</style>

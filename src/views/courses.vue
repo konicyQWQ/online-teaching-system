@@ -1,50 +1,56 @@
 <template>
-  <a-card :tab-list="tabList"
-          :active-tab-key="tabKey"
-          :style="{ margin: '20px 200px'}"
-          @tabChange="onTabChange">
-    <template v-slot:title>
-      <h1 :style="{ display: 'inline-block' }">{{ title }}</h1>
-      <span :style="{ color: 'grey' }">{{ college }}</span>
-    </template>
-    <template v-slot:extra>
-      <a-avatar :stc="teacherAvatar" size="large" />
-      <span :style="{ margin: '1em', fontSize: '1.2em' }">{{ teacher }}</span>
-    </template>
-    <router-view></router-view>
-  </a-card>
+    <two-col :fixed="true">
+        <template v-slot:left>
+            <transition name="fade">
+                <router-view></router-view>
+            </transition>
+        </template>
+        <template v-slot:right>
+            <nav-card :tabList="tabList">
+                <template v-slot:title>
+                    <h3>
+                        {{ courses.name }}
+                        <a-tooltip>
+                            <template v-slot:title>
+                                {{ courses.teacher }}
+                            </template>
+                            <a-avatar style="float: right;" :src="courses.teacherAvatar"></a-avatar>
+                        </a-tooltip>
+                    </h3>
+                </template>
+            </nav-card>
+        </template>
+    </two-col>
 </template>
 
 <script>
+import twoCol from "../components/two-col.vue";
+import navCard from "../components/nav-card.vue"
+import { courses } from "../axios/courses.js";
+import { reactive, readonly } from 'vue';
+
 export default {
-  name: 'courses',
-  data() {
-    return {
-      tabList: [
-        { key: 'description', tab: '课程简介' },
-        { key: 'bulletin', tab: '公告' },
-        { key: 'courseware', tab: '课件' },
-        { key: 'homework', tab: '作业' },
-        { key: 'exam', tab: '测试' },
-        { key: 'forum', tab: '讨论' },
-        { key: 'score', tab: '成绩' }
-      ],
-      tabKey: 'description',
-      title: '程序设计方法学',
-      college: '计算机科学与技术学院',
-      teacher: '翁恺',
-      teacherAvatar: ''
+    name: 'courses',
+    components: {
+        'two-col': twoCol,
+        'nav-card': navCard
+    },
+    setup() {
+        const tabList = readonly([
+            { key: 'description', name: '课程简介' },
+            { key: 'bulletin', name: '公告' },
+            { key: 'courseware', name: '课件' },
+            { key: 'homework', name: '作业' },
+            { key: 'exam', name: '测试' },
+            { key: 'forum', name: '讨论' },
+            { key: 'score', name: '成绩' }
+        ]);
+
+        return { courses, tabList }
     }
-  },
-  created() {
-    this.tabKey = this.$route.path.split('/')[3] || 'description'
-  },
-  methods: {
-    onTabChange(key) {
-      const id = this.$route.params.id
-      this.tabKey = key
-      this.$router.push(`/courses/${id}/${key}`)
-    }
-  }
 }
 </script>
+
+<style scoped>
+
+</style>
