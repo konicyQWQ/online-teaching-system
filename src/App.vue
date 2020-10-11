@@ -29,7 +29,7 @@ header {
 }
 
 main {
-    padding: 2em 0;
+    padding-bottom: 2em;
     min-height: 600px;
     background: linear-gradient(to bottom right, #F6F6F6, #F8F8F8);
 }
