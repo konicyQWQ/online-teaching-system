@@ -1,9 +1,9 @@
 <template>
   <two-col>
     <template v-slot:left>
-      <transition name="fade">
+      <fade>
         <router-view></router-view>
-      </transition>
+      </fade>
     </template>
     <template v-slot:right>
       <nav-card :tabList="tabList">
@@ -19,9 +19,9 @@
           </h3>
         </template>
       </nav-card>
-      <transition name="fade">
+      <fade>
         <router-view name="extra"></router-view>
-      </transition>
+      </fade>
     </template>
   </two-col>
 </template>
@@ -29,14 +29,15 @@
 <script>
 import twoCol from "../components/base/two-col.vue";
 import navCard from "../components/base/nav-card.vue"
-import {courses} from "../axios/courses.js";
-import {reactive, readonly} from 'vue';
+import fade from "../components/base/fade.vue";
+import { reactive, readonly } from 'vue';
 
 export default {
   name: 'courses',
   components: {
     'two-col': twoCol,
-    'nav-card': navCard
+    'nav-card': navCard,
+    fade
   },
   setup() {
     const tabList = readonly([
@@ -45,15 +46,17 @@ export default {
       {key: 'courseware', name: '课件'},
       {key: 'homework', name: '作业'},
       {key: 'exam', name: '测试'},
-      {key: 'forum', name: '讨论'},
+      {key: 'discuss', name: '讨论'},
       {key: 'score', name: '成绩'}
     ]);
+
+    const courses = reactive({
+      name: '程序设计',
+      teacher: '翁恺',
+      teacherAvatar: ''
+    })
 
     return {courses, tabList}
   }
 }
 </script>
-
-<style scoped>
-
-</style>

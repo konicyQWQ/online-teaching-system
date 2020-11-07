@@ -1,50 +1,42 @@
 <template>
-  <header>
-    <navigation />
-  </header>
+  <Header />
   <main>
-    <transition name="fade">
-      <router-view></router-view>
-    </transition>
+    <fade>
+      <router-view/>
+    </fade>
   </main>
-  <footer>
-    <m-footer />
-  </footer>
+  <Footer />
 </template>
 
 <script>
-import footer from './components/footer.vue'
-import navigation from './components/navigation.vue'
+import Header from "./components/header.vue";
+import fade from "./components/base/fade.vue"
+import Footer from "./components/footer.vue";
+import { message } from 'ant-design-vue'
 import { useStore } from 'vuex'
 
 export default {
-  name: 'App',
-  components: { 'm-footer': footer, navigation },
-  mounted() {
-    // 开始时检查浏览器token信息
-    let token = window.localStorage.getItem('token');
-    if(token !== 'undefined' && token !== '') {
-      const store = useStore();
-      store.commit('saveToken', { token, remember: true });
-      store.dispatch('getUserInfo');
-    }
+  components: { Header, fade, Footer },
+  setup() {
+    // 网页初始化时，检查token信息
+    const store = useStore()
+    store.commit('init')
+    store.dispatch('loginByToken', { remember: true })
+        .then(() => {
+          message.success('登录成功')
+        })
+        .catch((e) => {
+          if(e)
+            message.error(e)
+        })
   }
 }
 </script>
 
 <style scoped>
-header {
-  height: 200px;
-  background: url("/header.png") no-repeat top/cover;
-}
-
 main {
   padding: 2em 0;
   min-height: 600px;
-  background: linear-gradient(to bottom right, #F6F6F6, #F8F8F8);
-}
-
-footer {
-  background: linear-gradient(to bottom right, #fff, #fefefe);
+  background: #F6F6F6;
 }
 </style>

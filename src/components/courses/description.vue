@@ -74,13 +74,8 @@
 import {ProfileTwoTone} from '@ant-design/icons-vue'
 
 export default {
-  name: 'description',
   components: {
     ProfileTwoTone
   }
 }
 </script>
-
-<style scoped>
-
-</style>

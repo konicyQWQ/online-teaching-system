@@ -1,46 +1,34 @@
 <template>
-  <two-col fixed>
+  <twoCol fixed>
     <template #left>
-      <transition name="fade">
+      <fade>
         <router-view></router-view>
-      </transition>
+      </fade>
     </template>
     <template #right>
-      <nav-card :tab-list="tabList">
-        <template v-slot:title>
-          <div style="text-align: center">
-            <a-avatar :src="user.avatarID" :size="64" />
-            <h3 style="margin-top: .4em">
-              {{user.name}}
-            </h3>
-          </div>
+      <navCard :tab-list="tabList">
+        <template #title>
+
         </template>
-      </nav-card>
+        <template #title></template>
+      </navCard>
     </template>
-  </two-col>
+  </twoCol>
 </template>
 
 <script>
 import twoCol from '../components/base/two-col.vue'
 import navCard from '../components/base/nav-card.vue'
 import { readonly } from 'vue'
-import { useStore } from 'vuex'
+import fade from "../components/base/fade.vue";
 
 export default {
-  components: { 'two-col': twoCol, 'nav-card': navCard },
+  components: { twoCol, navCard, fade },
   setup() {
     const tabList = readonly([
       {key: 'index', name:'首页'},
-      {key: 'courses', name: '我的课程'},
-      {key: 'setting', name: '个人信息'}
     ])
-    const store = useStore()
-    const user = store.state.user
-    return { tabList, user }
+    return { tabList }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

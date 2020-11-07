@@ -1,11 +1,11 @@
 <template>
-  <modal :visible="visible">
+  <modal v-model:visible="visible">
     <div class="login-modal">
       <a-card class="ant-card-shadow login">
         <template #title>
           <h3 style="text-align: center">登录</h3>
         </template>
-        <a-form :model="form" :rules="rules" @finish="handleLogin">
+        <a-form :model="form" :rules="rules" @finish="handleLogin" :wrapper-col="{ span: 24 }">
           <a-form-item>
             <a-input v-model:value="form.id" placeholder="学号">
               <template #prefix><UserOutlined /></template>
@@ -17,20 +17,20 @@
             </a-input-password>
           </a-form-item>
           <a-form-item>
-            <a-checkbox v-model:checked="form.rememberMe">
+            <a-checkbox v-model:checked="form.remember">
               保持我的登录状态
             </a-checkbox>
-            <a style="float: right" href="">忘记密码?</a>
+            <a style="float: right" @click="forgetPassword">忘记密码?</a>
           </a-form-item>
-          <a-button html-type="submit" type="primary" block shape="round">
-            登录
+          <a-button html-type="submit" type="primary" block shape="round" :loading="isLoading">
+            {{ hint }}
           </a-button>
         </a-form>
       </a-card>
       <div class="login-shadow">
         <h3>还没有账户？</h3>
-        <p>现在注册，可以体验浙江大学的很多课程，著名学者分享心得，付费即可享受。</p>
-        <router-link to="/register">立即注册</router-link>
+        <p>现在注册，可以体验浙江大学的优质课程，著名学者分享心得，付费即可享受。</p>
+        <a @click="immediateRegister">立即注册</a>
       </div>
     </div>
   </modal>
@@ -38,24 +38,20 @@
 
 <script lang="ts">
 import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
-import { reactive, inject } from 'vue'
-import { useStore } from "vuex";
+import { reactive, watch, ref } from 'vue'
 import modal from './base/modal.vue'
-import request from '../axios/index.js'
-import md5 from 'md5'
-import { Role } from '../js/type.ts'
+import { login } from "../api/login";
+import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
 
 export default {
   components: { UserOutlined, LockOutlined, modal },
-  props: [
-    'visible'
-  ],
-  setup(props) {
-    const message = inject('message')
+  props: { visible: Boolean },
+  setup(props, ct) {
     const form = reactive({
       id: '',
       password: '',
-      rememberMe: true
+      remember: true
     })
     const rules = reactive({
       password: [{
@@ -67,27 +63,39 @@ export default {
         trigger: 'blur'
       }]
     })
-    const store = useStore()
-
+    const router = useRouter()
+    const hint = ref('登录')
+    const isLoading = ref(false)
     const handleLogin = async () => {
+      hint.value = '登录中'
+      isLoading.value = true
       try {
-        const res = await request.post('/authentication', {
-          id: form.id,
-          password: md5(form.password)
-        });
-        if(res.data.role === Role.unknown) {
-          throw '登录失败: ' + res.data.token
-        } else {
-          store.commit('saveToken', { token: res.data.token, remember: form.rememberMe});
-          await store.dispatch('getUserInfo');
-          message.success('登录成功!');
-          props.visible = false
-        }
+        const res = await login(form)
+        message.success(res)
+        closeLogin()
       } catch (e) {
-        message.error(e)
+        message.error(e.toString())
+      } finally {
+        isLoading.value = false
+        hint.value = '登录'
+        router.push('/user')
       }
     }
-    return { form, rules, handleLogin }
+    const closeLogin = () => {
+      ct.emit('update:visible', false)
+    }
+    watch(() => props.visible, (val) => {
+      ct.emit('update:visible', val)
+    })
+    const forgetPassword = () => {
+      router.push('/forget-password')
+      closeLogin()
+    }
+    const immediateRegister = () => {
+      router.push('/register')
+      closeLogin()
+    }
+    return { form, rules, handleLogin, immediateRegister, forgetPassword, hint, isLoading }
   }
 }
 </script>

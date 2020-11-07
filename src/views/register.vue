@@ -71,8 +71,12 @@
           </a-auto-complete>
         </a-form-item>
         <a-form-item :wrapper-col="{ span:20, offset: 4 }">
-          <a-button type="primary" html-type="submit">
+          <a-button type="primary" html-type="submit" :loading="registerLoading">
             完成
+          </a-button>
+          <a-divider type="vertical"/>
+          <a-button @click="onClickBack">
+            后退
           </a-button>
         </a-form-item>
       </a-form>
@@ -93,11 +97,14 @@
   </a-card>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, reactive, inject } from 'vue'
-import { UserOutlined, KeyOutlined, IdcardOutlined, MobileOutlined, MailOutlined } from '@ant-design/icons-vue'
-import request from '../axios/index.js'
+import { UserOutlined, KeyOutlined, IdcardOutlined, MobileOutlined, MailOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { defaultUserAvatar } from "../type";
+import { Gender, Role } from "../type";
+import { register } from "../api/register";
 import { useStore } from 'vuex'
+import { message } from 'ant-design-vue'
 
 export default {
   components: {
@@ -105,11 +112,16 @@ export default {
     KeyOutlined,
     IdcardOutlined,
     MobileOutlined,
-    MailOutlined
+    MailOutlined,
+    LoadingOutlined,
+    PlusOutlined
   },
   setup() {
     const current = ref(0);
-    const message = inject("message");
+    const onClickBack = () => {
+      current.value --;
+    }
+    const store = useStore()
     // 第一步
     const form = reactive({
       id: '',
@@ -118,28 +130,28 @@ export default {
     });
     const firstRules = reactive({
       id: [{
-          validator: (rule, value) => {
-            if (value === '')
-              return Promise.reject("学号不能为空!")
-            return Promise.resolve()
-          },
-          trigger: 'blur'
+        validator: (rule, value) => {
+          if (value === '')
+            return Promise.reject("学号不能为空!")
+          return Promise.resolve()
+        },
+        trigger: 'blur'
       }],
       password: [{
-          validator: (rule, value) => {
-            if (value === '')
-              return Promise.reject("密码不能为空!")
-            return Promise.resolve()
-          },
-          trigger: 'blur'
+        validator: (rule, value) => {
+          if (value === '')
+            return Promise.reject("密码不能为空!")
+          return Promise.resolve()
+        },
+        trigger: 'blur'
       }],
       confirm: [{
-          validator: (rule, value) => {
-            if (value !== form.password)
-              return Promise.reject("两次密码不一致!")
-            return Promise.resolve()
-          },
-          trigger: 'blur'
+        validator: (rule, value) => {
+          if (value !== form.password)
+            return Promise.reject("两次密码不一致!")
+          return Promise.resolve()
+        },
+        trigger: 'blur'
       }]
     });
     const handleFirst = () => {
@@ -148,12 +160,22 @@ export default {
     // 第二步
     const form2 = reactive({
       name: '',
-      gender: 0,
+      gender: Gender.male,
       grade: 1,
       email: '',
-      phone: ''
+      phone: '',
+      avatarId: defaultUserAvatar
     });
     const secondRules = reactive({
+      name: [{
+        validator: (rule, value) => {
+          if(!value) {
+            return Promise.reject('必须填写名字');
+          }
+          return  Promise.resolve();
+        },
+        trigger: 'blur'
+      }],
       phone: [{
         validator: (rule, value) => {
           if(/^\d{11}$/.test(value) === false)
@@ -171,32 +193,32 @@ export default {
         trigger: 'blur'
       }]
     });
+    // 邮件的自动补全
     const emailAC = ref([]);
-    const handleSearch = (now) => {
-      if(!now || now.indexOf('@') >= 0)
-        emailAC.value = []
-      else
-        emailAC.value = ['@163.com', '@qq.com', '@zju.edu.cn'].map((value) => { return now+value })
+    const handleSearch = (now : string) => {
+      let str = now.split('@')[0];
+      let searchArray = ['@163.com', '@qq.com', '@zju.edu.cn'].map(value => str+value )
+      emailAC.value = searchArray.filter(value => value.includes(now))
     }
+    const registerLoading = ref(false);
     const handleSecond = async () => {
+      registerLoading.value = true
       try {
-        const res = await request.post('/authentication/regist', {
-          ...form, ...form2
+        const token = await register({ id: form.id, password: form.password, ...form2 });
+        await store.dispatch('loginByToken', {
+          token,
+          remember: true
         })
-        if(res.data.res) {
-          const store = useStore();
-          store.commit('saveToken', res.data.token);
-          store.dispatch('getUserInfo');
-          current.value ++;
-        } else {
-          current.value = 0
-          throw '注册失败: ' + res.data.token
-        }
+        current.value ++;
       } catch (e) {
-        message.error(e);
+        current.value = 0;
+        message.error(e)
+      } finally {
+        registerLoading.value = false
       }
     }
-    return {current, form, firstRules, handleFirst, form2, secondRules, handleSecond, emailAC, handleSearch}
+    return {current, form, firstRules, handleFirst, form2, secondRules,
+      handleSecond, emailAC, handleSearch, onClickBack, registerLoading }
   }
 }
 </script>

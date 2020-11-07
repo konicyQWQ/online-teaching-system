@@ -11,6 +11,15 @@
 </template>
 
 <script>
+/**
+ * <twoCol :right="true | false" :fixed="true | false">
+ *   <template #left> 页面左侧显示的内容 </template>
+ *   <template #right> 页面右侧显示的内容 </template>
+ * </twoCol>
+ *
+ * right属性: true则显示右侧内容，默认为true
+ * fixed属性: true则右侧内容将会变为fixed状态，默认为false
+ */
 import {onMounted, ref} from "vue";
 
 export default {

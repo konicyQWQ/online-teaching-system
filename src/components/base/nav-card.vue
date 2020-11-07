@@ -5,7 +5,7 @@
     </template>
     <div v-if="router">
       <router-link v-for="tab in tabList"
-                   :to="{ name: tab.key }"
+                   :to="tab.key"
                    class="tab">
         {{ tab.name }}
       </router-link>
@@ -21,11 +21,24 @@
   </a-card>
 </template>
 
-<script>
+<script lang="ts">
+/**
+ * <navCard :tabList="">
+ *   <template #title>标题内容，可以自定义任意信息</template>
+ * </navCard>
+ *
+ * tabList 一个数组，数组的每个元素是下面的Tab类型
+ *
+ */
+
+interface Tab {
+  key: string, // 点击之后会进入到的路由
+  name: string // 显示在导航栏上的名字
+}
+
 export default {
-  name: 'navCard',
   props: {
-    tabList: Object,
+    tabList: Array<Tab> | undefined,
     router: {
       type: Boolean,
       default: true

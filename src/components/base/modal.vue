@@ -1,28 +1,18 @@
 <template>
-  <teleport to="#modal">
-    <div v-if="visible" class="my-mask" @click="handleClickMask" />
-    <transition name="modal-scale">
-      <div class="fixed-center" v-if="visible">
-        <slot></slot>
-      </div>
-    </transition>
-  </teleport>
+  <div v-if="visible" class="my-mask" @click="handleClickMask" />
+  <transition name="modal-scale">
+    <div class="fixed-center" v-if="visible">
+      <slot></slot>
+    </div>
+  </transition>
 </template>
 
 <script>
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props, context) {
+  props: { visible: Boolean },
+  setup(props, ct) {
     // 点击遮罩
-    const handleClickMask = () => {
-      context.emit('close')
-    }
-
+    const handleClickMask = () => ct.emit('update:visible', false)
     return { handleClickMask }
   }
 }
