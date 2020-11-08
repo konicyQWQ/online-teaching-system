@@ -1,7 +1,7 @@
 import request from "./axios"
 import { Gender, Role } from "../type"
 
-interface User {
+export declare interface User {
     id: string,
     name: string,
     gender: Gender,
@@ -26,6 +26,17 @@ async function getUserInfo(token:string) : Promise<User> {
     return res.data
 }
 
+async function modifyUserInfo(user:User, token:string) : Promise<string> {
+    const res = await request.post('/authentication/changeinfo', {
+        ...user,
+        token
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error)
+    return Promise.resolve('修改成功')
+}
+
 export {
-    getUserInfo
+    getUserInfo,
+    modifyUserInfo
 }

@@ -8,9 +8,11 @@
     <template #right>
       <navCard :tab-list="tabList">
         <template #title>
-
+          <div style="text-align: center">
+            <a-avatar :size="64" :src="getFileUrl(avatarId)"/>
+            <h3 style="margin-top: 1em">{{ name }}</h3>
+          </div>
         </template>
-        <template #title></template>
       </navCard>
     </template>
   </twoCol>
@@ -19,16 +21,22 @@
 <script>
 import twoCol from '../components/base/two-col.vue'
 import navCard from '../components/base/nav-card.vue'
-import { readonly } from 'vue'
+import { readonly, toRefs } from 'vue'
 import fade from "../components/base/fade.vue";
+import { useStore } from 'vuex'
+import { getFileUrl } from "../type";
 
 export default {
   components: { twoCol, navCard, fade },
   setup() {
+    // 新加一个TAB，key填 路由名字
     const tabList = readonly([
       {key: 'index', name:'首页'},
+      {key: 'myCourses', name: '我的课程'}
     ])
-    return { tabList }
+    const store = useStore()
+    const { name, avatarId } = toRefs(store.state)
+    return { tabList, name, avatarId, getFileUrl }
   }
 }
 </script>

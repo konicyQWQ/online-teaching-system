@@ -8,7 +8,7 @@
       <span :style="{ flex: 1 }"></span>
       <a @click="clickLogin" v-if="!token">登录</a>
       <router-link to="/register" v-if="!token">注册</router-link>
-      <router-link to="/user" v-if="token"><a-avatar :src="avatar_id" /></router-link>
+      <router-link to="/user" v-if="token"><a-avatar :src="getFileUrl(avatarId)" /></router-link>
       <a v-if="token" @click="logout"><PoweroffOutlined/> 退出登录</a>
     </nav>
   </header>
@@ -23,6 +23,7 @@ import login from './login.vue'
 import { useRouter } from 'vue-router'
 import { PoweroffOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
+import { getFileUrl } from "../type";
 
 export default {
   components: { login, PoweroffOutlined },
@@ -46,7 +47,7 @@ export default {
       message.success('退出登录成功!')
       router.push('/')
     }
-    return { scrollTop, token, avatarId, visible, clickLogin, logout }
+    return { scrollTop, token, avatarId, visible, clickLogin, logout, getFileUrl }
   }
 }
 </script>

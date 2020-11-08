@@ -28,12 +28,14 @@
  * </navCard>
  *
  * tabList 一个数组，数组的每个元素是下面的Tab类型
+ * router 如果传这个属性为false，对应的Tab被点击后将不会进行导航，而是调用handleClick函数
  *
  */
 
 interface Tab {
   key: string, // 点击之后会进入到的路由
-  name: string // 显示在导航栏上的名字
+  name?: string, // 显示在导航栏上的名字
+  handleClick?: ()=>void // 点击后执行的函数
 }
 
 export default {

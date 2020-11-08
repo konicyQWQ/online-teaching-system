@@ -5,6 +5,7 @@ import { getUserInfo } from "../api/user";
 interface loginInfo {
     token?: string | null,
     avatarId?: string | null,
+    name: string | null,
     role?: Role,
     remember?: boolean
 }
@@ -13,6 +14,7 @@ const store = createStore({
     state: {
         token: null,
         avatarId: null,
+        name: null,
         role: Role.guest
     },
     mutations: {
@@ -22,10 +24,11 @@ const store = createStore({
                 state.token = null
             state.role = parseInt(localStorage.getItem('role'))
         },
-        saveLoginInfo(state, { token, role, avatarId, remember }:loginInfo) {
+        saveLoginInfo(state, { token, role, avatarId, name, remember }:loginInfo) {
             state.token = token
             state.role = role
             state.avatarId = avatarId
+            state.name = name
             if(remember) {
                 window.localStorage.setItem('token', token)
                 window.localStorage.setItem('role', role.toString())
@@ -35,6 +38,7 @@ const store = createStore({
             state.token = null
             state.role = Role.guest
             state.avatarId = null
+            state.name = null
             window.localStorage.setItem('token', '')
             window.localStorage.setItem('role', Role.guest.toString())
         }

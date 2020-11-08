@@ -75,7 +75,7 @@ const router = createRouter({
                 {
                     /** 讨论 */
                     path: 'discuss',
-                    component: () => import('../components/courses/discuss/index.vue')
+                    component: () => import('../components/courses/discuss/index.tsx')
                 },
                 {
                     path: 'discuss/:discussId',
@@ -108,6 +108,10 @@ const router = createRouter({
                     /** 用户首页，显示课程的最新公告，未交的作业 */
                     path: 'index',
                     component: () => import('../components/user/index.vue')
+                },
+                {
+                    path: 'myCourses',
+                    component: () => import('../components/user/myCourses.vue')
                 }
             ]
         },

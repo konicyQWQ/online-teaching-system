@@ -72,13 +72,13 @@ export default {
       try {
         const res = await login(form)
         message.success(res)
+        router.push('/user')
         closeLogin()
       } catch (e) {
         message.error(e.toString())
       } finally {
         isLoading.value = false
         hint.value = '登录'
-        router.push('/user')
       }
     }
     const closeLogin = () => {

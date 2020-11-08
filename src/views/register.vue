@@ -85,10 +85,10 @@
                 sub-title="你已经注册成功了, 系统已经自动为您登录，请您选择进一步的操作..."
                 v-if="current===2">
         <template #extra>
-          <a-button key="public" type="primary">
+          <a-button key="public" type="primary" @click="gotoPublicPage">
             公开课程
           </a-button>
-          <a-button key="user">
+          <a-button key="user" @click="gotoUserPage">
             用户首页
           </a-button>
         </template>
@@ -105,6 +105,7 @@ import { Gender, Role } from "../type";
 import { register } from "../api/register";
 import { useStore } from 'vuex'
 import { message } from 'ant-design-vue'
+import router from "../router";
 
 export default {
   components: {
@@ -217,8 +218,14 @@ export default {
         registerLoading.value = false
       }
     }
+    const gotoUserPage = () => {
+      router.push('/user')
+    }
+    const gotoPublicPage = () => {
+      router.push('/public')
+    }
     return {current, form, firstRules, handleFirst, form2, secondRules,
-      handleSecond, emailAC, handleSearch, onClickBack, registerLoading }
+      handleSecond, emailAC, handleSearch, onClickBack, registerLoading, gotoUserPage, gotoPublicPage }
   }
 }
 </script>

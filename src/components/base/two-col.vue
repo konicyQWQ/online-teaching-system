@@ -99,8 +99,6 @@ export default {
 
       @media screen and (max-width: 1200px) {
         position: static;
-        top: 0;
-        right: 0;
       }
     }
   }
