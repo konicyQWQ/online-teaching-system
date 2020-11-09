@@ -9,10 +9,6 @@
     box-shadow: var(--shadow);
 }
 
-.has-error .ant-input-affix-wrapper .ant-input:focus {
-    box-shadow: none;
-}
-
 h3 {
     margin-bottom: 0;
 }

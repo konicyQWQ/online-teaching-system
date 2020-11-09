@@ -18,7 +18,7 @@ export declare interface User {
  * @param token 需要登录后才能获取，传入token
  */
 async function getUserInfo(token:string) : Promise<User> {
-    const res = await request.get('/authentication/user', {
+    const res = await request.get('/user/user', {
         params: {
             token
         }
@@ -27,7 +27,7 @@ async function getUserInfo(token:string) : Promise<User> {
 }
 
 async function modifyUserInfo(user:User, token:string) : Promise<string> {
-    const res = await request.post('/authentication/changeinfo', {
+    const res = await request.post('/user/changeinfo', {
         ...user,
         token
     })
@@ -36,7 +36,24 @@ async function modifyUserInfo(user:User, token:string) : Promise<string> {
     return Promise.resolve('修改成功')
 }
 
+interface SearchUser {
+    keyword: string, // 搜索关键字
+    limit: number // 结果数量上限
+    role: Role // 搜索身份
+}
+
+async function searchUser(search:SearchUser):Promise<Array<User>> {
+    if(!search.limit) search.limit = 10;
+    const res = await request.get('/user', {
+        params: search
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error);
+    return Promise.resolve(res.data.resList);
+}
+
 export {
     getUserInfo,
-    modifyUserInfo
+    modifyUserInfo,
+    searchUser
 }

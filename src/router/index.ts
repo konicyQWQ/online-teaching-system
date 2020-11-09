@@ -52,40 +52,40 @@ const router = createRouter({
                         default: () => import('../components/courses/bulletin.vue'),
                     }
                 },
-                {
-                    /** 课件 */
-                    path: 'courseware',
-                    component: () => import('../components/courses/courseware.vue')
-                },
-                {
-                    /** 作业列表 */
-                    path: 'homework',
-                    component: () => import('../components/courses/homework.vue'),
-                },
-                {
-                    /** 具体的作业内容，如果是学生显示内容和提交，老师显示表格去批改 */
-                    path: 'homework/:homeworkId',
-                    component: () => import('../components/courses/content.vue')
-                },
-                {
-                    /** 考试 */
-                    path: 'exam',
-                    component: () => import('../components/exam.vue')
-                },
-                {
-                    /** 讨论 */
-                    path: 'discuss',
-                    component: () => import('../components/courses/discuss/index.tsx')
-                },
+                // {
+                //     /** 课件 */
+                //     path: 'courseware',
+                //     component: () => import('../components/courses/courseware.vue')
+                // },
+                // {
+                //     /** 作业列表 */
+                //     path: 'homework',
+                //     component: () => import('../components/courses/homework.vue'),
+                // },
+                // {
+                //     /** 具体的作业内容，如果是学生显示内容和提交，老师显示表格去批改 */
+                //     path: 'homework/:homeworkId',
+                //     component: () => import('../components/courses/content.vue')
+                // },
+                // {
+                //     /** 考试 */
+                //     path: 'exam',
+                //     component: () => import('../components/exam.vue')
+                // },
+                // {
+                //     /** 讨论 */
+                //     path: 'discuss',
+                //     component: () => import('../components/courses/discuss/index.tsx')
+                // },
                 {
                     path: 'discuss/:discussId',
                     component: () => import('../components/courses/discuss/page.vue')
                 },
-                {
-                    /** 成绩，学生显示成绩，老师显示表格登记学生成绩 */
-                    path: 'score',
-                    component: () => import('../components/score.vue')
-                }
+                // {
+                //     /** 成绩，学生显示成绩，老师显示表格登记学生成绩 */
+                //     path: 'score',
+                //     component: () => import('../components/score.vue')
+                // }
             ]
         },
         {
@@ -112,6 +112,29 @@ const router = createRouter({
                 {
                     path: 'myCourses',
                     component: () => import('../components/user/myCourses.vue')
+                }
+            ]
+        },
+        {
+            path: '/administrator',
+            component: () => import('../views/administrator.vue'),
+            meta: {
+                auth: [Role.administrator]
+            },
+            children: [
+                {
+                    path: '',
+                    redirect: to => {
+                        return to.path + '/courses'
+                    }
+                },
+                {
+                    path: 'courses',
+                    component: () => import('../components/administrator/courses.vue')
+                },
+                {
+                    path: 'other',
+                    component: () => import('../components/administrator/other.vue')
                 }
             ]
         },

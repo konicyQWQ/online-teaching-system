@@ -3,6 +3,7 @@ import store from "../store";
 import Qs from 'qs'
 
 const request = axios.create({
+    // baseURL: 'https://10.181.244.103:5001/api',
     baseURL: 'https://localhost:5001/api',
     timeout: 5000
 })

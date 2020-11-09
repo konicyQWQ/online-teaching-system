@@ -68,14 +68,18 @@ export default {
     const { token } = toRefs(store.state)
     const userInfo:User = reactive({})
     // 加载用户数据
-    getUserInfo(token.value)
-      .then(res => {
+    async function loadUser() {
+      try {
+        loading.value = true
+        const res = await getUserInfo(token.value)
         Object.assign(userInfo, res)
-        loading.value = false
-      })
-      .catch(e => {
+      } catch (e) {
         message.error(e)
-      })
+      } finally {
+        loading.value = false
+      }
+    }
+    loadUser()
     // 修改用户资料的表单规则
     const rules = reactive({
       phone: [{
@@ -100,8 +104,8 @@ export default {
       try {
         modifyLoading.value = true
         const res = await modifyUserInfo(userInfo, token.value);
-        router.go(0)
         message.success(res)
+        await loadUser();
       } catch (e) {
         message.error(e)
       } finally {

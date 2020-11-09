@@ -16,7 +16,7 @@ interface Authentication {
  * @param remember 是否记住登录状态
  */
 async function login({ id, password, remember }:Authentication) : Promise<string> {
-    const loginRes = await request.post('/authentication', {
+    const loginRes = await request.post('/user', {
         id,
         password: md5(password)
     });

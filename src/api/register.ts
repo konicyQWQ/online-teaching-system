@@ -20,7 +20,7 @@ interface RegisterRes {
 
 async function register(infomation:RegisterInfo) : Promise<string> {
     infomation.password = md5(infomation.password)
-    const res = await request.post('/authentication/regist', infomation)
+    const res = await request.post('/user/regist', infomation)
     const data : RegisterRes = res.data
     if(data.res) {
         return Promise.resolve(data.token)
