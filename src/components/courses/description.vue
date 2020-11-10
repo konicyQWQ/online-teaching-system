@@ -1,6 +1,6 @@
 <template>
   <a-card class="ant-card-shadow" :body-style="{ padding: 0 }">
-    <a-card :bordered="false" id="information">
+    <a-card :bordered="false" id="information" :loading="loading">
       <template v-slot:title>
         <h3>
           <ProfileTwoTone twoToneColor="#eb2f96"/>
@@ -9,29 +9,29 @@
       </template>
       <a-descriptions bordered>
         <a-descriptions-item label="课程名称">
-          程序设计方法学
+          {{ courseInfo.course.name }}
         </a-descriptions-item>
         <a-descriptions-item label="课程代码">
-          (2020-2021-1)-21190650
+          {{ courseInfo.course.id }}
         </a-descriptions-item>
         <a-descriptions-item label="开课院系">
-          计算机科学与技术学院
+          {{ courseInfo.course.institute }}
         </a-descriptions-item>
         <a-descriptions-item label="学年期">
-          2020-2021秋冬
+          {{ courseInfo.course.year }}
         </a-descriptions-item>
         <a-descriptions-item label="开始日期">
-          2020-08-31
+          {{ new Date(courseInfo.course.startTime).toLocaleDateString() }}
         </a-descriptions-item>
         <a-descriptions-item label="课程属性">
           一般课程
         </a-descriptions-item>
         <a-descriptions-item label="开课情况">
-          <a-badge status="processing" text="正在开课"/>
+          <course-status :status="courseInfo.course.status"/>
         </a-descriptions-item>
       </a-descriptions>
     </a-card>
-    <a-card :bordered="false" id="description">
+    <a-card :bordered="false" id="description" :loading="loading">
       <template v-slot:title>
         <h3>
           <ProfileTwoTone twoToneColor="#eb2f96"/>
@@ -39,43 +39,45 @@
         </h3>
       </template>
       <p>
-        本课程是关于编程语言原理的，主要讲述编程语言的概念、分类、元素和实现。本课程主要由五部分内容组成：编程语言基本概念、语言要素及其实现、四种编程范式、虚拟机技术及实现、三个专题（函数式、并行计算和递归计算）。
-        本课程通过讲课、论文阅读与综述、编写编程语言解释器的方式实现学习目标。 本课程不涉及编译原理的知识。
+        {{ courseInfo.course.description }}
       </p>
     </a-card>
-    <a-card :bordered="false" id="scoreMethod">
+    <a-card :bordered="false" id="scoreMethod" :loading="loading">
       <template v-slot:title>
         <h3>
           <ProfileTwoTone twoToneColor="#eb2f96"/>
           课程评分方式
         </h3>
       </template>
+      <p>
+        {{ courseInfo.course.scoringMethod }}
+      </p>
     </a-card>
-    <a-card :bordered="false" id="textbook">
+    <a-card :bordered="false" id="textbook" :loading="loading">
       <template v-slot:title>
         <h3>
           <ProfileTwoTone twoToneColor="#eb2f96"/>
           课程教材
         </h3>
       </template>
-    </a-card>
-    <a-card :bordered="false" id="other">
-      <template v-slot:title>
-        <h3>
-          <ProfileTwoTone twoToneColor="#eb2f96"/>
-          其他信息
-        </h3>
-      </template>
+      <p>
+        {{ courseInfo.course.textbook }}
+      </p>
     </a-card>
   </a-card>
 </template>
 
 <script>
-import {ProfileTwoTone} from '@ant-design/icons-vue'
+import { ProfileTwoTone } from '@ant-design/icons-vue'
+import courseStatus from "./base/courseStatus.vue";
+import { inject, computed } from 'vue'
 
 export default {
-  components: {
-    ProfileTwoTone
+  components: { ProfileTwoTone, courseStatus },
+  setup() {
+    const courseInfo =  inject('courseInfo')
+    const loading = computed(() => courseInfo.loading)
+    return { courseInfo, loading }
   }
 }
 </script>

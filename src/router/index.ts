@@ -27,8 +27,8 @@ const router = createRouter({
             component: () => import('../views/forget-password.vue')
         },
         {
-            /** 课程页, id 是课程编号 */
-            path: '/courses/:id',
+            /** 课程页, cid 是课程编号 */
+            path: '/courses/:cid',
             component: () => import('../views/courses.vue'),
             children: [
                 {
@@ -43,6 +43,7 @@ const router = createRouter({
                     path: 'description',
                     components: {
                         default: () => import('../components/courses/description.vue'),
+                        extra: () => import('../components/courses/edit/description.vue')
                     }
                 },
                 {
@@ -50,6 +51,7 @@ const router = createRouter({
                     path: 'bulletin',
                     components: {
                         default: () => import('../components/courses/bulletin.vue'),
+                        extra: () => import('../components/courses/edit/bulletin.vue')
                     }
                 },
                 // {

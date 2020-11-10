@@ -8,7 +8,7 @@
         <a-form-item label="头像">
           <a-upload v-model:fileList="fileList"
                     :name="uploadName"
-                    accept=".jpg .png .jpeg"
+                    accept=".jpg,.png,.jpeg"
                     list-type="picture"
                     :show-upload-list="false"
                     :action="uploadUrl"
@@ -106,6 +106,7 @@ export default {
         const res = await modifyUserInfo(userInfo, token.value);
         message.success(res)
         await loadUser();
+        await store.dispatch('loginByToken', { remember: true })
       } catch (e) {
         message.error(e)
       } finally {

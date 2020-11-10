@@ -9,12 +9,12 @@
       <nav-card :tabList="tabList">
         <template v-slot:title>
           <h3>
-            {{ courses.name }}
-            <a-tooltip>
+            {{ courseInfo.course.name }}
+            <a-tooltip v-for="teacher in courseInfo.teachers">
               <template v-slot:title>
-                {{ courses.teacher }}
+                {{ teacher.name }}
               </template>
-              <a-avatar style="float: right;" :src="courses.teacherAvatar"></a-avatar>
+              <a-avatar style="float: right;" :src="getFileUrl(teacher.avatarId)" />
             </a-tooltip>
           </h3>
         </template>
@@ -30,7 +30,11 @@
 import twoCol from "../components/base/two-col.vue";
 import navCard from "../components/base/nav-card.vue"
 import fade from "../components/base/fade.vue";
-import { reactive, readonly } from 'vue';
+import { readonly, provide, ref, computed } from 'vue';
+import { useCourseState } from "../hooks/courses";
+import { getFileUrl } from "../type";
+import {useRoute} from "vue-router";
+import {useBulletin} from "../hooks/bulletin";
 
 export default {
   name: 'courses',
@@ -49,14 +53,17 @@ export default {
       {key: 'discuss', name: '讨论'},
       {key: 'score', name: '成绩'}
     ]);
+    const route = useRoute()
 
-    const courses = reactive({
-      name: '程序设计',
-      teacher: '翁恺',
-      teacherAvatar: ''
-    })
+    let courseInfo = useCourseState(route.params.cid)
+    provide('updateCourse', courseInfo.fetchCourse)
+    provide('courseInfo', courseInfo.course);
 
-    return {courses, tabList}
+    const bulletinInfo = useBulletin(route.params.cid);
+    provide('bulletinState', bulletinInfo.state);
+    provide('fetchBulletin', bulletinInfo.fetchBulletin);
+
+    return {courseInfo: courseInfo.course, tabList, getFileUrl}
   }
 }
 </script>

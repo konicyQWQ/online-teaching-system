@@ -24,6 +24,15 @@ export async function getAllCourses({ keyword='', start=0, limit=10 }) {
     return Promise.resolve(res.data)
 }
 
+export async function getCourses({id}) {
+    const res = await request.get('/course', {
+        params: { id }
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error);
+    return Promise.resolve(res.data)
+}
+
 export async function newCourses(courses:Courses, teachers:Array<string>) {
     const token = store.state.token;
     const res = await request.post('/course', {
@@ -52,4 +61,18 @@ export async function modifyCourses(courses:Courses, teachers:Array<string>) {
     if(res.data.res === false)
         return Promise.reject(res.data.error)
     return Promise.resolve(res.data.courseId)
+}
+
+// 返回登录的用户在这个课程里面是什么身份
+export async function getRole({ id }) {
+    const token = store.state.token || '';
+    const res = await request.get('/course/getrole', {
+        params: {
+            token,
+            courseID:id
+        }
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error)
+    return Promise.resolve(res.data)
 }

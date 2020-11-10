@@ -142,7 +142,6 @@ import { useRouter } from "vue-router";
 export default {
   components: { modal },
   setup() {
-    const router = useRouter()
     // 课程数据显示
     const columns = readonly([
       {dataIndex: 'id', title: '课程ID', key: 'id'},
@@ -190,7 +189,6 @@ export default {
     const modifyCoursesForm : Courses = reactive({})
     const openModifyModal = (record) => {
       Object.assign(modifyCoursesForm, record)
-      console.log(record)
       modifyTeachers.value = record.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
       modifyModalVisible.value = true
     }
