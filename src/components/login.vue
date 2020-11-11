@@ -72,7 +72,7 @@ export default {
       try {
         const res = await login(form)
         message.success(res)
-        router.push('/user')
+        // router.push('/user')
         closeLogin()
       } catch (e) {
         message.error(e.toString())

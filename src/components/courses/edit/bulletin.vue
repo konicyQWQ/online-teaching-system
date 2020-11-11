@@ -19,7 +19,7 @@
             <a-textarea v-model:value="form.content"/>
           </a-form-item>
           <a-form-item :wrapper-col="{ offset: 4 }">
-            <a-button type="primary" :loading="addLoading" html-type="submit">修改</a-button>
+            <a-button type="primary" :loading="addLoading" html-type="submit">新建</a-button>
             <a-divider type="vertical"/>
             <a-button type="default" @click="closeModal">关闭</a-button>
           </a-form-item>

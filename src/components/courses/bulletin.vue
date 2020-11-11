@@ -7,7 +7,7 @@
           <a-list-item>
             <template v-slot:actions v-if="courseInfo.role in [Role.teacher, Role.assistant, Role.administrator]">
               <a-button type="link" @click="openModal(item)">编辑</a-button>
-              <a-button type="link" :style="{ color: 'red' }" @click="delBulletin(item)">删除</a-button>
+              <confirm-delete @confirm="delBulletin(item)"/>
             </template>
             <a-list-item-meta :description="`${new Date(item.time).toLocaleDateString()} 更新`">
               <template v-slot:title>
@@ -50,9 +50,10 @@ import {deleteBulletin, updateBulletin} from "../../api/bulletin";
 import { message } from 'ant-design-vue'
 import { Role } from "../../type";
 import modal from "../base/modal.vue";
+import confirmDelete from "../base/confirmDelete.vue";
 
 export default {
-  components: { BellTwoTone, modal },
+  components: { BellTwoTone, modal, confirmDelete },
   setup() {
     const state = inject('bulletinState');
     const fetchBulletin = inject('fetchBulletin')
@@ -62,7 +63,7 @@ export default {
       try {
         await deleteBulletin({ bulletinID: id.bulletinId })
         message.success('删除成功')
-        fecthBulletin()
+        fetchBulletin()
       } catch (e) {
         message.error(e);
       }

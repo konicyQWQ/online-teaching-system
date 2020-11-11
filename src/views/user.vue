@@ -9,7 +9,7 @@
       <navCard :tab-list="tabList">
         <template #title>
           <div style="text-align: center">
-            <a-avatar :size="64" :src="getFileUrl(avatarId)"/>
+            <a-avatar :size="64" :src="getFileUrl(avatarId, 'user')"/>
             <h3 style="margin-top: 1em">{{ name }}</h3>
           </div>
         </template>
@@ -32,7 +32,9 @@ export default {
     // 新加一个TAB，key填 路由名字
     const tabList = readonly([
       {key: 'index', name:'首页'},
-      {key: 'myCourses', name: '我的课程'}
+      {key: 'information', name:'个人资料'},
+      {key: 'myCourses', name: '我的课程'},
+      {key: 'resetPassword', name: '修改密码'}
     ])
     const store = useStore()
     const { name, avatarId } = toRefs(store.state)

@@ -35,6 +35,7 @@ import { useCourseState } from "../hooks/courses";
 import { getFileUrl } from "../type";
 import {useRoute} from "vue-router";
 import {useBulletin} from "../hooks/bulletin";
+import { useCoursewareState } from "../hooks/courseware";
 
 export default {
   name: 'courses',
@@ -55,13 +56,17 @@ export default {
     ]);
     const route = useRoute()
 
-    let courseInfo = useCourseState(route.params.cid)
+    const courseInfo = useCourseState(route.params.cid)
     provide('updateCourse', courseInfo.fetchCourse)
     provide('courseInfo', courseInfo.course);
 
     const bulletinInfo = useBulletin(route.params.cid);
     provide('bulletinState', bulletinInfo.state);
     provide('fetchBulletin', bulletinInfo.fetchBulletin);
+
+    const coursewareInfo = useCoursewareState(route.params.cid);
+    provide('coursewareState', coursewareInfo.state)
+    provide('fetchCourseware', coursewareInfo.fetchCourseware)
 
     return {courseInfo: courseInfo.course, tabList, getFileUrl}
   }

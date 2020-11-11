@@ -6,7 +6,7 @@
       </template>
     </nav-card>
 
-    <editCourseModal v-model:visible="visible" :course="courseInfo.course"/>
+    <editCourseModal v-model:visible="visible"/>
   </div>
 </template>
 

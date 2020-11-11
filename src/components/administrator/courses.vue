@@ -57,6 +57,20 @@
           <a-form-item label="开课时间" name="startTime">
             <a-date-picker placeholder="开课时间" v-model:value="newCoursesForm.startTime" format="YYYY-MM-DD"/>
           </a-form-item>
+
+          <a-form-item label="课程图片">
+            <a-upload v-model:fileList="fileList"
+                      :name="uploadName"
+                      accept=".jpg,.png,.jpeg"
+                      list-type="picture-card"
+                      :show-upload-list="false"
+                      :action="uploadUrl"
+                      @change="fileUploadChange"
+                      :before-upload="checkImg">
+              <img alt="上传图片" :src="getFileUrl(newCoursesForm.iconId)" style="cursor: pointer; width: 300px;"/>
+            </a-upload>
+          </a-form-item>
+
           <a-form-item label="课程简介" name="description">
             <a-textarea v-model:value="newCoursesForm.description"/>
           </a-form-item>
@@ -108,6 +122,20 @@
           <a-form-item label="开课时间" name="startTime">
             <a-date-picker placeholder="开课时间" v-model:value="modifyCoursesForm.startTime" format="YYYY-MM-DD"/>
           </a-form-item>
+
+          <a-form-item label="课程图片">
+            <a-upload v-model:fileList="modifyfileList"
+                      :name="uploadName"
+                      accept=".jpg,.png,.jpeg"
+                      list-type="picture-card"
+                      :show-upload-list="false"
+                      :action="uploadUrl"
+                      @change="modifyfileUploadChange"
+                      :before-upload="checkImg">
+              <img alt="上传图片" :src="getFileUrl(modifyCoursesForm.iconId)" style="cursor: pointer; width: 300px;"/>
+            </a-upload>
+          </a-form-item>
+
           <a-form-item label="课程简介" name="description">
             <a-textarea v-model:value="modifyCoursesForm.description"/>
           </a-form-item>
@@ -133,7 +161,7 @@
 import { reactive, ref, readonly, getCurrentInstance } from 'vue';
 import modal from '../base/modal.vue'
 import { Courses, newCourses, getAllCourses, modifyCourses } from "../../api/courses";
-import { CoursesStatus, getFileUrl, Role } from "../../type";
+import { CoursesStatus, getFileUrl, Role, uploadUrl, checkImg, uploadName } from "../../type";
 import { searchUser } from "../../api/user";
 import  { message } from 'ant-design-vue'
 import debounce from 'lodash.debounce'
@@ -225,6 +253,7 @@ export default {
       startTime: null,
       description: '',
       scoringMethod: '',
+      iconId: null,
       textbook: '',
     })
     const clickNewCourses = async () => {
@@ -271,9 +300,36 @@ export default {
       }
     }, 300)
 
-    return { columns, data, addModalVisible, newTeachers, users, dataLoading,
+    // 上传头像
+    const fileList = ref([])
+    const fileUploadChange = (info) => {
+      if (info.file.status === 'done') {
+        message.success('上传成功')
+        console.log(info)
+        newCoursesForm.iconId = info.file.response.fileList[0].id
+      }
+      if (info.file.status === 'error') {
+        message.error(info.file.response.error)
+      }
+    }
+
+    const modifyfileList = ref([])
+    const modifyfileUploadChange = (info) => {
+      if (info.file.status === 'done') {
+        message.success('上传成功')
+        console.log(info)
+        modifyCoursesForm.iconId = info.file.response.fileList[0].id
+      }
+      if (info.file.status === 'error') {
+        message.error(info.file.response.error)
+      }
+    }
+
+
+
+    return { columns, data, addModalVisible, newTeachers, users, dataLoading, uploadUrl, checkImg, modifyfileList, modifyfileUploadChange,
       pagination, handleTableChange, openAddModal, newCoursesForm, newSending,
-      closeNewCoursesModal, clickNewCourses, loading, getFileUrl, onSearch,
+      closeNewCoursesModal, clickNewCourses, loading, getFileUrl, onSearch, fileList, fileUploadChange, uploadName,
       modifyModalVisible, openModifyModal, modifyTeachers, modifySending, modifyCoursesForm, clickModifyCourses, closeModifyCoursesModal
     }
   }

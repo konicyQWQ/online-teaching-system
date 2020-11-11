@@ -11,6 +11,7 @@ export declare interface Courses {
     description?: string, //简介
     scoringMethod?: string, //评分方式
     textbook?: string, // 教科书
+    iconId?: number,
 }
 
 export async function getAllCourses({ keyword='', start=0, limit=10 }) {

@@ -8,7 +8,7 @@
       <span :style="{ flex: 1 }"></span>
       <a @click="clickLogin" v-if="!token">登录</a>
       <router-link to="/register" v-if="!token">注册</router-link>
-      <router-link to="/user" v-if="token"><a-avatar :src="getFileUrl(avatarId)" /></router-link>
+      <router-link to="/user" v-if="token"><a-avatar :src="getFileUrl(avatarId, 'user')" /></router-link>
       <router-link v-if="role === Role.administrator" to="/administrator" >管理员配置页</router-link>
       <a v-if="token" @click="logout"><PoweroffOutlined/> 退出登录</a>
     </nav>

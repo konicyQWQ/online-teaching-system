@@ -1,10 +1,11 @@
 import axios from 'axios'
 import store from "../store";
 import Qs from 'qs'
+import { apiURL } from "../type";
+import router from "../router";
 
 const request = axios.create({
-    // baseURL: 'http://10.181.195.154:5000/api',
-    baseURL: 'https://localhost:5001/api',
+    baseURL: apiURL,
     timeout: 5000
 })
 
@@ -24,6 +25,7 @@ request.interceptors.response.use(
     response => {
         if(response.data.error === 'Token is Invalid') {
             store.commit('logout')
+            router.push('/public')
             return Promise.reject('登录信息过期，请重新登录')
         }
         return response

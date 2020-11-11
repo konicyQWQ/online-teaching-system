@@ -54,11 +54,14 @@ const router = createRouter({
                         extra: () => import('../components/courses/edit/bulletin.vue')
                     }
                 },
-                // {
-                //     /** 课件 */
-                //     path: 'courseware',
-                //     component: () => import('../components/courses/courseware.vue')
-                // },
+                {
+                    /** 课件 */
+                    path: 'courseware',
+                    components: {
+                        default : () => import('../components/courses/courseware.vue'),
+                        extra: () => import('../components/courses/edit/courseware.vue')
+                    }
+                },
                 // {
                 //     /** 作业列表 */
                 //     path: 'homework',
@@ -110,6 +113,14 @@ const router = createRouter({
                     /** 用户首页，显示课程的最新公告，未交的作业 */
                     path: 'index',
                     component: () => import('../components/user/index.vue')
+                },
+                {
+                    path: 'resetPassword',
+                    component: () => import('../components/user/resetPassword.vue')
+                },
+                {
+                    path: 'information',
+                    component: () => import('../components/user/information.vue')
                 },
                 {
                     path: 'myCourses',

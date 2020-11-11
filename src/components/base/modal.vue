@@ -1,7 +1,7 @@
 <template>
   <div v-if="visible" class="my-mask" @click="handleClickMask" />
   <transition name="modal-scale">
-    <div class="fixed-center" v-if="visible">
+    <div class="fixed-center" v-show="visible">
       <slot></slot>
     </div>
   </transition>

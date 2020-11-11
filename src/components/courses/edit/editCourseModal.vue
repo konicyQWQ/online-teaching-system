@@ -33,6 +33,20 @@
         <a-form-item label="开课时间" name="startTime">
           <a-date-picker placeholder="开课时间" v-model:value="modifyCoursesForm.startTime" format="YYYY-MM-DD"/>
         </a-form-item>
+
+        <a-form-item label="课程图片">
+          <a-upload v-model:fileList="fileList"
+                    :name="uploadName"
+                    accept=".jpg,.png,.jpeg"
+                    list-type="picture-card"
+                    :show-upload-list="false"
+                    :action="uploadUrl"
+                    @change="fileUploadChange"
+                    :before-upload="checkImg">
+            <img alt="上传图片" :src="getFileUrl(modifyCoursesForm.iconId)" style="cursor: pointer; width: 300px;"/>
+          </a-upload>
+        </a-form-item>
+
         <a-form-item label="课程简介" name="description">
           <a-textarea v-model:value="modifyCoursesForm.description"/>
         </a-form-item>
@@ -57,6 +71,7 @@ import {reactive, ref, watch, inject} from "vue";
 import {Courses, modifyCourses} from "../../../api/courses";
 import {message} from "ant-design-vue";
 import modal from '../../base/modal.vue'
+import { uploadUrl, checkImg, getFileUrl, uploadName  } from "../../../type";
 
 export default {
   name: "editCourseModal",
@@ -70,11 +85,18 @@ export default {
     const modifyTeachers = ref('')
     const modifySending = ref(false)
     const modifyCoursesForm : Courses = reactive({})
+    const courseInfo = inject('courseInfo')
     const updateCourse = inject('updateCourse');
 
     watch(() => props.course, () => {
       Object.assign(modifyCoursesForm, props.course)
     })
+
+    watch(() => courseInfo, () => {
+      Object.assign(modifyCoursesForm, courseInfo.course)
+      modifyTeachers.value = courseInfo.teachers && courseInfo.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
+    }, { deep: true })
+
     watch(() => props.teacher, () => {
       modifyTeachers.value = props.teachers && props.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
     })
@@ -103,8 +125,21 @@ export default {
     watch(() => props.visible, (val) => {
       context.emit('update:visible', val)
     })
+
+    // 上传头像
+    const fileList = ref([])
+    const fileUploadChange = (info) => {
+      if (info.file.status === 'done') {
+        message.success('上传成功')
+        console.log(info)
+        modifyCoursesForm.iconId = info.file.response.fileList[0].id
+      }
+      if (info.file.status === 'error') {
+        message.error(info.file.response.error)
+      }
+    }
     return {
-      closeModifyCoursesModal, clickModifyCourses, modifyCoursesForm, modifyTeachers, modifySending
+      uploadName, closeModifyCoursesModal, clickModifyCourses, modifyCoursesForm, modifyTeachers, modifySending, uploadUrl, checkImg, getFileUrl, fileList, fileUploadChange
     }
   }
 }

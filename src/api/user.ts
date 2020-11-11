@@ -1,5 +1,7 @@
 import request from "./axios"
 import { Gender, Role } from "../type"
+import store from "../store";
+import {md5} from "./md5";
 
 export declare interface User {
     id: string,
@@ -52,8 +54,20 @@ async function searchUser(search:SearchUser):Promise<Array<User>> {
     return Promise.resolve(res.data.resList);
 }
 
+async function resetPassword({ oldPassword, newPassword }) {
+    const res = await request.post('/user/resetPassword',{
+        token: store.state.token,
+        oldPassword: md5(oldPassword),
+        newPassword: md5(newPassword)
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error)
+    return Promise.resolve('修改成功')
+}
+
 export {
     getUserInfo,
     modifyUserInfo,
-    searchUser
+    searchUser,
+    resetPassword
 }
