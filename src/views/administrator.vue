@@ -22,6 +22,7 @@ export default {
   setup() {
     const tabList = readonly([
       {key: 'courses', name: '课程管理'},
+      {key: 'users', name: '用户管理'},
       {key: 'other', name: '其他'}
     ])
 

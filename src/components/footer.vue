@@ -13,7 +13,7 @@
 import {readonly} from 'vue'
 
 export default {
-  name: 'footer',
+  name: 'mFooter',
   setup() {
     let category = readonly([
       {

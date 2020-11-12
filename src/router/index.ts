@@ -142,6 +142,10 @@ const router = createRouter({
                     }
                 },
                 {
+                    path: 'users',
+                    component: () => import('../components/administrator/users.vue')
+                },
+                {
                     path: 'courses',
                     component: () => import('../components/administrator/courses.vue')
                 },

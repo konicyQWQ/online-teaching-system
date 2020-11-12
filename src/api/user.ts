@@ -28,7 +28,8 @@ async function getUserInfo(token:string) : Promise<User> {
     return res.data
 }
 
-async function modifyUserInfo(user:User, token:string) : Promise<string> {
+async function modifyUserInfo(user:User, token:string = null) : Promise<string> {
+    token = token || store.state.token
     const res = await request.post('/user/changeinfo', {
         ...user,
         token
@@ -65,9 +66,56 @@ async function resetPassword({ oldPassword, newPassword }) {
     return Promise.resolve('修改成功')
 }
 
+async function getAllUser({ start, limit, keyword, roles }) {
+    const token = store.state.token
+    const res = await request.post('/user/getall', {
+        start,
+        limit,
+        keyword,
+        roles,
+        token
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error)
+    return Promise.resolve({
+        total: res.data.totalCount,
+        data: res.data.resList
+    })
+}
+
+async function deleteUser({ userID }) {
+    const token = store.state.token
+    const res = await request.post('/user/remove', {
+        userID,
+        token
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error)
+    return Promise.resolve('删除成功')
+}
+
+async function newGetUserInfo({ userID }) {
+    const token = store.state.token
+    const res = await request.get('/user/getInfo', {
+        params: {
+            token,
+            userID
+        }
+    })
+    if(res.data.res === false)
+        return Promise.reject(res.data.error)
+    return Promise.resolve({
+        userInfo: res.data.userInfo,
+        courseList: res.data.courseList
+    })
+}
+
 export {
     getUserInfo,
     modifyUserInfo,
     searchUser,
-    resetPassword
+    resetPassword,
+    getAllUser,
+    deleteUser,
+    newGetUserInfo
 }
