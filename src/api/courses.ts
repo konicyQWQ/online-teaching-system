@@ -77,3 +77,16 @@ export async function getRole({ id }) {
         return Promise.reject(res.data.error)
     return Promise.resolve(res.data)
 }
+
+export async function getCourseUser({ courseID }) {
+    const token = store.state.token
+    const res = await request.get('/course/getUsers', {
+        params: {
+            courseID,
+            token
+        }
+    })
+    if(!res.data.res)
+        return Promise.reject(res.data.error)
+    return Promise.resolve(res.data.userList)
+}

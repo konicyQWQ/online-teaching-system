@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="courseInfo.role in [Role.teacher, Role.administrator, Role.assistant]">
+    <div v-if="[Role.teacher, Role.administrator, Role.assistant].indexOf(courseInfo.role) !== -1">
       <nav-card :tab-list="nav" :router="false">
         <template #title>
           <h3><edit-two-tone twotonecolor="#eb2f96"/> 课程操作</h3>

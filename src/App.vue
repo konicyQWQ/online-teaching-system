@@ -1,11 +1,13 @@
 <template>
-  <Header />
-  <main>
-    <fade>
-      <router-view>
-    </fade>
-  </main>
-  <m-footer />
+  <a-config-provider :locale="locale">
+    <Header />
+    <main>
+      <fade>
+        <router-view>
+      </fade>
+    </main>
+    <m-footer />
+  </a-config-provider>
 </template>
 
 <script lang="ts">
@@ -14,6 +16,7 @@ import fade from "./components/base/fade.vue"
 import mFooter from "./components/footer.vue";
 import { message } from 'ant-design-vue'
 import { useStore } from 'vuex'
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
 
 export default {
   components: { Header, fade, mFooter },
@@ -29,6 +32,9 @@ export default {
           if(e)
             message.error(e.toString())
         })
+    return {
+      locale: zhCN
+    }
   }
 }
 </script>

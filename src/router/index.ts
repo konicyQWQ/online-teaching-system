@@ -62,16 +62,19 @@ const router = createRouter({
                         extra: () => import('../components/courses/edit/courseware.vue')
                     }
                 },
-                // {
-                //     /** 作业列表 */
-                //     path: 'homework',
-                //     component: () => import('../components/courses/homework.vue'),
-                // },
-                // {
-                //     /** 具体的作业内容，如果是学生显示内容和提交，老师显示表格去批改 */
-                //     path: 'homework/:homeworkId',
-                //     component: () => import('../components/courses/content.vue')
-                // },
+                {
+                    /** 作业列表 */
+                    path: 'homework',
+                    components: {
+                        default : () => import('../components/courses/homework.vue'),
+                        extra: () => import('../components/courses/edit/homework.vue')
+                    }
+                },
+                {
+                    /** 具体的作业内容，如果是学生显示内容和提交，老师显示表格去批改 */
+                    path: 'homework/:homeworkId',
+                    component: () => import('../components/courses/content.vue')
+                },
                 // {
                 //     /** 考试 */
                 //     path: 'exam',
@@ -82,9 +85,13 @@ const router = createRouter({
                 //     path: 'discuss',
                 //     component: () => import('../components/courses/discuss/index.tsx')
                 // },
+                // {
+                //     path: 'discuss/:discussId',
+                //     component: () => import('../components/courses/discuss/page.vue')
+                // },
                 {
-                    path: 'discuss/:discussId',
-                    component: () => import('../components/courses/discuss/page.vue')
+                    path: 'studentList',
+                    component: () => import('../components/courses/studentList.vue')
                 },
                 // {
                 //     /** 成绩，学生显示成绩，老师显示表格登记学生成绩 */

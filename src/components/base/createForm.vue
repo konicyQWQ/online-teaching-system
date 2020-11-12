@@ -1,5 +1,5 @@
 <template>
-  <a-form :model="model" :rules="rules" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" @finish="finish">
+  <a-form :model="model" :rules="rules" :layout="layout" @finish="finish" v-bind="itemLayout">
     <a-form-item v-for="field, name in fields"
                  :label="field.label"
                  :key="field.label"
@@ -15,12 +15,12 @@
         </a-radio>
       </a-radio-group>
       <a-upload        v-if="field.type === 'upload'"
-                       v-model:filelist="model[name]"
+                       v-model:fileList="model[name]"
                        :multiple="field.file.multiple || false"
                        :name="field.file.name"
                        :action="field.file.action"
-                       :beforeUpload="field.file.beforeUpload"
-                       @change="field.file.onChange"
+                       :beforeUpload="beforeUpload"
+                       @change="handleChange"
                        :data="field.file.data">
         <a-button><UploadOutlined/>点击上传</a-button>
       </a-upload>
@@ -29,8 +29,11 @@
                        :field="field">
       </slot>
     </a-form-item>
-    <a-form-item :wrapper-col="{ offset: 4 }">
-      <a-button type="primary" html-type="submit" :loading="submitLoading">{{ form.submitHint || '提交' }}</a-button>
+    <a-form-item :wrapper-col="form.layout === 'inline' ? {} : { offset: 4 }">
+      <a-button type="primary"
+                html-type="submit"
+                :loading="submitLoading"
+                :disabled="nowFileUploadingCnt !== 0">{{ form.submitHint || '提交' }}</a-button>
       <a-divider type="vertical"/>
       <a-button type="default" @click="form.cancel">{{ form.cancelHint || '取消' }}</a-button>
     </a-form-item>
@@ -40,6 +43,7 @@
 <script lang="ts">
 import { PropType, ref, reactive } from 'vue'
 import { UploadOutlined } from '@ant-design/icons-vue'
+import {message} from "ant-design-vue";
 
 export declare interface Model {
   [property: string]: any
@@ -76,7 +80,8 @@ export declare interface Form {
   submitHint?: string,
   cancelHint?: string,
   finish: () => Promise<string>,
-  cancel: () => void
+  cancel: () => void,
+  layout: string
 }
 
 export default {
@@ -106,7 +111,37 @@ export default {
         submitLoading.value = false
       }
     }
-    return { rules, finish, submitLoading }
+
+    // 文件上传
+    const nowFileUploadingCnt = ref(0);
+    let uploadFileProperty = ''
+    for(let key in props.fields) {
+      if(props.fields[key].type === 'upload') {
+        uploadFileProperty = key
+        break;
+      }
+    }
+    const beforeUpload = () => {
+      nowFileUploadingCnt.value ++;
+      if(props.fields[uploadFileProperty].file.beforeUpload)
+        props.fields[uploadFileProperty].file.beforeUpload()
+    }
+    function handleChange(info) {
+      if(info.file.status === 'done')
+        nowFileUploadingCnt.value --;
+      if(info.file.status === 'error') {
+        nowFileUploadingCnt.value --;
+        message.error('上传文件失败');
+      }
+      if(props.fields[uploadFileProperty].file.onChange)
+        props.fields[uploadFileProperty].onChange(info)
+    }
+
+    // 布局
+    const layout = ref(props.form.layout ? props.form.layout : 'horizontal')
+    const itemLayout = ref(layout.value === 'horizontal' ? {labelCol: { span: 4 }, wrapperCol: { span: 20 }} : {})
+
+    return { rules, finish, submitLoading, layout, itemLayout, nowFileUploadingCnt, beforeUpload, handleChange}
   }
 }
 </script>

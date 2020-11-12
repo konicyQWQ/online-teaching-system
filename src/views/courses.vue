@@ -32,10 +32,11 @@ import navCard from "../components/base/nav-card.vue"
 import fade from "../components/base/fade.vue";
 import { readonly, provide, ref, computed } from 'vue';
 import { useCourseState } from "../hooks/courses";
-import { getFileUrl } from "../type";
+import {getFileUrl, Role} from "../type";
 import {useRoute} from "vue-router";
 import {useBulletin} from "../hooks/bulletin";
 import { useCoursewareState } from "../hooks/courseware";
+import { useHomework } from "../hooks/homework";
 
 export default {
   name: 'courses',
@@ -45,15 +46,30 @@ export default {
     fade
   },
   setup() {
-    const tabList = readonly([
-      {key: 'description', name: '课程简介'},
-      {key: 'bulletin', name: '公告'},
-      {key: 'courseware', name: '课件'},
-      {key: 'homework', name: '作业'},
-      {key: 'exam', name: '测试'},
-      {key: 'discuss', name: '讨论'},
-      {key: 'score', name: '成绩'}
-    ]);
+    const tabList = computed(() => {
+      if([Role.teacher, Role.administrator].indexOf(courseInfo.course.role) != -1) {
+        return [
+          {key: 'description', name: '课程简介'},
+          {key: 'bulletin', name: '公告'},
+          {key: 'courseware', name: '课件'},
+          {key: 'homework', name: '作业'},
+          {key: 'exam', name: '测试'},
+          {key: 'discuss', name: '讨论'},
+          {key: 'score', name: '成绩'},
+          {key: 'studentList', name: '课程名单'}
+        ]
+      } else {
+        return [
+          {key: 'description', name: '课程简介'},
+          {key: 'bulletin', name: '公告'},
+          {key: 'courseware', name: '课件'},
+          {key: 'homework', name: '作业'},
+          {key: 'exam', name: '测试'},
+          {key: 'discuss', name: '讨论'},
+          {key: 'score', name: '成绩'},
+        ]
+      }
+    });
     const route = useRoute()
 
     const courseInfo = useCourseState(route.params.cid)
@@ -67,6 +83,10 @@ export default {
     const coursewareInfo = useCoursewareState(route.params.cid);
     provide('coursewareState', coursewareInfo.state)
     provide('fetchCourseware', coursewareInfo.fetchCourseware)
+
+    const homeworkInfo = useHomework(route.params.cid);
+    provide('homeworkState', homeworkInfo.state)
+    provide('fetchHomeworkData', homeworkInfo.fetchData)
 
     return {courseInfo: courseInfo.course, tabList, getFileUrl}
   }

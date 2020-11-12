@@ -94,7 +94,7 @@ async function deleteUser({ userID }) {
     return Promise.resolve('删除成功')
 }
 
-async function newGetUserInfo({ userID }) {
+async function newGetUserInfo({ userID } : { userID?: string }) {
     const token = store.state.token
     const res = await request.get('/user/getInfo', {
         params: {
@@ -110,6 +110,31 @@ async function newGetUserInfo({ userID }) {
     })
 }
 
+async function addToCourses({ userID, courseID, role }) {
+    const token = store.state.token
+    const res = await request.post('/user/addToCourse', {
+        userID,
+        courseID,
+        role,
+        token
+    })
+    if(!res.data.res)
+        return Promise.reject(res.data.error)
+    return Promise.resolve('添加成功')
+}
+
+async function removeFromCourse({ userID, courseID }) {
+    const token = store.state.token
+    const res = await request.post('/user/removeFromCourse', {
+        userID,
+        courseID,
+        token
+    })
+    if(!res.data.res)
+        return Promise.reject(res.data.error)
+    return Promise.resolve('移除成功')
+}
+
 export {
     getUserInfo,
     modifyUserInfo,
@@ -117,5 +142,7 @@ export {
     resetPassword,
     getAllUser,
     deleteUser,
-    newGetUserInfo
+    newGetUserInfo,
+    addToCourses,
+    removeFromCourse
 }

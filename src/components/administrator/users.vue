@@ -173,7 +173,7 @@ export default {
           message.success('修改成功')
           handleChange(null, null, null)
         } catch (e) {
-          message.error(e)
+          message.error(e.toString())
         }
       },
       cancel: () => {
