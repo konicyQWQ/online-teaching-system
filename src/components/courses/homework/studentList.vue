@@ -2,14 +2,16 @@
   <div>
     <a-card class="ant-card-shadow">
       <template #title>
-        <h3>已提交作业列表</h3>
+        <h3>学生提交作业列表</h3>
       </template>
       <a-table :columns="columns" :data-source="state.data.stuHomeworkList" :loading="state.loading">
-        <template #mark="{ text }">
-          {{ text || '未打分' }}
+        <template #mark="{ text, record }">
+          {{ text ? text.mark || '未打分' : '未提交' }}
         </template>
         <template #action="{ text, record }">
-          <a @click="openModal(record)">打分</a>
+          <div v-if="record.userHomework">
+            <a @click="openModal(record)">打分</a>
+          </div>
         </template>
       </a-table>
     </a-card>
@@ -64,7 +66,7 @@ export default {
     const columns = readonly([
       {dataIndex: 'userInfo.id', title: '学号'},
       {dataIndex: 'userInfo.name', title: '姓名'},
-      {dataIndex: 'userHomework.mark', title: '分数', slots: { customRender: 'mark' }},
+      {dataIndex: 'userHomework', title: '分数', slots: { customRender: 'mark' }},
       {dataIndex: 'action', title: '操作', slots: { customRender: 'action' }}
     ])
 

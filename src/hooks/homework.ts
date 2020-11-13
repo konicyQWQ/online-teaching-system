@@ -56,6 +56,17 @@ export function useHomework(hwID) {
         data: {
             homework: {
                 homework: {}
+            },
+            userHomework: {
+                userInfo: {
+
+                },
+                userHomework: {
+
+                },
+                files: {
+
+                }
             }
         },
         loading: false

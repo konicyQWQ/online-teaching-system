@@ -24,17 +24,19 @@ export default {
     const store = useStore()
     watch(() => state.loading, (newVal) => {
       if(newVal === false) {
-        model.description = state.data.userHomework.userHomework.description
-        model.files = state.data.userHomework.files.map(value => {
-          return {
-            uid: value.id,
-            name: value.name,
-            status: 'done',
-            response: {
-              fileList: [{id: value.id}]
-            },
-          }
-        })
+        if(state.data.userHomework.userHomework) {
+          model.description = state.data.userHomework.userHomework.description
+          model.files = state.data.userHomework.files.map(value => {
+            return {
+              uid: value.id,
+              name: value.name,
+              status: 'done',
+              response: {
+                fileList: [{id: value.id}]
+              },
+            }
+          })
+        }
       }
     })
     const model = reactive({
