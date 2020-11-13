@@ -34,7 +34,7 @@ import { useHomework, useAllHomework } from "../../../hooks/homework";
 import { useRoute, useRouter } from 'vue-router'
 import modal from "../../base/modal.vue";
 import createForm from "../../base/createForm.vue";
-import { CoursewareUploadName, CoursewareUploadUrl, CoursewareUploadData, FileMode } from "../../../type/file";
+import { CoursewareUploadName, CoursewareUploadUrl, CoursewareUploadData, FileMode, CoursewareDownloadUrl } from "../../../type/file";
 import { useStore } from 'vuex'
 import moment from "moment";
 import { message } from 'ant-design-vue'
@@ -74,7 +74,7 @@ export default {
               response: {
                 fileList: [{ id: value.id }]
               },
-              url: HomeworkDownloadUrl(route.params.hwID, value.id, FileMode.download)
+              url: CoursewareDownloadUrl(route.params.hwID, value.id, FileMode.download)
             }
           })
           visible.value = true
