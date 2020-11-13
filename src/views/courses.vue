@@ -1,12 +1,12 @@
 <template>
-  <two-col>
+  <two-col :fixed="true">
     <template v-slot:left>
       <fade>
         <router-view></router-view>
       </fade>
     </template>
     <template v-slot:right>
-      <nav-card :tabList="tabList">
+      <nav-card :tabList="tabList" >
         <template v-slot:title>
           <h3>
             {{ courseInfo.course.name }}
@@ -36,7 +36,7 @@ import {getFileUrl, Role} from "../type";
 import {useRoute} from "vue-router";
 import {useBulletin} from "../hooks/bulletin";
 import { useCoursewareState } from "../hooks/courseware";
-import { useHomework } from "../hooks/homework";
+import { useAllHomework } from "../hooks/homework";
 
 export default {
   name: 'courses',
@@ -49,24 +49,24 @@ export default {
     const tabList = computed(() => {
       if([Role.teacher, Role.administrator].indexOf(courseInfo.course.role) != -1) {
         return [
-          {key: 'description', name: '课程简介'},
-          {key: 'bulletin', name: '公告'},
-          {key: 'courseware', name: '课件'},
-          {key: 'homework', name: '作业'},
-          {key: 'exam', name: '测试'},
-          {key: 'discuss', name: '讨论'},
-          {key: 'score', name: '成绩'},
-          {key: 'studentList', name: '课程名单'}
+          {key: 'description', name: '课程简介', keyByName: true},
+          {key: 'bulletin', name: '公告', keyByName: true},
+          {key: 'courseware', name: '课件', keyByName: true},
+          {key: 'homework', name: '作业', keyByName: true},
+          {key: 'exam', name: '测试', keyByName: true},
+          {key: 'discuss', name: '讨论', keyByName: true},
+          {key: 'score', name: '成绩', keyByName: true},
+          {key: 'studentList', name: '课程名单', keyByName: true}
         ]
       } else {
         return [
-          {key: 'description', name: '课程简介'},
-          {key: 'bulletin', name: '公告'},
-          {key: 'courseware', name: '课件'},
-          {key: 'homework', name: '作业'},
-          {key: 'exam', name: '测试'},
-          {key: 'discuss', name: '讨论'},
-          {key: 'score', name: '成绩'},
+          {key: 'description', name: '课程简介', keyByName: true},
+          {key: 'bulletin', name: '公告', keyByName: true},
+          {key: 'courseware', name: '课件', keyByName: true},
+          {key: 'homework', name: '作业', keyByName: true},
+          {key: 'exam', name: '测试', keyByName: true},
+          {key: 'discuss', name: '讨论', keyByName: true},
+          {key: 'score', name: '成绩', keyByName: true},
         ]
       }
     });
@@ -84,7 +84,7 @@ export default {
     provide('coursewareState', coursewareInfo.state)
     provide('fetchCourseware', coursewareInfo.fetchCourseware)
 
-    const homeworkInfo = useHomework(route.params.cid);
+    const homeworkInfo = useAllHomework(route.params.cid);
     provide('homeworkState', homeworkInfo.state)
     provide('fetchHomeworkData', homeworkInfo.fetchData)
 

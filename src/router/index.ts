@@ -41,6 +41,7 @@ const router = createRouter({
                 {
                     /** 课程简介 */
                     path: 'description',
+                    name: 'description',
                     components: {
                         default: () => import('../components/courses/description.vue'),
                         extra: () => import('../components/courses/edit/description.vue')
@@ -49,6 +50,7 @@ const router = createRouter({
                 {
                     /** 公告 */
                     path: 'bulletin',
+                    name: 'bulletin',
                     components: {
                         default: () => import('../components/courses/bulletin.vue'),
                         extra: () => import('../components/courses/edit/bulletin.vue')
@@ -57,6 +59,7 @@ const router = createRouter({
                 {
                     /** 课件 */
                     path: 'courseware',
+                    name: 'courseware',
                     components: {
                         default : () => import('../components/courses/courseware.vue'),
                         extra: () => import('../components/courses/edit/courseware.vue')
@@ -66,38 +69,50 @@ const router = createRouter({
                     /** 作业列表 */
                     path: 'homework',
                     components: {
-                        default : () => import('../components/courses/homework.vue'),
-                        extra: () => import('../components/courses/edit/homework.vue')
-                    }
+                        default: () => import('../components/courses/homeworkParentNode.vue'),
+                        extra: () => import('../components/courses/homeworkExtraParentNode.vue')
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'homework',
+                            components: {
+                                default : () => import('../components/courses/homework.vue'),
+                                extra: () => import('../components/courses/edit/homework.vue')
+                            },
+                        },
+                        {
+                            path: ':hwID',
+                            components: {
+                                default: () => import('../components/courses/content.vue'),
+                                extra: () => import('../components/courses/edit/content.vue')
+                            }
+                        }
+                    ]
                 },
                 {
-                    /** 具体的作业内容，如果是学生显示内容和提交，老师显示表格去批改 */
-                    path: 'homework/:homeworkId',
-                    component: () => import('../components/courses/content.vue')
+                    /** 考试 */
+                    path: 'exam',
+                    name: 'exam',
+                    component: () => import('../components/exam.vue')
                 },
-                // {
-                //     /** 考试 */
-                //     path: 'exam',
-                //     component: () => import('../components/exam.vue')
-                // },
-                // {
-                //     /** 讨论 */
-                //     path: 'discuss',
-                //     component: () => import('../components/courses/discuss/index.tsx')
-                // },
-                // {
-                //     path: 'discuss/:discussId',
-                //     component: () => import('../components/courses/discuss/page.vue')
-                // },
+                {
+                    /** 讨论 */
+                    path: 'discuss',
+                    name: 'discuss',
+                    component: () => import('../components/courses/discuss/index.tsx')
+                },
                 {
                     path: 'studentList',
+                    name: 'studentList',
                     component: () => import('../components/courses/studentList.vue')
                 },
-                // {
-                //     /** 成绩，学生显示成绩，老师显示表格登记学生成绩 */
-                //     path: 'score',
-                //     component: () => import('../components/score.vue')
-                // }
+                {
+                    /** 成绩，学生显示成绩，老师显示表格登记学生成绩 */
+                    path: 'score',
+                    name: 'score',
+                    component: () => import('../components/score.vue')
+                }
             ]
         },
         {

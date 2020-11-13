@@ -42,6 +42,7 @@ export default {
 .footer {
   display: flex;
   padding: 2em 5%;
+  background: #222;
 
   .list {
     list-style: none;
@@ -53,12 +54,12 @@ export default {
       &.title {
         font-size: 18px;
         font-weight: 300;
-        color: #000;
+        color: #fff;
         margin-bottom: .5em;
       }
 
       a {
-        color: #000;
+        color: #fff;
         font-size: 14px;
       }
     }

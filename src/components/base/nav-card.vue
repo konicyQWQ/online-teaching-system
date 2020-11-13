@@ -5,7 +5,7 @@
     </template>
     <div v-if="router">
       <router-link v-for="tab in tabList"
-                   :to="tab.key"
+                   :to="tab.keyByName ? { name: tab.key } : tab.key"
                    class="tab">
         {{ tab.name }}
       </router-link>
@@ -13,9 +13,13 @@
     <div v-else>
       <div v-for="tab in tabList"
            class="tab"
-           @click="tab.handleClick"
            style="cursor: pointer">
-        {{ tab.name }}
+        <div v-if="tab.confirm">
+          <confirm-delete @confirm="tab.handleClick" :hint="tab.hint" :button="tab.button"/>
+        </div>
+        <div v-else @click="tab.handleClick">
+          {{ tab.name }}
+        </div>
       </div>
     </div>
   </a-card>
@@ -31,14 +35,19 @@
  * router 如果传这个属性为false，对应的Tab被点击后将不会进行导航，而是调用handleClick函数
  *
  */
+import confirmDelete from "./confirmDelete.vue";
 
 interface Tab {
   key: string, // 点击之后会进入到的路由
+  keyByName: string, // 通过name进入对应路由
   name?: string, // 显示在导航栏上的名字
-  handleClick?: ()=>void // 点击后执行的函数
+  handleClick?: ()=>void, // 点击后执行的函数
+  confirm: boolean,
+  button: string
 }
 
 export default {
+  components: { confirmDelete },
   props: {
     tabList: Array<Tab> | undefined,
     router: {

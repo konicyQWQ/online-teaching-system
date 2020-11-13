@@ -1,7 +1,7 @@
 import {message} from "ant-design-vue";
 
-export const apiURL = 'https://10.181.151.50:5001/api';
-export const staticUrl = 'https://10.181.151.50:5001'
+export const apiURL = 'https://localhost:5001/api';
+export const staticUrl = 'https://localhost:5001'
 
 export enum Role {
     student, teacher,  administrator, guest, assistant

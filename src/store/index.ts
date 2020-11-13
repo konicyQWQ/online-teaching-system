@@ -7,7 +7,8 @@ interface loginInfo {
     avatarId?: string | null,
     name: string | null,
     role?: Role,
-    remember?: boolean
+    remember?: boolean,
+    id?: string
 }
 
 const store = createStore({
@@ -15,7 +16,8 @@ const store = createStore({
         token: null,
         avatarId: null,
         name: null,
-        role: Role.guest
+        role: Role.guest,
+        id: null
     },
     mutations: {
         init(state) {
@@ -24,11 +26,12 @@ const store = createStore({
                 state.token = null
             state.role = parseInt(localStorage.getItem('role'))
         },
-        saveLoginInfo(state, { token, role, avatarId, name, remember }:loginInfo) {
+        saveLoginInfo(state, { token, role, avatarId, name, remember, id }:loginInfo) {
             state.token = token
             state.role = role
             state.avatarId = avatarId
             state.name = name
+            state.id = id
             if(remember) {
                 window.localStorage.setItem('token', token)
                 window.localStorage.setItem('role', role.toString())

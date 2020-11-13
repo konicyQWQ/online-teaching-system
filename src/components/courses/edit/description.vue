@@ -1,5 +1,5 @@
 <template>
-  <div v-if="courseInfo.role in [Role.teacher, Role.administrator, Role.assistant]">
+  <div v-if="notGuestAndStudent(courseInfo.role)">
     <nav-card :tab-list="nav" :router="false">
       <template #title>
         <h3><edit-two-tone twotonecolor="#eb2f96"/> 课程操作</h3>
@@ -16,6 +16,7 @@ import navCard from '../../base/nav-card.vue'
 import { readonly, inject, ref } from 'vue'
 import { EditTwoTone } from '@ant-design/icons-vue'
 import { Role } from "../../../type";
+import { notGuestAndStudent } from "../../../type/user";
 
 export default {
   components: { navCard, editCourseModal, EditTwoTone },
@@ -31,7 +32,7 @@ export default {
       }
     ])
 
-    return { nav, courseInfo, visible, Role }
+    return { nav, courseInfo, visible, Role, notGuestAndStudent }
   }
 }
 </script>
