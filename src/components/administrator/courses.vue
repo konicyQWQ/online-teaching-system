@@ -17,6 +17,9 @@
             {{ teacher.name }}
           </a-tag>
         </template>
+        <template #status="{text}">
+          <course-status :status="text"/>
+        </template>
         <template #actions="{ text, record }">
           <a type="link" @click="openModifyModal(record)">修改</a>
         </template>
@@ -34,7 +37,6 @@
         <create-form :model="modifyCoursesModel" :fields="fields" :form="modifyForm"/>
       </a-card>
     </modal>
-
   </div>
 </template>
 
@@ -45,6 +47,7 @@ import {newCourses, modifyCourses} from "../../api/courses";
 import {CourseStatus} from "../../type/course";
 import {message} from 'ant-design-vue'
 import {useAllCoursesState} from "../../hooks/allCourses";
+import courseStatus from "../courses/base/courseStatus.vue";
 import createForm from "../base/createForm.vue";
 import {
   CourseDescriptionField,
@@ -56,16 +59,16 @@ import {
 } from "../../type/course";
 
 export default {
-  components: {modal, createForm},
+  components: {modal, createForm, courseStatus},
   setup() {
     // 课程数据显示
     const columns = readonly([
-      {dataIndex: 'id', title: '课程ID', key: 'id'},
-      {dataIndex: 'name', title: '课程名字', key: 'name'},
-      {dataIndex: 'institute', title: '开课学院', key: 'institute'},
+      {dataIndex: 'course.id', title: '课程ID', key: 'id'},
+      {dataIndex: 'course.name', title: '课程名字', key: 'name'},
+      {dataIndex: 'course.institute', title: '开课学院', key: 'institute'},
       {dataIndex: 'teachers', title: '老师', slots: {customRender: 'teachers'}, key: 'teachers'},
-      {dataIndex: 'status', title: '开课状态', key: 'status'},
-      {dataIndex: 'year', title: '开课学年', key: 'year'},
+      {dataIndex: 'course.status', title: '开课状态', key: 'status', slots: {customRender: 'status'}},
+      {dataIndex: 'course.year', title: '开课学年', key: 'year'},
       {title: '操作', key: 'action', slots: {customRender: 'actions'}}
     ])
     const {state, fetchData} = useAllCoursesState()
@@ -79,7 +82,7 @@ export default {
     })
     const handleTableChange = async (p) => {
       pagination.current = p.current;
-      await fetchData()
+      await fetchData({})
     }
 
     // 修改课程
@@ -92,20 +95,14 @@ export default {
       startTime: null,
       description: '',
       scoringMethod: '',
-      iconId: null,
+      iconId: undefined,
       textbook: '',
       teachers: ''
     })
     const openModifyModal = (record) => {
-      Object.assign(modifyCoursesModel, record)
+      Object.assign(modifyCoursesModel, record.course)
+      console.log(record.course)
       modifyCoursesModel.teachers = record.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
-      modifyCoursesModel.iconId = [{
-        response: {
-          fileList: [{
-            id: modifyCoursesModel.iconId
-          }]
-        }
-      }]
       modifyModalVisible.value = true
     }
     const modifyForm = reactive({
@@ -116,13 +113,10 @@ export default {
             if (!index) return undefined;
             return value.split(',')[1].trim()
           });
-          await modifyCourses({
-            ...modifyCoursesModel,
-            iconId: typeof newCourseModel.iconId === 'object' && newCourseModel.iconId ? newCourseModel.iconId.response.fileList[0].id : null
-          }, teacherArray.slice(1));
+          await modifyCourses(modifyCoursesModel, teacherArray.slice(1));
           message.success('修改成功')
           modifyModalVisible.value = false
-          await fetchData()
+          await fetchData({})
         } catch (e) {
           message.error(e);
         }
@@ -164,13 +158,10 @@ export default {
             if (!index) return undefined;
             return value.split(',')[1].trim()
           });
-          await newCourses({
-            ...newCourseModel,
-            iconId: typeof newCourseModel.iconId === 'object' && newCourseModel.iconId ? newCourseModel.iconId[0].response.fileList[0].id : 'null'
-          }, teacherArray.slice(1));
+          await newCourses(newCourseModel, teacherArray.slice(1));
           message.success('新建成功')
           addModalVisible.value = false
-          await fetchData()
+          await fetchData({})
         } catch (e) {
           message.error(e.toString());
         }

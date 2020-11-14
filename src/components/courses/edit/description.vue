@@ -15,7 +15,7 @@ import editCourseModal from "./editCourseModal.vue";
 import navCard from '../../base/nav-card.vue'
 import { readonly, inject, ref } from 'vue'
 import { EditTwoTone } from '@ant-design/icons-vue'
-import { Role } from "../../type/user";
+import {Role} from "../../../type/user";
 import { notGuestAndStudent } from "../../../type/user";
 
 export default {

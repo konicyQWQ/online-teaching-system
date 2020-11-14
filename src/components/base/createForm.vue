@@ -29,7 +29,7 @@
         </a-button>
       </a-upload>
       <a-upload v-if="field.type === 'avatar'"
-                v-model:fileList="model[name]"
+                v-model:fileList="CopyFields[name].__AVATAR.fileList"
                 :name="StaticUploadName"
                 :action="StaticUploadUrl"
                 accept=".jpg,.png,.jpeg"
@@ -38,7 +38,7 @@
                 @change="CopyFields[name].__AVATAR.handleChange"
                 :before-upload="checkImg">
         <img alt="上传图片"
-             :src="StaticPreviewUrl(typeof model[name] === 'object' && model[name] && model[name][0].response ? model[name][0].response.fileList[0].id : null)"
+             :src="StaticPreviewUrl(model[name])"
              style="cursor: pointer; width: 300px;"/>
       </a-upload>
       <a-auto-complete v-if="field.type === 'autocomplete'"
@@ -144,8 +144,10 @@ export default {
       }
       if (field.type === 'avatar') {
         CopyFields[x].__AVATAR = reactive({
+          fileList: [],
           handleChange: (info) => {
             if (info.file.status === 'done') {
+              props.model[x] = info.file.response.fileList[0].id
               message.success('上传成功')
             }
             if (info.file.status === 'error') {
