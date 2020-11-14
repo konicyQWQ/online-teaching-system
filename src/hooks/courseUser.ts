@@ -1,5 +1,5 @@
-import { getCourseUser } from "../api/courses";
-import { reactive } from 'vue'
+import {getCourseUser} from "../api/courses";
+import {reactive} from 'vue'
 import {message} from "ant-design-vue";
 
 export function useCourseUser(courseID) {
@@ -10,7 +10,7 @@ export function useCourseUser(courseID) {
 
     function fetchData() {
         state.loading = true
-        getCourseUser({ courseID })
+        getCourseUser({courseID})
             .then(res => {
                 state.data = res
                 state.loading = false

@@ -28,9 +28,7 @@ export async function getCourses({id}) {
     const res = await request.get('/course', {
         params: {id}
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error);
-    return Promise.resolve(res.data)
+    return res.data
 }
 
 export async function newCourses(courses: Course, teachers: Array<string>) {
@@ -43,9 +41,7 @@ export async function newCourses(courses: Course, teachers: Array<string>) {
         },
         teachers
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve(res.data.courseId)
+    return res.data.courseId
 }
 
 export async function modifyCourses(courses: Course, teachers: Array<string>) {
@@ -58,9 +54,7 @@ export async function modifyCourses(courses: Course, teachers: Array<string>) {
         },
         teachers
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve(res.data.courseId)
+    return res.data.courseId
 }
 
 // 返回登录的用户在这个课程里面是什么身份
@@ -72,9 +66,7 @@ export async function getRole({id}) {
             courseID: id
         }
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve(res.data)
+    return res.data
 }
 
 export async function getCourseUser({courseID}) {
@@ -85,7 +77,5 @@ export async function getCourseUser({courseID}) {
             token
         }
     })
-    if (!res.data.res)
-        return Promise.reject(res.data.error)
-    return Promise.resolve(res.data.userList)
+    return res.data.userList
 }

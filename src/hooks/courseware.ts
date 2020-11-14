@@ -2,7 +2,7 @@ import { reactive } from 'vue'
 import { getAllCourseware } from "../api/courseware";
 import { message } from "ant-design-vue";
 
-export function useCoursewareState(cid : number) {
+export function useCourseware(cid : number) {
     const state = reactive({
         loading: true,
         coursewares: []

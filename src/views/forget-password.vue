@@ -4,28 +4,19 @@
       <h3 style="text-align: center">找回密码</h3>
     </template>
     <a-steps :current="current">
-      <a-step title="用户信息" />
-      <a-step title="身份验证" />
-      <a-step title="修改密码" />
-      <a-step title="成功" />
+      <a-step title="用户信息"/>
+      <a-step title="身份验证"/>
+      <a-step title="修改密码"/>
+      <a-step title="成功"/>
     </a-steps>
 
     <div class="form">
-      <a-form :model="firstForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" v-if="current === 0" @finish="handleFirstForm">
-        <a-form-item label="学号" name="id">
-          <a-input v-model:value="firstForm.id"/>
-        </a-form-item>
-        <a-form-item label="邮箱" name="email">
-          <a-input v-model:value="firstForm.email"/>
-        </a-form-item>
-        <a-form-item :wrapper-col="{ offset: 4 }">
-          <a-button type="primary" html-type="submit" :loading="firstLoading">下一步</a-button>
-        </a-form-item>
-      </a-form>
+      <create-form :model="firstModel" :form="firstForm" :fields="firstFields" v-if="current === 0"/>
 
       <div v-if="current === 1">
         <a-alert message="用户信息核对通过" description="一份含有验证码的信件已经发往您的邮箱......" type="success" show-icon/>
-        <a-form :model="secondForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" @finish="handleSecondForm" style="margin-top: 2em">
+        <a-form :model="secondForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" @finish="handleSecondForm"
+                style="margin-top: 2em">
           <a-form-item label="验证码" name="confirmCode">
             <a-input v-model:value="secondForm.confirmCode"/>
             <a-button type="default" @click="reSend" :loading="cannotReSend">{{ hint }}</a-button>
@@ -36,17 +27,7 @@
         </a-form>
       </div>
 
-      <a-form :model="thirdForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" v-if="current===2" @finish="handleThirdForm" :rules="rules">
-        <a-form-item label="新密码" name="newPassword">
-          <a-input-password v-model:value="thirdForm.newPassword"/>
-        </a-form-item>
-        <a-form-item label="重复新密码" name="confirm">
-          <a-input-password v-model:value="thirdForm.confirm"/>
-        </a-form-item>
-        <a-form-item :wrapper-col="{ offset: 4 }">
-          <a-button type="primary" html-type="submit" :loading="thirdLoading">下一步</a-button>
-        </a-form-item>
-      </a-form>
+      <create-form :model="thirdModel" :fields="thirdFields" :form="thirdForm" v-if="current===2"/>
 
       <a-result status="success" title="密码重置成功!"
                 sub-title="请保管好您的新密码"
@@ -68,47 +49,53 @@
 // 点击找回，发送 token，验证码，返回是否成功，成功进入下一步
 // 第三步，输入新的密码，传新密码，special token
 
-import { reactive, ref } from 'vue'
-import { UserOutlined, MobileOutlined } from "@ant-design/icons-vue";
+import {reactive, ref} from 'vue'
+import {UserOutlined, MobileOutlined} from "@ant-design/icons-vue";
 import request from "../api/axios";
 import {message} from "ant-design-vue";
-import { useRouter } from "vue-router";
-import { md5 } from "../api/md5";
+import {useRouter} from "vue-router";
+import {md5} from "../api/md5";
+import {EmailField, IdField, PasswordField} from "../type/user";
+import createForm from "../components/base/createForm.vue";
 
 export default {
-  components: { UserOutlined, MobileOutlined },
+  components: {UserOutlined, MobileOutlined, createForm},
   setup() {
     const current = ref(0)
     const specialToken = ref('')
     const router = useRouter()
 
-    const firstLoading = ref(false)
-    const firstForm = reactive({
+    const firstModel = reactive({
       id: '',
       email: ''
     })
-    async function handleFirstForm() {
-      firstLoading.value = true
-      try {
-        const res = await request.post('/user/RetrievePassword', {
-          userID: firstForm.id,
-          email: firstForm.email
-        })
-        if(res.data.res === false)
-          throw new Error(res.data.error)
-        specialToken.value = res.data.token
-        current.value ++;
-      } catch (e) {
-        message.error(e.toString());
-      } finally {
-        firstLoading.value = false
-      }
-    }
+    const firstFields = reactive({
+      id: IdField,
+      email: EmailField
+    })
+    const firstForm = reactive({
+      submitHint: '下一步',
+      finish: async () => {
+        try {
+          const res = await request.post('/user/RetrievePassword', {
+            userID: firstModel.id,
+            email: firstModel.email
+          })
+          if (res.data.res === false)
+            throw res.data.error
+          specialToken.value = res.data.token
+          current.value++;
+        } catch (e) {
+          message.error(e);
+        }
+      },
+    })
 
     const secondLoading = ref(false)
     const secondForm = reactive({
       confirmCode: ''
     })
+
     async function handleSecondForm() {
       secondLoading.value = true
       try {
@@ -116,9 +103,9 @@ export default {
           token: specialToken.value,
           code: secondForm.confirmCode
         })
-        if(res.data.res === false)
+        if (res.data.res === false)
           throw new Error(res.data.error)
-        current.value ++
+        current.value++
       } catch (e) {
         message.error(e.toString())
       } finally {
@@ -126,9 +113,11 @@ export default {
       }
     }
 
+    // 重发验证码
     const hint = ref('重新发送验证码')
     const cannotReSend = ref(false)
     let cnt = 60;
+
     async function reSend() {
       cannotReSend.value = true
 
@@ -138,61 +127,61 @@ export default {
 
       cnt = 60;
       let id = setInterval(() => {
-        if(cnt === 0) {
+        if (cnt === 0) {
           clearInterval(id)
           hint.value = '重新发送验证码'
           cannotReSend.value = true
         } else {
-          cnt --;
+          cnt--;
           hint.value = `${cnt}秒后可重新发送`
         }
       }, 1000)
     }
 
-    const thirdLoading = ref(false)
-    const thirdForm = reactive({
+    // 第三个步骤
+    const thirdModel = reactive({
       newPassword: '',
       confirm: ''
     })
-    const rules = reactive({
-      newPassword: [{
-        required: true,
-        message: '密码不能为空',
-        trigger: 'blur'
-      }],
-      confirm: [{
-        validator: async (rule, value) => {
-          if(value !== thirdForm.newPassword)
-            return Promise.reject('两次密码不一致')
-          return Promise.resolve()
-        },
-        trigger: 'blur'
-      }]
-    })
-    async function handleThirdForm() {
-      thirdLoading.value = true
-      try {
-        const res = await request.post('/user/PasswordReset', {
-          token: specialToken.value,
-          newPassword: md5(thirdForm.newPassword)
-        })
-        if(res.data.res === false)
-          throw new Error(res.data.error)
-        message.success('修改成功')
-        current.value ++
-      } catch (e) {
-        message.error(e)
-      } finally {
-        thirdLoading.value = false
+    const thirdFields = reactive({
+      newPassword: PasswordField,
+      confirm: {
+        type: 'password',
+        label: '确认密码',
+        rule: {
+          validator: async (rule, value) => {
+            if (value !== thirdModel.newPassword)
+              return Promise.reject('两次密码不一致')
+            return Promise.resolve()
+          },
+          trigger: 'blur'
+        }
       }
-    }
+    })
+    const thirdForm = reactive({
+      submitHint: '重置',
+      finish: async () => {
+        try {
+          const res = await request.post('/user/PasswordReset', {
+            token: specialToken.value,
+            newPassword: md5(thirdModel.newPassword)
+          })
+          if (res.data.res === false)
+            throw res.data.error
+          message.success('修改成功')
+          current.value++
+        } catch (e) {
+          message.error(e)
+        }
+      }
+    })
 
-    const gotoPublicPage = () => {
-      router.push('/public')
-    }
+    const gotoPublicPage = () => router.push('/public')
 
-    return { current, firstForm, secondForm, thirdForm, handleFirstForm, firstLoading, secondLoading, thirdLoading,
-      handleSecondForm, handleThirdForm, gotoPublicPage, rules, reSend, cannotReSend, hint }
+    return {
+      current, secondForm, thirdForm, firstModel, firstForm, firstFields,
+      handleSecondForm, gotoPublicPage, reSend, cannotReSend, hint, thirdModel, thirdFields
+    }
   }
 }
 </script>

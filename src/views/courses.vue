@@ -6,7 +6,7 @@
       </fade>
     </template>
     <template v-slot:right>
-      <nav-card :tabList="tabList" >
+      <nav-card :tabList="tabList">
         <template v-slot:title>
           <h3>
             {{ courseInfo.course.name }}
@@ -14,7 +14,7 @@
               <template v-slot:title>
                 {{ teacher.name }}
               </template>
-              <a-avatar style="float: right;" :src="StaticPreviewUrl(teacher.avatarId)" />
+              <a-avatar style="float: right;" :src="StaticPreviewUrl(teacher.avatarId)"/>
             </a-tooltip>
           </h3>
         </template>
@@ -30,25 +30,25 @@
 import twoCol from "../components/base/two-col.vue";
 import navCard from "../components/base/nav-card.vue"
 import fade from "../components/base/fade.vue";
-import { readonly, provide, ref, computed } from 'vue';
-import { useCourseState } from "../hooks/courses";
+import {provide, computed} from 'vue';
+import {useCourse} from "../hooks/courses";
 import {StaticPreviewUrl} from "../type/file";
-import { Role } from "../type/user";
+import {notGuestAndStudent} from "../type/user";
 import {useRoute} from "vue-router";
 import {useBulletin} from "../hooks/bulletin";
-import { useCoursewareState } from "../hooks/courseware";
-import { useAllHomework } from "../hooks/homework";
+import {useCourseware} from "../hooks/courseware";
+import {useAllHomework} from "../hooks/homework";
 
 export default {
   name: 'courses',
   components: {
-    'two-col': twoCol,
-    'nav-card': navCard,
+    twoCol,
+    navCard,
     fade
   },
   setup() {
     const tabList = computed(() => {
-      if([Role.teacher, Role.administrator].indexOf(courseInfo.course.role) != -1) {
+      if (notGuestAndStudent(courseInfo.course.role)) {
         return [
           {key: 'description', name: '课程简介', keyByName: true},
           {key: 'bulletin', name: '公告', keyByName: true},
@@ -73,7 +73,7 @@ export default {
     });
     const route = useRoute()
 
-    const courseInfo = useCourseState(route.params.cid)
+    const courseInfo = useCourse(route.params.cid)
     provide('updateCourse', courseInfo.fetchCourse)
     provide('courseInfo', courseInfo.course);
 
@@ -81,7 +81,7 @@ export default {
     provide('bulletinState', bulletinInfo.state);
     provide('fetchBulletin', bulletinInfo.fetchBulletin);
 
-    const coursewareInfo = useCoursewareState(route.params.cid);
+    const coursewareInfo = useCourseware(route.params.cid);
     provide('coursewareState', coursewareInfo.state)
     provide('fetchCourseware', coursewareInfo.fetchCourseware)
 

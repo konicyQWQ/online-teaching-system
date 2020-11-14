@@ -20,9 +20,7 @@ export async function getHomework({ hwID }) {
             token
         }
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve(res.data.hwDetail)
+    return res.data.hwDetail
 }
 
 export async function getAllHomework({ courseID }) {
@@ -33,9 +31,7 @@ export async function getAllHomework({ courseID }) {
             token
         }
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve(res.data.hwList)
+    return res.data.hwList
 }
 
 export async function addNewHomework({ homework, files } : { homework: Homework, files: Array<number> } ) {
@@ -45,9 +41,7 @@ export async function addNewHomework({ homework, files } : { homework: Homework,
         files,
         token
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('新建成功')
+    return '新建成功'
 }
 
 export async function modifyHomework({ homework, files } : { homework: Homework, files: Array<number> } ) {
@@ -57,9 +51,7 @@ export async function modifyHomework({ homework, files } : { homework: Homework,
         files,
         token
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('修改成功')
+    return '修改成功'
 }
 
 export async function deleteHomework({ hwID } : { hwID:number} ) {
@@ -68,9 +60,7 @@ export async function deleteHomework({ hwID } : { hwID:number} ) {
         hwID,
         token
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('删除成功')
+    return '删除成功'
 }
 
 interface userHomework {
@@ -88,9 +78,7 @@ export async function submitHomework({ userHomework, files } : { userHomework: u
         files,
         token
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('提交成功')
+    return '提交成功'
 }
 
 export async function setScoreHomework({ stuID, hwID, score, comment }) {
@@ -102,8 +90,6 @@ export async function setScoreHomework({ stuID, hwID, score, comment }) {
         comment,
         token
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('批改成功')
+    return '批改成功'
 }
 

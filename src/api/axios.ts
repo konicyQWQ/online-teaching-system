@@ -23,7 +23,7 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
     response => {
-        if (response.data.res === false) {
+        if (response.data.res === false || response.data.error) {
             if (response.data.error === 'Token is Invalid')
                 store.commit('logout');
             return Promise.reject(response.data.error)

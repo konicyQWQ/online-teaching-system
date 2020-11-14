@@ -1,6 +1,6 @@
-import { reactive } from 'vue'
+import {reactive} from 'vue'
 import {message} from "ant-design-vue";
-import { getAllUser } from "../api/user";
+import {getAllUser} from "../api/user";
 
 export function useAllUser() {
     const state = reactive({
@@ -9,9 +9,9 @@ export function useAllUser() {
         total: 0
     })
 
-    function fetchData({ start, limit, keyword, roles }) {
+    function fetchData({start, limit, keyword, roles}) {
         state.loading = true
-        getAllUser({ start, limit, keyword, roles })
+        getAllUser({start, limit, keyword, roles})
             .then(res => {
                 state.loading = false
                 state.total = res.total

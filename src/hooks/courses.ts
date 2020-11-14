@@ -1,12 +1,13 @@
-import {Courses, getCourses, getRole} from "../api/courses";
-import { reactive, ref, watch } from 'vue'
-import { message } from "ant-design-vue";
-import { Role } from "../type/user";
+import {getCourses, getRole} from "../api/courses";
+import {Course} from "../type/course";
+import {reactive, watch} from 'vue'
+import {message} from "ant-design-vue";
+import {Role} from "../type/user";
 import store from "../store";
 import {User} from "../type/user";
 
 interface CoursesInfo {
-    course: Courses,
+    course: Course,
     teachers: Array<User>,
     role: Role,
     loading: boolean
@@ -17,7 +18,7 @@ interface CourseState {
     fetchCourse: () => void
 }
 
-function useCourseState(id: number) : CourseState {
+function useCourse(id: number): CourseState {
     const course = reactive({
         teachers: [],
         course: {},
@@ -60,5 +61,5 @@ function useCourseState(id: number) : CourseState {
 }
 
 export {
-    useCourseState
+    useCourse
 }

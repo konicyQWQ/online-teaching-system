@@ -9,7 +9,7 @@ interface useAllCourses {
         totalCount: number,
         loading: boolean
     },
-    fetchData: (searchParams?:SearchCourseParams) => Promise<string|void>
+    fetchData: (searchParams?: SearchCourseParams) => Promise<string | void>
 }
 
 export function useAllCoursesState(): useAllCourses {
@@ -19,10 +19,10 @@ export function useAllCoursesState(): useAllCourses {
         loading: true
     })
 
-    async function fetchData({keyword = '', start = 0, limit = 1000}:SearchCourseParams) {
+    async function fetchData({keyword = '', start = 0, limit = 1000}: SearchCourseParams) {
         state.loading = true
         try {
-            const res = await getAllCourses({ keyword, start, limit })
+            const res = await getAllCourses({keyword, start, limit})
             state.data = res.resList
             state.totalCount = res.totalCount
             state.loading = false

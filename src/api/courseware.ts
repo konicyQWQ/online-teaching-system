@@ -39,9 +39,7 @@ export async function getAllCourseware({ courseId } : { courseId: number }) : Pr
             courseId: courseId
         }
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve(res.data.coursewareList)
+    return res.data.coursewareList
 }
 
 export async function addCourseware({ courseware } : { courseware: Courseware }) : Promise<string> {
@@ -53,9 +51,7 @@ export async function addCourseware({ courseware } : { courseware: Courseware })
         fileList: courseware.fileList,
         token
     })
-    if(!res.data.res)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('上传成功')
+    return '上传成功'
 }
 
 export async function modifyCourseware({ courseware } : { courseware: Courseware }) : Promise<string> {
@@ -65,9 +61,7 @@ export async function modifyCourseware({ courseware } : { courseware: Courseware
         courseware,
         fileList: courseware.fileList
     })
-    if(!res.data.res)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('修改成功')
+    return '修改成功'
 }
 
 export async function deleteCourseware({ courseId, coursewareId } : { courseId:number , coursewareId: number }) : Promise<string> {
@@ -77,7 +71,5 @@ export async function deleteCourseware({ courseId, coursewareId } : { courseId:n
         coursewareId,
         courseId
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('删除成功')
+    return '删除成功'
 }

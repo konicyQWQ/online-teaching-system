@@ -1,12 +1,12 @@
-import { getAllHomework, getHomework } from "../api/homework";
-import { reactive } from 'vue'
-import { message } from "ant-design-vue";
+import {getAllHomework, getHomework} from "../api/homework";
+import {reactive} from 'vue'
+import {message} from "ant-design-vue";
 
 const allHomeworkPool = {}
 
 export function useAllHomework(courseID) {
     // 如果有缓存
-    if(allHomeworkPool[courseID]) {
+    if (allHomeworkPool[courseID]) {
         allHomeworkPool[courseID].fetchData()
         return allHomeworkPool[courseID]
     }
@@ -18,7 +18,7 @@ export function useAllHomework(courseID) {
 
     function fetchData() {
         state.loading = true
-        getAllHomework({ courseID })
+        getAllHomework({courseID})
             .then(res => {
                 state.loading = false
                 state.data = res
@@ -27,6 +27,7 @@ export function useAllHomework(courseID) {
                 message.error(e)
             })
     }
+
     fetchData()
 
     allHomeworkPool[courseID] = {
@@ -46,7 +47,7 @@ const pool = {}
 
 export function useHomework(hwID) {
     // 如果有缓存
-    if(pool[hwID]) {
+    if (pool[hwID]) {
         pool[hwID].fetchData()
         return pool[hwID]
     }
@@ -58,15 +59,9 @@ export function useHomework(hwID) {
                 homework: {}
             },
             userHomework: {
-                userInfo: {
-
-                },
-                userHomework: {
-
-                },
-                files: {
-
-                }
+                userInfo: {},
+                userHomework: {},
+                files: {}
             }
         },
         loading: false
@@ -74,7 +69,7 @@ export function useHomework(hwID) {
 
     function fetchData() {
         state.loading = true
-        getHomework({ hwID })
+        getHomework({hwID})
             .then(res => {
                 state.loading = false
                 state.data = res
