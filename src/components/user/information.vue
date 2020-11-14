@@ -1,130 +1,125 @@
 <template>
-  <a-card class="ant-card-shadow" :loading="loading">
+  <a-card class="ant-card-shadow" :loading="state.loading" :body-style="{ paddingRight: '20em' }">
     <template #title>
       <h3>个人资料</h3>
     </template>
-    <template #default>
-      <a-form :model="userInfo" :label-col="{ span: 4 }" :wrapper-col="{ span: 10 }" :rules="rules" @finish="modifyUser">
-        <a-form-item label="头像">
-          <a-upload v-model:fileList="fileList"
-                    :name="uploadName"
-                    accept=".jpg,.png,.jpeg"
-                    list-type="picture"
-                    :show-upload-list="false"
-                    :action="uploadUrl"
-                    @change="fileUploadChange"
-                    :before-upload="checkImg">
-            <a-avatar :size="64" :src="getFileUrl(userInfo.avatarId, 'user')" style="cursor: pointer"/>
-          </a-upload>
-        </a-form-item>
-        <a-form-item label="学号" name="id">
-          {{userInfo.id}}
-        </a-form-item>
-        <a-form-item label="姓名" name="name">
-          {{userInfo.name}}
-        </a-form-item>
-        <a-form-item label="年级" name="grade">
-          大学 {{userInfo.grade}} 年级
-        </a-form-item>
-        <a-form-item label="性别" name="gender">
-          <a-radio-group v-model:value="userInfo.gender">
-            <a-radio :value="0">男</a-radio>
-            <a-radio :value="1">女</a-radio>
-          </a-radio-group>
-        </a-form-item>
-        <a-form-item label="邮箱" name="email">
-          <a-input v-model:value="userInfo.email"></a-input>
-        </a-form-item>
-        <a-form-item label="手机号" name="phone">
-          <a-input v-model:value="userInfo.phone" />
-        </a-form-item>
-        <a-form-item label="个人简介" name="introduction">
-          <a-textarea v-model:value="userInfo.introduction" placeholder="填写你的个人简介"/>
-        </a-form-item>
-        <a-form-item :wrapper-col="{ offset: 4 }">
-          <a-button type="primary" html-type="submit" :loading="modifyLoading">
-            修改
-          </a-button>
-        </a-form-item>
-      </a-form>
-    </template>
+    <create-form :model="model" :form="form" :fields="fields">
+      <template #avatar>
+        <a-upload v-model:fileList="fileList"
+                  :name="StaticUploadName"
+                  :action="StaticUploadUrl"
+                  accept=".jpg,.png,.jpeg"
+                  list-type="picture"
+                  :show-upload-list="false"
+                  @change="fileUploadChange"
+                  :before-upload="checkImg">
+          <a-avatar :size="64" :src="StaticPreviewUrl(model.avatarId, 'user')" style="cursor: pointer"/>
+        </a-upload>
+      </template>
+    </create-form>
   </a-card>
 </template>
 
 <script lang="ts">
-import { ref, toRefs, reactive, inject } from 'vue'
-import { getUserInfo, User } from "../../api/user";
-import { useStore } from 'vuex'
-import { message } from 'ant-design-vue'
-import { uploadUrl, getFileUrl, uploadName, checkImg } from "../../type";
-import { modifyUserInfo } from "../../api/user";
-import { useRouter } from "vue-router";
+import {ref, reactive, watch} from 'vue'
+import {useStore} from 'vuex'
+import {message} from 'ant-design-vue'
+import {StaticPreviewUrl, StaticUploadName, StaticUploadUrl, checkImg} from "../../type/file";
+import {modifyUserInfo} from "../../api/user";
+import createForm from "../base/createForm.vue";
+import {useUserInfo} from "../../hooks/user";
+import {
+  DepartmentField,
+  EmailField,
+  Gender,
+  GenderField,
+  GradeField,
+  IdField,
+  IntroductionField,
+  NameField,
+  PhoneField
+} from "../../type/user";
+import {Fields} from "../../type/form";
 
 export default {
+  components: {createForm},
   setup() {
-    const loading = ref(true)
     const store = useStore()
-    const router = useRouter()
-    const { token } = toRefs(store.state)
-    const userInfo:User = reactive({})
-    // 加载用户数据
-    async function loadUser() {
-      try {
-        loading.value = true
-        const res = await getUserInfo(token.value)
-        Object.assign(userInfo, res)
-      } catch (e) {
-        message.error(e)
-      } finally {
-        loading.value = false
+    const {state, fetchData} = useUserInfo()
+
+    // 加载完成时，传递这些值给表单
+    watch(() => state.loading, (newVal) => {
+      if (newVal === false)
+        Object.assign(model, state.data)
+    })
+
+    const model = reactive({
+      avatarId: 0,
+      id: 0,
+      name: '',
+      gender: Gender.male,
+      grade: 1,
+      phone: '',
+      email: '',
+      introduction: '',
+      department: ''
+    })
+    const fields: Fields = reactive({
+      avatarId: {
+        label: '头像',
+        customRender: {slot: 'avatar'}
+      },
+      id: {
+        ...IdField,
+        disabled: true
+      },
+      name: {
+        ...NameField,
+        disabled: true
+      },
+      department: DepartmentField,
+      gender: GenderField,
+      grade: GradeField,
+      phone: PhoneField,
+      email: EmailField,
+      introduction: IntroductionField,
+    })
+    const form = reactive({
+      submitHint: '修改',
+      finish: async () => {
+        try {
+          await modifyUserInfo(model);
+          await fetchData()
+          await store.dispatch('loginByToken', {remember: true})
+          message.success('修改成功')
+        } catch (e) {
+          message.error(e)
+        }
       }
-    }
-    loadUser()
-    // 修改用户资料的表单规则
-    const rules = reactive({
-      phone: [{
-        validator: (rule, value) => {
-          if(/^\d{11}$/.test(value) === false)
-            return Promise.reject('手机格式错误!')
-          return Promise.resolve()
-        },
-        trigger: 'blur'
-      }],
-      email: [{
-        validator: (rule, value) => {
-          if(/^\w+@\w+(\.\w+)+$/.test(value) === false)
-            return Promise.reject('邮箱格式错误!')
-          return Promise.resolve()
-        },
-        trigger: 'blur'
-      }]
-    });
-    const modifyLoading = ref(false)
-    const modifyUser = async () => {
-      try {
-        modifyLoading.value = true
-        const res = await modifyUserInfo(userInfo, token.value);
-        message.success(res)
-        await loadUser();
-        await store.dispatch('loginByToken', { remember: true })
-      } catch (e) {
-        message.error(e)
-      } finally {
-        modifyLoading.value = false
-      }
-    }
+    })
     // 上传头像
     const fileList = ref([])
     const fileUploadChange = (info) => {
       if (info.file.status === 'done') {
         message.success('上传成功')
-        userInfo.avatarId = info.file.response.fileList[0].id
+        model.avatarId = info.file.response.fileList[0].id
       }
       if (info.file.status === 'error') {
         message.error(info.file.response.error)
       }
     }
-    return { loading, userInfo, rules, modifyLoading, modifyUser, fileList, fileUploadChange, uploadUrl, checkImg, getFileUrl, uploadName }
+    return {
+      state,
+      model,
+      fields,
+      form,
+      fileList,
+      fileUploadChange,
+      StaticPreviewUrl,
+      StaticUploadName,
+      StaticUploadUrl,
+      checkImg
+    }
   }
 }
 </script>

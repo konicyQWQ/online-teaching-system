@@ -8,26 +8,31 @@
       <span :style="{ flex: 1 }"></span>
       <a @click="clickLogin" v-if="!token">登录</a>
       <router-link to="/register" v-if="!token">注册</router-link>
-      <router-link to="/user" v-if="token"><a-avatar :src="getFileUrl(avatarId, 'user')" /></router-link>
-      <router-link v-if="role === Role.administrator" to="/administrator" >管理员配置页</router-link>
-      <a v-if="token" @click="logout"><PoweroffOutlined/> 退出登录</a>
+      <router-link to="/user" v-if="token">
+        <a-avatar :src="StaticPreviewUrl(avatarId, 'user')"/>
+      </router-link>
+      <router-link v-if="role === Role.administrator" to="/administrator">管理员配置页</router-link>
+      <a v-if="token" @click="logout">
+        <PoweroffOutlined/>
+        退出登录</a>
     </nav>
   </header>
 
   <login v-model:visible="visible"/>
 </template>
 
-<script>
-import { ref, onMounted, toRefs } from 'vue'
-import { useStore } from 'vuex'
+<script lang="ts">
+import {ref, onMounted, toRefs} from 'vue'
+import {useStore} from 'vuex'
 import login from './login.vue'
-import { useRouter } from 'vue-router'
-import { PoweroffOutlined } from '@ant-design/icons-vue'
-import { message } from 'ant-design-vue'
-import { getFileUrl, Role } from "../type";
+import {useRouter} from 'vue-router'
+import {PoweroffOutlined} from '@ant-design/icons-vue'
+import {message} from 'ant-design-vue'
+import {Role} from "../type/user";
+import {StaticPreviewUrl} from "../type/file";
 
 export default {
-  components: { login, PoweroffOutlined },
+  components: {login, PoweroffOutlined},
   setup() {
     // 滚动事件
     const scrollTop = ref(0)
@@ -39,7 +44,7 @@ export default {
     // 用户信息
     const store = useStore()
     const router = useRouter()
-    const { token, avatarId, role } = toRefs(store.state)
+    const {token, avatarId, role} = toRefs(store.state)
     // 登录框处理
     const visible = ref(false)
     const clickLogin = () => visible.value = true
@@ -48,7 +53,7 @@ export default {
       message.success('退出登录成功!')
       router.push('/')
     }
-    return { scrollTop, token, avatarId, visible, clickLogin, logout, getFileUrl, role, Role}
+    return {scrollTop, token, avatarId, visible, clickLogin, logout, StaticPreviewUrl, role, Role}
   }
 }
 </script>

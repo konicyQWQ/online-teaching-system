@@ -79,11 +79,11 @@ export function StudentHomeworkDownloadUrl(stuID: number, hwID: number, fileID: 
     return `${APIUrl}/upload/homework?stuID=${stuID}&hwID=${hwID}&fileID=${fileID}&token=${token}&mode=${FileModeToBool(mode)}`
 }
 
-export function StaticPriviewUrl(id: number, type: string = 'course'): string {
+export function StaticPreviewUrl(id: number, type: string = 'course'): string {
     if (!id) {
         return type === 'course' ? `${ServerHost}/pic/main.jpg`
             : type === 'user' ? `${ServerHost}/pic/user.png`
                 : '';
     }
-    return `${APIUrl}?id=${id}`
+    return `${APIUrl}/upload/?id=${id}`
 }

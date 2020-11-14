@@ -14,7 +14,7 @@
               <template v-slot:title>
                 {{ teacher.name }}
               </template>
-              <a-avatar style="float: right;" :src="getFileUrl(teacher.avatarId)" />
+              <a-avatar style="float: right;" :src="StaticPreviewUrl(teacher.avatarId)" />
             </a-tooltip>
           </h3>
         </template>
@@ -32,7 +32,8 @@ import navCard from "../components/base/nav-card.vue"
 import fade from "../components/base/fade.vue";
 import { readonly, provide, ref, computed } from 'vue';
 import { useCourseState } from "../hooks/courses";
-import {getFileUrl, Role} from "../type";
+import {StaticPreviewUrl} from "../type/file";
+import { Role } from "../type/user";
 import {useRoute} from "vue-router";
 import {useBulletin} from "../hooks/bulletin";
 import { useCoursewareState } from "../hooks/courseware";
@@ -88,7 +89,7 @@ export default {
     provide('homeworkState', homeworkInfo.state)
     provide('fetchHomeworkData', homeworkInfo.fetchData)
 
-    return {courseInfo: courseInfo.course, tabList, getFileUrl}
+    return {courseInfo: courseInfo.course, tabList, StaticPreviewUrl}
   }
 }
 </script>

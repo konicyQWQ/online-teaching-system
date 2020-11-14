@@ -1,7 +1,8 @@
 import {Field} from "./form";
 
 export enum Gender { male, female }
-export enum Role { student, teacher, administrator, guest, assistant }
+
+export enum Role { guest, student, assistant, teacher, administrator }
 
 export declare interface User {
     id: string,
@@ -13,9 +14,18 @@ export declare interface User {
     email?: string,
     role?: Role,
     avatarId?: number,
-    introduction?: string
+    introduction?: string,
+    department?: string
 }
 
+export const DepartmentField: Field = {
+    type: 'input',
+    label: '院系',
+    rule: {
+        required: true,
+        trigger: "blur"
+    }
+}
 export const EmailField: Field = {
     type: 'autocomplete',
     label: '邮箱',
@@ -43,7 +53,7 @@ export const IdField: Field = {
         required: true,
         trigger: "blur",
         validator: (rule, value) => {
-            if(/^\d{10}$/.test(value) === false)
+            if (/^\d{10}$/.test(value) === false)
                 return Promise.reject('学号必须为10位!')
             return Promise.resolve('')
         }
@@ -63,7 +73,7 @@ export const PhoneField: Field = {
     rule: {
         required: true,
         validator: (rule, value) => {
-            if(/^\d{11}$/.test(value) === false)
+            if (/^\d{11}$/.test(value) === false)
                 return Promise.reject('手机格式错误!')
             return Promise.resolve('')
         },
@@ -92,6 +102,15 @@ export const PasswordField: Field = {
         required: true,
         trigger: "blur"
     }
+}
+export const RoleField: Field = {
+    type: 'radio',
+    label: '身份',
+    radios: [
+        {value: Role.student, hint: '学生'},
+        {value: Role.teacher, hint: '老师'},
+        {value: Role.administrator, hint: '管理员'}
+    ]
 }
 
 export const notGuest = (role: Role) => role != Role.guest

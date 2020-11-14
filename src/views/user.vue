@@ -9,7 +9,7 @@
       <navCard :tab-list="tabList">
         <template #title>
           <div style="text-align: center">
-            <a-avatar :size="64" :src="getFileUrl(avatarId, 'user')"/>
+            <a-avatar :size="64" :src="StaticPreviewUrl(avatarId, 'user')"/>
             <h3 style="margin-top: 1em">{{ name }}</h3>
           </div>
         </template>
@@ -21,15 +21,14 @@
 <script>
 import twoCol from '../components/base/two-col.vue'
 import navCard from '../components/base/nav-card.vue'
-import { readonly, toRefs } from 'vue'
 import fade from "../components/base/fade.vue";
+import { readonly, toRefs } from 'vue'
 import { useStore } from 'vuex'
-import { getFileUrl } from "../type";
+import { StaticPreviewUrl } from "../type/file";
 
 export default {
   components: { twoCol, navCard, fade },
   setup() {
-    // 新加一个TAB，key填 路由名字
     const tabList = readonly([
       {key: 'index', name:'首页'},
       {key: 'information', name:'个人资料'},
@@ -38,7 +37,7 @@ export default {
     ])
     const store = useStore()
     const { name, avatarId } = toRefs(store.state)
-    return { tabList, name, avatarId, getFileUrl }
+    return { tabList, name, avatarId, StaticPreviewUrl }
   }
 }
 </script>

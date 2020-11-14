@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
-import { Role } from "../type";
 import { getUserInfo } from "../api/user";
+import { Role } from "../type/user";
 
 interface loginInfo {
     token?: string | null,
@@ -34,7 +34,8 @@ const store = createStore({
             state.id = id
             if(remember) {
                 window.localStorage.setItem('token', token)
-                window.localStorage.setItem('role', role.toString())
+                if(role)
+                    window.localStorage.setItem('role', role.toString())
             }
         },
         logout(state) {

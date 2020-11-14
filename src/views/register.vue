@@ -33,7 +33,17 @@ import {useStore} from 'vuex'
 import {message} from 'ant-design-vue'
 import router from "../router";
 import createForm from "../components/base/createForm.vue";
-import {IdField, PasswordField, Gender, NameField, PhoneField, EmailField, GradeField, GenderField} from "../type/user";
+import {
+  IdField,
+  PasswordField,
+  Gender,
+  NameField,
+  PhoneField,
+  EmailField,
+  GradeField,
+  GenderField,
+  DepartmentField
+} from "../type/user";
 
 export default {
   components: {createForm},
@@ -73,14 +83,16 @@ export default {
       grade: 1,
       email: '',
       phone: '',
-      avatarId: null
+      avatarId: null,
+      department: ''
     })
     const secondFields = reactive({
       name: NameField,
+      department: DepartmentField,
       gender: GenderField,
       grade: GradeField,
       email: EmailField,
-      phone: PhoneField,
+      phone: PhoneField
     })
     const secondForm = reactive({
       submitHint: '注册',
@@ -115,7 +127,7 @@ export default {
 
 <style scoped lang="scss">
 .register {
-  margin: 0em auto;
+  margin: 0 auto;
   width: 800px;
   padding: 0 1em;
 

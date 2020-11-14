@@ -83,7 +83,7 @@ import { deleteCourseware } from "../../api/courseware";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import modal from "../base/modal.vue";
-import { Role } from "../../type";
+import { Role } from "../../type/user";
 import confirmDelete from "../base/confirmDelete.vue";
 
 export default {

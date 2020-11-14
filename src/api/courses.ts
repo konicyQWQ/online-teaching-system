@@ -1,40 +1,39 @@
 import request from "./axios";
 import store from '../store/index'
+import {Course, CourseWithTeachers} from "../type/course";
 
-export declare interface Courses {
-    id?: number, // 课程名
-    name?: string, // 课程名
-    institute?: string, //开课学院
-    status?: number, //开课状态
-    year?: number, //开课学年
-    startTime?: Date, //开课时间
-    description?: string, //简介
-    scoringMethod?: string, //评分方式
-    textbook?: string, // 教科书
-    iconId?: number,
+export declare interface SearchCourseParams {
+    keyword?: string,
+    start?: number,
+    limit?: number
 }
 
-export async function getAllCourses({ keyword='', start=0, limit=10 }) {
+/**
+ * 搜索所有的课程
+ * @param keyword 关键字
+ * @param start 从第几条开始
+ * @param limit 限制返回数量
+ */
+export async function getAllCourses({keyword = '', start = 0, limit = 10}: SearchCourseParams)
+    : Promise<{ totalCount: number, resList: Array<CourseWithTeachers> }> {
     const res = await request.get('/course/get', {
         params: {
             keyword, start, limit
         }
     })
-    if(res.data.res === false)
-        return Promise.reject(res.data.error);
-    return Promise.resolve(res.data)
+    return res.data
 }
 
 export async function getCourses({id}) {
     const res = await request.get('/course', {
-        params: { id }
+        params: {id}
     })
-    if(res.data.res === false)
+    if (res.data.res === false)
         return Promise.reject(res.data.error);
     return Promise.resolve(res.data)
 }
 
-export async function newCourses(courses:Courses, teachers:Array<string>) {
+export async function newCourses(courses: Course, teachers: Array<string>) {
     const token = store.state.token;
     const res = await request.post('/course', {
         token,
@@ -44,12 +43,12 @@ export async function newCourses(courses:Courses, teachers:Array<string>) {
         },
         teachers
     })
-    if(res.data.res === false)
+    if (res.data.res === false)
         return Promise.reject(res.data.error)
     return Promise.resolve(res.data.courseId)
 }
 
-export async function modifyCourses(courses:Courses, teachers:Array<string>) {
+export async function modifyCourses(courses: Course, teachers: Array<string>) {
     const token = store.state.token;
     const res = await request.post('/course/update', {
         token,
@@ -59,26 +58,26 @@ export async function modifyCourses(courses:Courses, teachers:Array<string>) {
         },
         teachers
     })
-    if(res.data.res === false)
+    if (res.data.res === false)
         return Promise.reject(res.data.error)
     return Promise.resolve(res.data.courseId)
 }
 
 // 返回登录的用户在这个课程里面是什么身份
-export async function getRole({ id }) {
+export async function getRole({id}) {
     const token = store.state.token || '';
     const res = await request.get('/course/getrole', {
         params: {
             token,
-            courseID:id
+            courseID: id
         }
     })
-    if(res.data.res === false)
+    if (res.data.res === false)
         return Promise.reject(res.data.error)
     return Promise.resolve(res.data)
 }
 
-export async function getCourseUser({ courseID }) {
+export async function getCourseUser({courseID}) {
     const token = store.state.token
     const res = await request.get('/course/getUsers', {
         params: {
@@ -86,7 +85,7 @@ export async function getCourseUser({ courseID }) {
             token
         }
     })
-    if(!res.data.res)
+    if (!res.data.res)
         return Promise.reject(res.data.error)
     return Promise.resolve(res.data.userList)
 }

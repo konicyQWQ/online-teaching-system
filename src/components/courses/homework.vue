@@ -39,7 +39,7 @@
 
 <script>
 import { computed, inject } from 'vue'
-import { Role } from "../../type";
+import { Role } from "../../type/user";
 import moment from 'moment'
 import { useRoute } from 'vue-router'
 

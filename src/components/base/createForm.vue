@@ -4,11 +4,12 @@
                  :label="field.label"
                  :key="field.label"
                  :name="name">
-      <a-input v-if="field.type === 'input'" v-model:value="model[name]"/>
-      <a-input-password v-if="field.type === 'password'" v-model:value="model[name]"/>
-      <a-input-number v-if="field.type === 'number'" v-model:value="model[name]" :min="field.min" :max="field.max"/>
-      <a-textarea v-if="field.type === 'textarea'" v-model:value="model[name]"/>
-      <a-radio-group v-if="field.type === 'radio'" v-model:value="model[name]">
+      <a-input v-if="field.type === 'input'" v-model:value="model[name]" :disabled="field.disabled"/>
+      <a-input-password v-if="field.type === 'password'" v-model:value="model[name]" :disabled="field.disabled"/>
+      <a-input-number v-if="field.type === 'number'" v-model:value="model[name]" :min="field.min" :max="field.max"
+                      :disabled="field.disabled"/>
+      <a-textarea v-if="field.type === 'textarea'" v-model:value="model[name]" :disabled="field.disabled"/>
+      <a-radio-group v-if="field.type === 'radio'" v-model:value="model[name]" :disabled="field.disabled">
         <a-radio v-for="radio in field.radios"
                  :value="radio.value">
           {{ radio.hint }}
@@ -27,15 +28,40 @@
           点击上传
         </a-button>
       </a-upload>
+      <a-upload v-if="field.type === 'avatar'"
+                v-model:fileList="model[name]"
+                :name="StaticUploadName"
+                :action="StaticUploadUrl"
+                accept=".jpg,.png,.jpeg"
+                list-type="picture-card"
+                :show-upload-list="false"
+                @change="CopyFields[name].__AVATAR.handleChange"
+                :before-upload="checkImg">
+        <img alt="上传图片"
+             :src="StaticPreviewUrl(typeof model[name] === 'object' && model[name] && model[name][0].response ? model[name][0].response.fileList[0].id : null)"
+             style="cursor: pointer; width: 300px;"/>
+      </a-upload>
       <a-auto-complete v-if="field.type === 'autocomplete'"
                        v-model:value="model[name]"
                        :data-source="CopyFields[name].__AUTOCOMPLETE.acList"
                        @search="CopyFields[name].__AUTOCOMPLETE.handleSearch">
-        {{field}}
+        {{ field }}
         <template #default>
-          <a-input />
+          <a-input/>
         </template>
       </a-auto-complete>
+      <a-date-picker v-if="field.type === 'time'" v-model:value="model[name]" format="YYYY-MM-DD"/>
+      <a-mentions v-if="field.type === 'search'"
+                  v-model:value="model[name]"
+                  :loading="CopyFields[name].__SEARCH.loading"
+                  @search="CopyFields[name].__SEARCH.onSearch"
+                  :placeholder="field.search.placeholder">
+        <a-mentions-option v-for="{ id, name, avatarId } in CopyFields[name].__SEARCH.users" :key="id"
+                           :value="`${name},${id}`">
+          <a-avatar :src="StaticPreviewUrl(avatarId)" :size="20" style="margin-right: 8px"/>
+          <span>{{ id }} : {{ name }}</span>
+        </a-mentions-option>
+      </a-mentions>
       <slot v-if="field.customRender"
             :name="field.customRender.slot"
             :field="field">
@@ -58,6 +84,10 @@ import {PropType, ref, reactive} from 'vue'
 import {UploadOutlined} from '@ant-design/icons-vue'
 import {message} from "ant-design-vue";
 import {Form, Model, Fields} from "../../type/form";
+import {StaticUploadUrl, StaticUploadName, checkImg, StaticPreviewUrl} from "../../type/file";
+import debounce from 'lodash.debounce'
+import {searchUser} from "../../api/user";
+import {Role} from "../../type/user";
 
 export default {
   name: "createForm",
@@ -79,7 +109,7 @@ export default {
       // 如果有规则
       if (field.rule) {
         rules[x] = props.fields[x].rule
-        if(rules[x].required && !rules[x].validator)
+        if (rules[x].required && !rules[x].validator)
           rules[x].message = `${field.label}不能为空!`
       }
       // 如果有文件
@@ -87,7 +117,7 @@ export default {
         CopyFields[x].__FILE = reactive({
           beforeUpload: () => {
             nowFileUploadingCnt.value++;
-            if(field.file.beforeUpload)
+            if (field.file.beforeUpload)
               return field.file.beforeUpload()
             return true
           },
@@ -112,6 +142,47 @@ export default {
           }
         })
       }
+      if (field.type === 'avatar') {
+        CopyFields[x].__AVATAR = reactive({
+          handleChange: (info) => {
+            if (info.file.status === 'done') {
+              message.success('上传成功')
+            }
+            if (info.file.status === 'error') {
+              message.error(info.file.response.error)
+            }
+            if (field.file.onChange)
+              field.file.onChange(info);
+          }
+        })
+      }
+      if (field.type === 'search') {
+        CopyFields[x].__SEARCH = reactive({
+          loading: false,
+          users: [],
+          searchV: '',
+          loadUsers: debounce(async (key) => {
+            if (!key) {
+              CopyFields[x].__SEARCH.users = []
+              return;
+            }
+            try {
+              if (CopyFields[x].__SEARCH.searchV !== key)
+                return;
+              CopyFields[x].__SEARCH.users = await searchUser({keyword: key, limit: 10, role: field.search.role})
+              CopyFields[x].__SEARCH.loading = false
+            } catch (e) {
+              message.error(e);
+            }
+          }, 300),
+          onSearch: (search) => {
+            CopyFields[x].__SEARCH.searchV = search
+            CopyFields[x].__SEARCH.loading = !!search
+            CopyFields[x].__SEARCH.users = []
+            CopyFields[x].__SEARCH.loadUsers(search)
+          }
+        })
+      }
     }
 
     // 提交函数
@@ -131,7 +202,19 @@ export default {
     const layout = ref(props.form.layout || 'horizontal')
     const itemLayout = ref(layout.value === 'horizontal' ? {labelCol: {span: 4}, wrapperCol: {span: 20}} : {})
 
-    return {rules, finish, submitLoading, layout, itemLayout, nowFileUploadingCnt, CopyFields}
+    return {
+      rules,
+      finish,
+      submitLoading,
+      layout,
+      itemLayout,
+      nowFileUploadingCnt,
+      CopyFields,
+      StaticUploadName,
+      StaticUploadUrl,
+      checkImg,
+      StaticPreviewUrl
+    }
   }
 }
 </script>

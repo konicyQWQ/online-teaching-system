@@ -34,7 +34,7 @@ import navCard from '../../base/nav-card.vue'
 import modal from "../../base/modal.vue";
 import {EditTwoTone} from "@ant-design/icons-vue";
 import {inject, readonly, ref, reactive} from "vue";
-import {Role} from "../../../type";
+import { Role } from "../../type/user";
 import createForm from "../../base/createForm.vue";
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'

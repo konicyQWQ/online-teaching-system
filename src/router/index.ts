@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import index from '../views/index.vue'
-import { Role } from "../type";
+import { Role } from "../type/user";
 import store from "../store";
 
 const router = createRouter({

@@ -1,3 +1,5 @@
+import {Role} from "./user";
+
 export declare interface Form {
     submitHint?: string,
     cancelHint?: string,
@@ -11,8 +13,9 @@ export declare interface Model {
 }
 
 export declare interface Field {
-    type: 'input' | 'textarea' | 'number' | 'upload' | 'autocomplete' | 'radio' | 'password',
+    type?: 'input' | 'textarea' | 'number' | 'upload' | 'autocomplete' | 'radio' | 'password' | 'time' | 'avatar' | 'search',
     label: string,
+    disabled?: boolean,
     min?: number,
     max?: number,
     radios?: Array<{ value: number, hint: string }>,
@@ -23,8 +26,12 @@ export declare interface Field {
         beforeUpload?: () => boolean,
         onChange?: (info) => void
     },
+    search?: {
+        placeholder: string,
+        role: Role
+    },
     autoComplete?: {
-        handleSearch: (data, now:string) => void
+        handleSearch: (data, now: string) => void
     },
     rule?: {
         required?: boolean,

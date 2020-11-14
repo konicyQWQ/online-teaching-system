@@ -23,7 +23,7 @@ import { ref, inject, reactive, readonly } from 'vue'
 import { useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 import createForm from "../base/createForm.vue";
-import {Role} from "../../type";
+import { Role } from "../../type/user";
 import { addToCourses, removeFromCourse } from "../../api/user";
 import { useCourseUser } from "../../hooks/courseUser";
 import confirmDelete from "../base/confirmDelete.vue";

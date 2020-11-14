@@ -1,9 +1,9 @@
 import {Courses, getCourses, getRole} from "../api/courses";
 import { reactive, ref, watch } from 'vue'
 import { message } from "ant-design-vue";
-import {User} from "../api/user";
-import {Role} from "../type";
+import { Role } from "../type/user";
 import store from "../store";
+import {User} from "../type/user";
 
 interface CoursesInfo {
     course: Courses,

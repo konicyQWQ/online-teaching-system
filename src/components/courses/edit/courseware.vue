@@ -48,7 +48,7 @@ import navCard from '../../base/nav-card.vue'
 import modal from "../../base/modal.vue";
 import { readonly, ref, reactive, inject } from 'vue'
 import { useRoute } from 'vue-router'
-import { Role } from "../../../type";
+import { Role } from "../../type/user";
 import { uploadCoursewareName, uploadCoursewareUrl, addCourseware } from "../../../api/courseware";
 import { UploadOutlined, EditTwoTone } from '@ant-design/icons-vue'
 import { useStore } from 'vuex'

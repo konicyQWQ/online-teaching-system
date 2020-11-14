@@ -1,34 +1,40 @@
-import request from "../api/axios";
-import { reactive, ref, Ref } from 'vue'
-import {Courses, getAllCourses} from "../api/courses";
+import {reactive} from 'vue'
+import {getAllCourses, SearchCourseParams} from "../api/courses";
 import {message} from "ant-design-vue";
-import {User} from "../api/user";
+import {CourseWithTeachers} from "../type/course";
 
-interface OneCourses {
-    course: Courses,
-    teachers: Array<User>
+interface useAllCourses {
+    state: {
+        data: Array<CourseWithTeachers>,
+        totalCount: number,
+        loading: boolean
+    },
+    fetchData: (searchParams?:SearchCourseParams) => Promise<string|void>
 }
 
-interface AllCourses {
-    state: Ref<Array<OneCourses>>,
-    loading: Ref<boolean>
-}
+export function useAllCoursesState(): useAllCourses {
+    const state = reactive({
+        data: [],
+        totalCount: 0,
+        loading: true
+    })
 
-export function useAllCoursesState() : AllCourses {
-    const state : Ref<Array<Courses>> = ref([])
-    const loading = ref(true);
+    async function fetchData({keyword = '', start = 0, limit = 1000}:SearchCourseParams) {
+        state.loading = true
+        try {
+            const res = await getAllCourses({ keyword, start, limit })
+            state.data = res.resList
+            state.totalCount = res.totalCount
+            state.loading = false
+        } catch (e) {
+            message.error(e)
+        }
+    }
 
-    getAllCourses({limit: 1000})
-        .then(res => {
-            state.value = res.resList;
-            loading.value = false
-        })
-        .catch(e => {
-            message.error(e);
-        })
+    fetchData({})
 
     return {
         state,
-        loading
+        fetchData
     }
 }

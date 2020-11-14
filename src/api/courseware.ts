@@ -1,6 +1,6 @@
 import request from "./axios";
 import store from "../store";
-import { apiURL } from "../type";
+import { APIUrl } from "../type/setting";
 
 interface CoursewareFile {
     id: number,
@@ -19,7 +19,7 @@ interface Courseware {
 }
 
 // 上传课件使用
-export const uploadCoursewareUrl = `${apiURL}/upload/courseware`
+export const uploadCoursewareUrl = `${APIUrl}/upload/courseware`
 export const uploadCoursewareName = 'formFiles'
 export declare interface extraData {
     courseId: number,
@@ -29,7 +29,7 @@ export declare interface extraData {
 // 下载课件使用
 export function downloadCoursewareUrl(coursewareId : number, fileId : number, mode:boolean = false) : string {
     const token = store.state.token
-    return `${apiURL}/upload/courseware?coursewareID=${coursewareId}&fileID=${fileId}&token=${token}&mode=${mode}`
+    return `${APIUrl}/upload/courseware?coursewareID=${coursewareId}&fileID=${fileId}&token=${token}&mode=${mode}`
 }
 
 // 课件的一套CRUD

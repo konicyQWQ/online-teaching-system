@@ -2,7 +2,8 @@
   <modal v-model:visible="visible">
     <a-card style="width: 600px; margin: 0 2em;" :body-style="{ overflowY: 'auto', maxHeight: '600px' }">
       <template #title><h3 style="text-align: center">修改课程</h3></template>
-      <a-form :model="modifyCoursesForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" @finish="clickModifyCourses">
+      <a-form :model="modifyCoursesForm" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }"
+              @finish="clickModifyCourses">
         <a-form-item label="课程名称" name="name">
           <a-input placeholder="课程名称" v-model:value="modifyCoursesForm.name"/>
         </a-form-item>
@@ -15,7 +16,7 @@
                       @search="onSearch"
                       placeholder="输入 @名字 来搜索教师">
             <a-mentions-option v-for="{ id, name, avatarId } in users" :key="id" :value="`${name},${id}`">
-              <a-avatar :src="getFileUrl(avatarId)" :size="20" style="margin-right: 8px"/>
+              <a-avatar :src="StaticPreviewUrl(avatarId)" :size="20" style="margin-right: 8px"/>
               <span>{{ id }} : {{ name }}</span>
             </a-mentions-option>
           </a-mentions>
@@ -36,14 +37,14 @@
 
         <a-form-item label="课程图片">
           <a-upload v-model:fileList="fileList"
-                    :name="uploadName"
+                    :name="StaticUploadName"
                     accept=".jpg,.png,.jpeg"
                     list-type="picture-card"
                     :show-upload-list="false"
-                    :action="uploadUrl"
+                    :action="StaticUploadUrl"
                     @change="fileUploadChange"
                     :before-upload="checkImg">
-            <img alt="上传图片" :src="getFileUrl(modifyCoursesForm.iconId)" style="cursor: pointer; width: 300px;"/>
+            <img alt="上传图片" :src="StaticPreviewUrl(modifyCoursesForm.iconId)" style="cursor: pointer; width: 300px;"/>
           </a-upload>
         </a-form-item>
 
@@ -71,11 +72,12 @@ import {reactive, ref, watch, inject} from "vue";
 import {Courses, modifyCourses} from "../../../api/courses";
 import {message} from "ant-design-vue";
 import modal from '../../base/modal.vue'
-import { uploadUrl, checkImg, getFileUrl, uploadName  } from "../../../type";
+import {StaticUploadUrl, StaticUploadName, StaticPreviewUrl} from "../../../type/file";
+import {checkImg} from "../../../type/file";
 
 export default {
   name: "editCourseModal",
-  components: { modal },
+  components: {modal},
   props: {
     visible: Boolean,
     course: Object,
@@ -84,7 +86,7 @@ export default {
   setup(props, context) {
     const modifyTeachers = ref('')
     const modifySending = ref(false)
-    const modifyCoursesForm : Courses = reactive({})
+    const modifyCoursesForm: Courses = reactive({})
     const courseInfo = inject('courseInfo')
     const updateCourse = inject('updateCourse');
 
@@ -95,7 +97,7 @@ export default {
     watch(() => courseInfo, () => {
       Object.assign(modifyCoursesForm, courseInfo.course)
       modifyTeachers.value = courseInfo.teachers && courseInfo.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
-    }, { deep: true })
+    }, {deep: true})
 
     watch(() => props.teacher, () => {
       modifyTeachers.value = props.teachers && props.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
@@ -105,7 +107,7 @@ export default {
       try {
         modifySending.value = true
         let teacherArray = modifyTeachers.value.split('@').map((value, index) => {
-          if(!index) return undefined;
+          if (!index) return undefined;
           return value.split(',')[1].trim()
         });
         await modifyCourses(modifyCoursesForm, teacherArray.slice(1));
@@ -139,7 +141,17 @@ export default {
       }
     }
     return {
-      uploadName, closeModifyCoursesModal, clickModifyCourses, modifyCoursesForm, modifyTeachers, modifySending, uploadUrl, checkImg, getFileUrl, fileList, fileUploadChange
+      StaticUploadUrl,
+      closeModifyCoursesModal,
+      clickModifyCourses,
+      modifyCoursesForm,
+      modifyTeachers,
+      modifySending,
+      StaticUploadName,
+      checkImg,
+      StaticPreviewUrl,
+      fileList,
+      fileUploadChange
     }
   }
 }

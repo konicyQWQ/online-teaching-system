@@ -2,6 +2,7 @@ import request from "./axios"
 import store from "../store";
 import {User, Role} from "../type/user";
 import {md5} from "./md5";
+import {UserCourse} from "../type/course";
 
 /**
  * 注册接口
@@ -16,7 +17,7 @@ async function register(info: User): Promise<string> {
 }
 
 /**
- * return the user information
+ * 返回用户信息
  * @param token 需要登录后才能获取，传入token
  */
 async function getUserInfo(token: string): Promise<User> {
@@ -28,15 +29,17 @@ async function getUserInfo(token: string): Promise<User> {
     return res.data
 }
 
-async function modifyUserInfo(user: User, token: string = null): Promise<string> {
-    token = token || store.state.token
+/**
+ * 修改用户信息
+ * @param user
+ */
+async function modifyUserInfo(user: User): Promise<string> {
+    const token = store.state.token
     const res = await request.post('/user/changeinfo', {
         ...user,
         token
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('修改成功')
+    return ''
 }
 
 interface SearchUser {
@@ -44,29 +47,44 @@ interface SearchUser {
     limit: number // 结果数量上限
     role: Role // 搜索身份
 }
-
+/**
+ * 搜索用户
+ * @param search
+ */
 async function searchUser(search: SearchUser): Promise<Array<User>> {
     if (!search.limit) search.limit = 10;
     const res = await request.get('/user', {
         params: search
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error);
-    return Promise.resolve(res.data.resList);
+    return res.data.resList;
 }
 
+/**
+ * 重置密码
+ * @param oldPassword
+ * @param newPassword
+ */
 async function resetPassword({oldPassword, newPassword}) {
     const res = await request.post('/user/resetPassword', {
         token: store.state.token,
         oldPassword: md5(oldPassword),
         newPassword: md5(newPassword)
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('修改成功')
+    return ''
 }
 
-async function getAllUser({start, limit, keyword, roles}) {
+interface AllUser {
+    total: number,
+    data: User[]
+}
+/**
+ * 获得所有用户信息
+ * @param start
+ * @param limit
+ * @param keyword
+ * @param roles
+ */
+async function getAllUser({start, limit, keyword, roles}): Promise<AllUser> {
     const token = store.state.token
     const res = await request.post('/user/getall', {
         start,
@@ -75,26 +93,30 @@ async function getAllUser({start, limit, keyword, roles}) {
         roles,
         token
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve({
+    return {
         total: res.data.totalCount,
         data: res.data.resList
-    })
+    }
 }
 
+/**
+ * 删除用户
+ * @param userID
+ */
 async function deleteUser({userID}) {
     const token = store.state.token
     const res = await request.post('/user/remove', {
         userID,
         token
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('删除成功')
+    return ''
 }
 
-async function newGetUserInfo({userID}: { userID?: string }) {
+/**
+ * 获得用户信息，包括他的课程
+ * @param userID
+ */
+async function newGetUserInfo({userID}: { userID?: string }): Promise<{ userInfo: User, courseList: UserCourse }> {
     const token = store.state.token
     const res = await request.get('/user/getInfo', {
         params: {
@@ -102,12 +124,10 @@ async function newGetUserInfo({userID}: { userID?: string }) {
             userID
         }
     })
-    if (res.data.res === false)
-        return Promise.reject(res.data.error)
-    return Promise.resolve({
+    return {
         userInfo: res.data.userInfo,
         courseList: res.data.courseList
-    })
+    }
 }
 
 async function addToCourses({userID, courseID, role}) {
@@ -118,9 +138,7 @@ async function addToCourses({userID, courseID, role}) {
         role,
         token
     })
-    if (!res.data.res)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('添加成功')
+    return ''
 }
 
 async function removeFromCourse({userID, courseID}) {
@@ -130,9 +148,7 @@ async function removeFromCourse({userID, courseID}) {
         courseID,
         token
     })
-    if (!res.data.res)
-        return Promise.reject(res.data.error)
-    return Promise.resolve('移除成功')
+    return ''
 }
 
 export {

@@ -70,9 +70,8 @@ export default {
       hint.value = '登录中'
       isLoading.value = true
       try {
-        const res = await login(form)
-        message.success(res)
-        // router.push('/user')
+        await login(form)
+        message.success('登录成功')
         closeLogin()
       } catch (e) {
         message.error(e.toString())

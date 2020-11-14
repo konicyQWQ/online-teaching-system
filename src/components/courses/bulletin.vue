@@ -48,9 +48,9 @@ import { inject, ref, reactive } from 'vue'
 import { BellTwoTone } from '@ant-design/icons-vue'
 import {deleteBulletin, updateBulletin} from "../../api/bulletin";
 import { message } from 'ant-design-vue'
-import { Role } from "../../type";
 import modal from "../base/modal.vue";
 import confirmDelete from "../base/confirmDelete.vue";
+import { Role } from "../../type/user";
 
 export default {
   components: { BellTwoTone, modal, confirmDelete },
