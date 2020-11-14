@@ -1,11 +1,11 @@
 import axios from 'axios'
 import store from "../store";
+import {APIUrl} from "../type/setting";
+// @ts-ignore
 import Qs from 'qs'
-import { apiURL } from "../type";
-import router from "../router";
 
 const request = axios.create({
-    baseURL: apiURL,
+    baseURL: APIUrl,
     timeout: 5000
 })
 
@@ -18,15 +18,15 @@ request.interceptors.request.use(
         }
         return config
     },
-    error => Promise.reject(error)
+    error => Promise.reject(error.toString())
 )
 
 request.interceptors.response.use(
     response => {
-        if(response.data.error === 'Token is Invalid') {
-            store.commit('logout')
-            router.push('/public')
-            return Promise.reject('登录信息过期，请重新登录')
+        if (response.data.res === false) {
+            if (response.data.error === 'Token is Invalid')
+                store.commit('logout');
+            return Promise.reject(response.data.error)
         }
         return response
     },
