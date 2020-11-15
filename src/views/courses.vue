@@ -74,8 +74,8 @@ export default {
     const route = useRoute()
 
     const courseInfo = useCourse(route.params.cid)
-    provide('updateCourse', courseInfo.fetchCourse)
     provide('courseInfo', courseInfo.course);
+    provide('updateCourse', courseInfo.fetchCourse)
 
     const bulletinInfo = useBulletin(route.params.cid);
     provide('bulletinState', bulletinInfo.state);

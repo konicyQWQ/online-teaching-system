@@ -2,9 +2,8 @@ import {getCourses, getRole} from "../api/courses";
 import {Course} from "../type/course";
 import {reactive, watch} from 'vue'
 import {message} from "ant-design-vue";
-import {Role} from "../type/user";
+import {Role, User} from "../type/user";
 import store from "../store";
-import {User} from "../type/user";
 
 interface CoursesInfo {
     course: Course,
@@ -28,7 +27,7 @@ function useCourse(id: number): CourseState {
 
     watch(() => store.state.token, () => {
         getRole({id}).then(res => {
-            course.role = res.role;
+            course.role = res;
         }).catch(e => {
             course.role = Role.guest
         })
@@ -46,7 +45,7 @@ function useCourse(id: number): CourseState {
         })
 
         getRole({id}).then(res => {
-            course.role = res.role;
+            course.role = res;
         }).catch(e => {
             course.role = Role.guest
         })

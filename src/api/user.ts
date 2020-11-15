@@ -47,6 +47,7 @@ interface SearchUser {
     limit: number // 结果数量上限
     role: Role // 搜索身份
 }
+
 /**
  * 搜索用户
  * @param search
@@ -64,7 +65,7 @@ async function searchUser(search: SearchUser): Promise<Array<User>> {
  * @param oldPassword
  * @param newPassword
  */
-async function resetPassword({oldPassword, newPassword}) {
+async function resetPassword({oldPassword, newPassword}): Promise<string> {
     const res = await request.post('/user/resetPassword', {
         token: store.state.token,
         oldPassword: md5(oldPassword),
@@ -77,6 +78,7 @@ interface AllUser {
     total: number,
     data: User[]
 }
+
 /**
  * 获得所有用户信息
  * @param start
@@ -103,7 +105,7 @@ async function getAllUser({start, limit, keyword, roles}): Promise<AllUser> {
  * 删除用户
  * @param userID
  */
-async function deleteUser({userID}) {
+async function deleteUser({userID}): Promise<string> {
     const token = store.state.token
     const res = await request.post('/user/remove', {
         userID,
@@ -130,7 +132,7 @@ async function newGetUserInfo({userID}: { userID?: string }): Promise<{ userInfo
     }
 }
 
-async function addToCourses({userID, courseID, role}) {
+async function addToCourses({userID, courseID, role}): Promise<string> {
     const token = store.state.token
     const res = await request.post('/user/addToCourse', {
         userID,
@@ -141,7 +143,7 @@ async function addToCourses({userID, courseID, role}) {
     return ''
 }
 
-async function removeFromCourse({userID, courseID}) {
+async function removeFromCourse({userID, courseID}): Promise<string> {
     const token = store.state.token
     const res = await request.post('/user/removeFromCourse', {
         userID,

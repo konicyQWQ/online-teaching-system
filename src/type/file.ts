@@ -35,6 +35,10 @@ export declare interface File {
     size: number
 }
 
+export function checkImgAndSize(file: AntFileInfo): boolean {
+    return checkImg(file) && checkFileSize(file);
+}
+
 /**
  * 判断文件类型是否是图片
  * @param file

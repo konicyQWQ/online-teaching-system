@@ -3,7 +3,10 @@
     <div v-if="[Role.teacher, Role.administrator, Role.assistant].indexOf(courseInfo.role) !== -1">
       <nav-card :tab-list="nav" :router="false">
         <template #title>
-          <h3><edit-two-tone twotonecolor="#eb2f96"/> 课程作业</h3>
+          <h3>
+            <edit-two-tone twotonecolor="#eb2f96"/>
+            课程作业
+          </h3>
         </template>
       </nav-card>
     </div>
@@ -34,14 +37,15 @@ import navCard from '../../base/nav-card.vue'
 import modal from "../../base/modal.vue";
 import {EditTwoTone} from "@ant-design/icons-vue";
 import {inject, readonly, ref, reactive} from "vue";
-import { Role } from "../../type/user";
+import {Role} from "../../../type/user";
 import createForm from "../../base/createForm.vue";
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import { message } from "ant-design-vue";
-import { uploadCoursewareName, uploadCoursewareUrl } from "../../../api/courseware";
+import {useRoute} from 'vue-router'
+import {useStore} from 'vuex'
+import {message} from "ant-design-vue";
 import moment from 'moment'
-import { addNewHomework } from "../../../api/homework";
+import {addNewHomework} from "../../../api/homework";
+import {HomeworkFileField, HWContentField, HWTitleField, PercentageField, TotalMarkField} from "../../../type/homework";
+import {HomeworkUploadData} from "../../../type/file";
 
 function range(start, end) {
   const result = [];
@@ -52,7 +56,7 @@ function range(start, end) {
 }
 
 export default {
-  components: { navCard, modal, EditTwoTone, createForm },
+  components: {navCard, modal, EditTwoTone, createForm},
   setup() {
     const courseInfo = inject('courseInfo')
     const fetchHomeworkData = inject('fetchHomeworkData')
@@ -80,49 +84,19 @@ export default {
       files: []
     })
     const fields = reactive({
-      title: {
-        type: 'input',
-        label: '标题',
-        rule: {
-          required: true,
-          message: '标题必须填写'
-        }
-      },
-      content: {
-        type: 'textarea',
-        label: '描述'
-      },
+      title: HWTitleField,
+      content: HWContentField,
       time: {
-        customRender: { slot: 'time' },
-        label: '日期',
-        rule: {
-          required: true,
-          message: '必须填写日期'
-        }
+        customRender: {slot: 'time'},
+        label: '日期'
       },
-      totalMark: {
-        type: 'number',
-        label: '总分',
-        min: 0,
-        max: 999
-      },
-      percentage: {
-        type: 'number',
-        label: '占比',
-        min: 0,
-        max: 100
-      },
+      totalMark: TotalMarkField,
+      percentage: PercentageField,
       files: {
-        type: 'upload',
-        label: '附件',
+        ...HomeworkFileField,
         file: {
-          multiple: true,
-          name: uploadCoursewareName,
-          action: uploadCoursewareUrl,
-          data: {
-            courseId: route.params.cid,
-            token: store.state.token
-          }
+          ...HomeworkFileField.file,
+          data: HomeworkUploadData(parseInt(route.params.cid), store.state.token)
         }
       }
     })
@@ -156,7 +130,7 @@ export default {
       return current && current <= moment().subtract(1, "days");
     }
 
-    return { nav, Role, courseInfo, visible, model, fields, form, moment, disabledDate }
+    return {nav, Role, courseInfo, visible, model, fields, form, moment, disabledDate}
   }
 }
 </script>

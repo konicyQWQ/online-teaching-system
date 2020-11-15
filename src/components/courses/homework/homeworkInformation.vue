@@ -26,18 +26,19 @@
   </a-card>
 </template>
 
-<script>
-import { inject, computed } from 'vue'
+<script lang="ts">
+import {inject, computed} from 'vue'
 import moment from 'moment'
 import showFile from "../../base/showFile.vue";
-import { HomeworkDownloadUrl } from "../../../type/file";
-import { useRoute } from 'vue-router'
-import { notGuest } from "../../../type/user";
+import {HomeworkDownloadUrl} from "../../../type/file";
+import {useRoute} from 'vue-router'
+import {notGuest} from "../../../type/user";
+import {HomeworkState_State} from "../../../hooks/homework";
 
 export default {
-  components: { showFile },
+  components: {showFile},
   setup() {
-    const state = inject('oneHomeworkState');
+    const state: HomeworkState_State = inject('oneHomeworkState');
     const courseInfo = inject('courseInfo');
     const route = useRoute()
     const hwID = route.params.hwID
@@ -45,7 +46,7 @@ export default {
     const ThisHomeworkDownloadUrl = HomeworkDownloadUrl.bind(null, hwID);
     const canDownload = computed(() => notGuest(courseInfo.role))
 
-    return { state, moment, courseInfo, ThisHomeworkDownloadUrl, canDownload }
+    return {state, moment, courseInfo, ThisHomeworkDownloadUrl, canDownload}
   }
 }
 </script>

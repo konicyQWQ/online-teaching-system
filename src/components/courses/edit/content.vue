@@ -34,12 +34,16 @@ import { useHomework, useAllHomework } from "../../../hooks/homework";
 import { useRoute, useRouter } from 'vue-router'
 import modal from "../../base/modal.vue";
 import createForm from "../../base/createForm.vue";
-import { CoursewareUploadName, CoursewareUploadUrl, CoursewareUploadData, FileMode, CoursewareDownloadUrl } from "../../../type/file";
+import {
+  FileMode,
+  HomeworkUploadData, HomeworkDownloadUrl
+} from "../../../type/file";
 import { useStore } from 'vuex'
 import moment from "moment";
 import { message } from 'ant-design-vue'
 import { modifyHomework, deleteHomework } from "../../../api/homework";
 import { notGuestAndStudent } from "../../../type/user";
+import {HomeworkFileField, HWContentField, HWTitleField, PercentageField, TotalMarkField} from "../../../type/homework";
 
 function range(start, end) {
   const result = [];
@@ -74,7 +78,7 @@ export default {
               response: {
                 fileList: [{ id: value.id }]
               },
-              url: CoursewareDownloadUrl(route.params.hwID, value.id, FileMode.download)
+              url: HomeworkDownloadUrl(route.params.hwID, value.id, FileMode.preview)
             }
           })
           visible.value = true
@@ -111,46 +115,23 @@ export default {
       files: []
     })
     const fields = reactive({
-      title: {
-        type: 'input',
-        label: '标题',
-        rule: {
-          required: true,
-          message: '标题必须填写'
-        }
-      },
-      content: {
-        type: 'textarea',
-        label: '描述'
-      },
+      title: HWTitleField,
+      content: HWContentField,
       time: {
-        customRender: { slot: 'time' },
+        customRender: {slot: 'time'},
         label: '日期',
         rule: {
           required: true,
           message: '必须填写日期'
         }
       },
-      totalMark: {
-        type: 'number',
-        label: '总分',
-        min: 0,
-        max: 999
-      },
-      percentage: {
-        type: 'number',
-        label: '占比',
-        min: 0,
-        max: 100
-      },
+      totalMark: TotalMarkField,
+      percentage: PercentageField,
       files: {
-        type: 'upload',
-        label: '附件',
+        ...HomeworkFileField,
         file: {
-          multiple: true,
-          name: CoursewareUploadName,
-          action: CoursewareUploadUrl,
-          data: CoursewareUploadData(route.params.cid, store.state.token)
+          ...HomeworkFileField.file,
+          data: HomeworkUploadData(parseInt(route.params.cid), store.state.token)
         }
       }
     })
@@ -158,9 +139,12 @@ export default {
       submitHint: '修改',
       finish: async () => {
         try {
+          model.startTime = model.time[0];
+          model.endTime = model.time[1];
           await modifyHomework({
             homework: {
               ...model,
+              time: '',
               files: ''
             },
             files: model.files.map(value => value.response.fileList[0].id)

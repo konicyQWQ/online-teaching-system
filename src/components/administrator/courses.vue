@@ -101,7 +101,6 @@ export default {
     })
     const openModifyModal = (record) => {
       Object.assign(modifyCoursesModel, record.course)
-      console.log(record.course)
       modifyCoursesModel.teachers = record.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
       modifyModalVisible.value = true
     }

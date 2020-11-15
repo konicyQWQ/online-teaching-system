@@ -71,7 +71,8 @@
       <a-button type="primary"
                 html-type="submit"
                 :loading="submitLoading"
-                :disabled="nowFileUploadingCnt !== 0">{{ form.submitHint || '提交' }}
+                :disabled="nowFileUploadingCnt !== 0 || form.canSubmit === false">
+        {{ form.submitHint || '提交' }}
       </a-button>
       <a-divider type="vertical"/>
       <a-button type="default" @click="form.cancel" v-if="form.cancel">{{ form.cancelHint || '取消' }}</a-button>
@@ -84,7 +85,7 @@ import {PropType, ref, reactive} from 'vue'
 import {UploadOutlined} from '@ant-design/icons-vue'
 import {message} from "ant-design-vue";
 import {Form, Model, Fields} from "../../type/form";
-import {StaticUploadUrl, StaticUploadName, checkImg, StaticPreviewUrl} from "../../type/file";
+import {StaticUploadUrl, StaticUploadName, checkImgAndSize, StaticPreviewUrl} from "../../type/file";
 import debounce from 'lodash.debounce'
 import {searchUser} from "../../api/user";
 import {Role} from "../../type/user";
@@ -214,7 +215,7 @@ export default {
       CopyFields,
       StaticUploadName,
       StaticUploadUrl,
-      checkImg,
+      checkImgAndSize,
       StaticPreviewUrl
     }
   }

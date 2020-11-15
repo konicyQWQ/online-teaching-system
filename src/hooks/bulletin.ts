@@ -1,19 +1,18 @@
-import {Bulletin, getBulletin} from "../api/bulletin";
-import {reactive, ref} from 'vue'
+import {getBulletin} from "../api/bulletin";
+import {reactive} from 'vue'
 import {message} from "ant-design-vue";
+import {Bulletin} from "../type/bulletin";
 
 interface BulletinState {
-    bulletin: Array<Bulletin>,
-    loading: boolean
-}
-
-interface Bulletin {
-    state: BulletinState,
+    state: {
+        bulletin: Array<Bulletin>,
+        loading: boolean
+    },
     fetchBulletin: () => void
 }
 
-export function useBulletin(courseID): Bulletin {
-    const state: BulletinState = reactive({
+export function useBulletin(courseID): BulletinState {
+    const state = reactive({
         bulletin: [],
         loading: true
     })

@@ -1,18 +1,12 @@
 import request from "./axios";
 import store from "../store";
+import {Homework, HomeworkDetail, StudentHomeworkOverview, UserHomework} from "../type/homework";
 
-interface Homework {
-    hwId: number,
-    courseId: string,
-    title: string,
-    startTime: Date,
-    endTime: Date,
-    content: string,
-    totalMark: number,
-    percentage: number
-}
-
-export async function getHomework({ hwID }) {
+/**
+ * 获取hwID的作业详细信息
+ * @param hwID
+ */
+export async function getHomework({hwID}): Promise<HomeworkDetail> {
     const token = store.state.token
     const res = await request.get('/homework', {
         params: {
@@ -23,7 +17,11 @@ export async function getHomework({ hwID }) {
     return res.data.hwDetail
 }
 
-export async function getAllHomework({ courseID }) {
+/**
+ * 获得所有作业信息
+ * @param courseID
+ */
+export async function getAllHomework({courseID}): Promise<Array<StudentHomeworkOverview>> {
     const token = store.state.token
     const res = await request.get('/homework/all', {
         params: {
@@ -34,54 +32,46 @@ export async function getAllHomework({ courseID }) {
     return res.data.hwList
 }
 
-export async function addNewHomework({ homework, files } : { homework: Homework, files: Array<number> } ) {
+export async function addNewHomework({homework, files}: { homework: Homework, files: Array<number> }): Promise<string> {
     const token = store.state.token
     const res = await request.post('/homework', {
         homework,
         files,
         token
     })
-    return '新建成功'
+    return ''
 }
 
-export async function modifyHomework({ homework, files } : { homework: Homework, files: Array<number> } ) {
+export async function modifyHomework({homework, files}: { homework: Homework, files: Array<number> }): Promise<string> {
     const token = store.state.token
     const res = await request.post('/homework/update', {
         homework,
         files,
         token
     })
-    return '修改成功'
+    return ''
 }
 
-export async function deleteHomework({ hwID } : { hwID:number} ) {
+export async function deleteHomework({hwID}: { hwID: number }) : Promise<string> {
     const token = store.state.token
     const res = await request.post('/homework/remove', {
         hwID,
         token
     })
-    return '删除成功'
+    return ''
 }
 
-interface userHomework {
-    userId: number,
-    hwId: number,
-    description: string,
-    mark: number,
-    comment: string
-}
-
-export async function submitHomework({ userHomework, files } : { userHomework: userHomework, files: Array<number> } ) {
+export async function submitHomework({userHomework, files}: { userHomework: UserHomework, files: Array<number> }): Promise<string> {
     const token = store.state.token
     const res = await request.post('/homework/submit', {
-        homework : userHomework,
+        homework: userHomework,
         files,
         token
     })
-    return '提交成功'
+    return ''
 }
 
-export async function setScoreHomework({ stuID, hwID, score, comment }) {
+export async function setScoreHomework({stuID, hwID, score, comment}): Promise<string> {
     const token = store.state.token
     const res = await request.post('/homework/setScore', {
         stuID,
@@ -90,6 +80,6 @@ export async function setScoreHomework({ stuID, hwID, score, comment }) {
         comment,
         token
     })
-    return '批改成功'
+    return ''
 }
 

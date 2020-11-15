@@ -1,10 +1,19 @@
 import {getAllHomework, getHomework} from "../api/homework";
 import {reactive} from 'vue'
 import {message} from "ant-design-vue";
+import {HomeworkDetail, StudentHomeworkOverview} from "../type/homework";
+
+// 下面这个做缓存处理，同时也解决组件之间无法靠inject，provide同步修改的问题
+interface AllHomeworkState {
+    state: {
+        loading: boolean,
+        data: StudentHomeworkOverview[]
+    },
+    fetchData: () => void
+}
 
 const allHomeworkPool = {}
-
-export function useAllHomework(courseID) {
+export function useAllHomework(courseID): AllHomeworkState {
     // 如果有缓存
     if (allHomeworkPool[courseID]) {
         allHomeworkPool[courseID].fetchData()
@@ -41,11 +50,18 @@ export function useAllHomework(courseID) {
     }
 }
 
-// 下面这个做缓存处理，同时也解决组件之间无法靠inject，provide同步修改的问题
+interface HomeworkState {
+    state: HomeworkState_State
+    fetchData: ()=>void
+}
+
+export declare interface HomeworkState_State {
+    data: HomeworkDetail,
+    loading: false
+}
+
 const pool = {}
-
-
-export function useHomework(hwID) {
+export function useHomework(hwID):HomeworkState {
     // 如果有缓存
     if (pool[hwID]) {
         pool[hwID].fetchData()
@@ -56,12 +72,11 @@ export function useHomework(hwID) {
     const state = reactive({
         data: {
             homework: {
-                homework: {}
+                homework: {},
+                files: {}
             },
             userHomework: {
-                userInfo: {},
-                userHomework: {},
-                files: {}
+
             }
         },
         loading: false

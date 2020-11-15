@@ -24,7 +24,7 @@
 import {ref, reactive, watch} from 'vue'
 import {useStore} from 'vuex'
 import {message} from 'ant-design-vue'
-import {StaticPreviewUrl, StaticUploadName, StaticUploadUrl, checkImg} from "../../type/file";
+import {StaticPreviewUrl, StaticUploadName, StaticUploadUrl, checkImgAndSize} from "../../type/file";
 import {modifyUserInfo} from "../../api/user";
 import createForm from "../base/createForm.vue";
 import {useUserInfo} from "../../hooks/user";
@@ -118,7 +118,7 @@ export default {
       StaticPreviewUrl,
       StaticUploadName,
       StaticUploadUrl,
-      checkImg
+      checkImgAndSize
     }
   }
 }

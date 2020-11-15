@@ -5,7 +5,7 @@
   </a-card>
 </template>
 
-<script>
+<script lang="ts">
 import createForm from "../../base/createForm.vue";
 import { reactive, inject, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -13,6 +13,7 @@ import { HomeworkUploadUrl, HomeworkUploadName, HomeworkUploadData } from "../..
 import { useStore } from 'vuex'
 import { message } from 'ant-design-vue'
 import { submitHomework } from "../../../api/homework";
+import {HomeworkState_State} from "../../../hooks/homework";
 
 export default {
   name: "studentSubmit",
@@ -20,7 +21,7 @@ export default {
   setup() {
     const route = useRoute()
     const fetchData = inject('oneHomeworkFetchData')
-    const state = inject('oneHomeworkState')
+    const state:HomeworkState_State = inject('oneHomeworkState')
     const store = useStore()
     watch(() => state.loading, (newVal) => {
       if(newVal === false) {
@@ -61,7 +62,8 @@ export default {
       }
     })
     const form = reactive({
-      submitHint: '提交',
+      canSubmit: new Date() > state.data.homework.homework.endTime,
+      submitHint: new Date() < state.data.homework.homework.endTime ? '提交' : '作业已结束',
       finish: async () => {
         console.log(model)
         try {

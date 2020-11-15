@@ -1,6 +1,7 @@
 import {Role} from "./user";
 
 export declare interface Form {
+    canSubmit?: boolean,
     submitHint?: string,
     cancelHint?: string,
     finish?: () => void,
@@ -24,7 +25,8 @@ export declare interface Field {
         name?: string,
         action?: string,
         beforeUpload?: () => boolean,
-        onChange?: (info) => void
+        onChange?: (info) => void,
+        data?: ()=>Object
     },
     search?: {
         placeholder: string,

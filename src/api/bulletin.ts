@@ -1,35 +1,28 @@
 import request from "./axios";
 import store from "../store";
+import {Bulletin} from "../type/bulletin";
 
-export declare interface Bulletin {
-    bulletinId?: number,
-    courseId: number,
-    time: string,
-    title: string,
-    content: string
-}
-
-async function getBulletin({ courseID }):Promise<Array<Bulletin>> {
-    const res = await request.get('/course/bulletin',{params: {courseID}});
+async function getBulletin({courseID}): Promise<Array<Bulletin>> {
+    const res = await request.get('/course/bulletin', {params: {courseID}});
     return res.data.list;
 }
 
-async function deleteBulletin({ bulletinID }):Promise<string> {
+async function deleteBulletin({bulletinID}): Promise<string> {
     const token = store.state.token;
-    const res = await request.post('/course/bulletin/delete', { bulletinID, token });
-    return '删除成功'
+    const res = await request.post('/course/bulletin/delete', {bulletinID, token});
+    return ''
 }
 
-async function updateBulletin({ bulletin }):Promise<string> {
+async function updateBulletin({bulletin}: { bulletin: Bulletin }): Promise<string> {
     const token = store.state.token;
-    const res = await request.post('/course/bulletin/update', { bulletin, token });
-    return '修改成功'
+    const res = await request.post('/course/bulletin/update', {bulletin, token});
+    return ''
 }
 
-async function addBulletin({ bulletin }):Promise<string> {
+async function addBulletin({bulletin}: { bulletin: Bulletin }): Promise<string> {
     const token = store.state.token
-    const res = await request.post('/course/bulletin', { bulletin, token });
-    return '增加成功'
+    const res = await request.post('/course/bulletin', {bulletin, token});
+    return ''
 }
 
 export {

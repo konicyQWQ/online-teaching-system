@@ -55,6 +55,7 @@ import { useRoute } from 'vue-router'
 import showFile from "../../base/showFile.vue";
 import { message } from 'ant-design-vue'
 import { setScoreHomework } from "../../../api/homework";
+import {CommentField} from "../../../type/homework";
 
 export default {
   name: "studentList",
@@ -110,10 +111,7 @@ export default {
         label: '分数',
         customRender: { slot: 'score' }
       },
-      comment: {
-        label: '评语',
-        type: 'textarea'
-      }
+      comment: CommentField
     })
 
     return { state, columns, visible, openModal, model, form, fields, nowStudentHomework, downloadUrl }
