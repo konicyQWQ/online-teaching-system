@@ -12,7 +12,7 @@ import {readonly, inject} from 'vue'
 import {useRoute, useRouter} from "vue-router";
 import {notGuestAndStudent} from "../../../type/user";
 import {EditTwoTone} from "@ant-design/icons-vue";
-import {exportAllExam} from "../../../api/exam";
+import {exportExam} from "../../../api/exam";
 
 export default {
   components: {navCard, EditTwoTone},
@@ -22,15 +22,9 @@ export default {
     const courseInfo = inject('courseInfo')
     const nav = readonly([
       {
-        name: '新建测试',
+        name: '导出本次测试成绩',
         handleClick: () => {
-          router.push({ path: '/exam/edit', query: {mode: 'new', courseID: route.params.cid, examId: 0}})
-        }
-      },
-      {
-        name: '导出所有测试成绩',
-        handleClick: () => {
-          exportAllExam(route.params.cid)
+          exportExam(route.params.examId)
         }
       }
     ])

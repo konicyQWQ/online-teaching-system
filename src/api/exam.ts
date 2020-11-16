@@ -9,6 +9,8 @@ import {
     UserExamWithAnswers
 } from "../components/exam/exam";
 import store from "../store";
+import {FileMode, FileModeToBool} from "../type/file";
+import {APIUrl} from "../type/setting";
 
 export async function getAllExam(courseId: number): Promise<ExamOverview[]> {
     const token = store.state.token
@@ -110,4 +112,19 @@ export async function getStuExam(examID: number, stuID:number): Promise<UserExam
         }
     })
     return res.data.stuExam
+}
+
+export async function exportBoth(courseID: number) {
+    const token = store.state.token
+    window.open(`${APIUrl}/exam/exportBoth?courseID=${courseID}&mode=${FileModeToBool(FileMode.download)}&token=${token}`);
+}
+
+export async function exportAllExam(courseID: number) {
+    const token = store.state.token
+    window.open(`${APIUrl}/exam/exportAll?courseID=${courseID}&mode=${FileModeToBool(FileMode.download)}&token=${token}`);
+}
+
+export async function exportExam(examID: number) {
+    const token = store.state.token
+    window.open(`${APIUrl}/exam/export?examID=${examID}&mode=${FileModeToBool(FileMode.download)}&token=${token}`);
 }

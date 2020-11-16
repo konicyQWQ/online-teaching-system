@@ -37,12 +37,15 @@ import {
 } from "../../../type/course";
 import {modifyCourses} from "../../../api/courses";
 import {message} from "ant-design-vue";
+import {exportBoth} from "../../../api/exam";
+import {useRoute} from 'vue-router'
 
 export default {
   components: {navCard, EditTwoTone, createForm, modal},
   setup() {
     const courseInfo = inject('courseInfo')
     const updateCourse = inject('updateCourse');
+    const route = useRoute()
     const visible = ref(false)
     const nav = readonly([
       {
@@ -51,6 +54,12 @@ export default {
           Object.assign(model, courseInfo.course)
           model.teachers = courseInfo.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
           visible.value = true
+        }
+      },
+      {
+        name: '导出成绩',
+        handleClick() {
+          exportBoth(route.params.cid);
         }
       }
     ])

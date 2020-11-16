@@ -9,8 +9,8 @@
       <nav-card :tabList="tabList">
         <template v-slot:title>
           <h3>
-            {{ courseInfo.course.name }}
-            <a-tooltip v-for="teacher in courseInfo.teachers">
+            {{ courseInfo.course.course.name }}
+            <a-tooltip v-for="teacher in courseInfo.course.teachers">
               <template v-slot:title>
                 {{ teacher.name }}
               </template>
@@ -30,7 +30,7 @@
 import twoCol from "../components/base/two-col.vue";
 import navCard from "../components/base/nav-card.vue"
 import fade from "../components/base/fade.vue";
-import {provide, computed} from 'vue';
+import {provide, computed, readonly} from 'vue';
 import {useCourse} from "../hooks/courses";
 import {StaticPreviewUrl} from "../type/file";
 import {notGuestAndStudent} from "../type/user";
@@ -57,8 +57,8 @@ export default {
           {key: 'homework', name: '作业', keyByName: true},
           {key: 'exam', name: '测试', keyByName: true},
           {key: 'discuss', name: '讨论', keyByName: true},
-          {key: 'score', name: '成绩', keyByName: true},
-          {key: 'studentList', name: '课程名单', keyByName: true}
+          {key: 'group', name: '分组', keyByName: true},
+          {key: 'studentList', name: '课程名单', keyByName: true},
         ]
       } else {
         return [
@@ -68,7 +68,7 @@ export default {
           {key: 'homework', name: '作业', keyByName: true},
           {key: 'exam', name: '测试', keyByName: true},
           {key: 'discuss', name: '讨论', keyByName: true},
-          {key: 'score', name: '成绩', keyByName: true},
+          {key: 'group', name: '分组', keyByName: true},
         ]
       }
     });
@@ -94,7 +94,7 @@ export default {
     provide('examState', examInfo.state)
     provide('fetchExamData', examInfo.fetchData)
 
-    return {courseInfo: courseInfo.course, tabList, StaticPreviewUrl}
+    return {courseInfo, tabList, StaticPreviewUrl, notGuestAndStudent}
   }
 }
 </script>

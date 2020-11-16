@@ -109,7 +109,8 @@ const router = createRouter({
                         {
                             path: ':examId',
                             components: {
-                                default: () => import('../components/courses/exam/content.vue')
+                                default: () => import('../components/courses/exam/content.vue'),
+                                extra: () => import('../components/courses/exam/nav.vue')
                             }
                         }
                     ]
@@ -126,10 +127,9 @@ const router = createRouter({
                     component: () => import('../components/courses/studentList.vue')
                 },
                 {
-                    /** 成绩，学生显示成绩，老师显示表格登记学生成绩 */
-                    path: 'score',
-                    name: 'score',
-                    component: () => import('../components/score.vue')
+                    path: 'group',
+                    name: 'group',
+                    component: () => import('../components/courses/group.vue')
                 }
             ]
         },
