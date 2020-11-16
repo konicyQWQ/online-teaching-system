@@ -62,8 +62,8 @@ export default {
       }
     })
     const form = reactive({
-      canSubmit: new Date() > state.data.homework.homework.endTime,
-      submitHint: new Date() < state.data.homework.homework.endTime ? '提交' : '作业已结束',
+      canSubmit: new Date() < new Date(state.data.homework.homework.endTime) && new Date() > new Date(state.data.homework.homework.startTime),
+      submitHint: new Date() < new Date(state.data.homework.homework.startTime) ? '作业未开始' : new Date() < new Date(state.data.homework.homework.endTime) ? '提交' : '作业已结束',
       finish: async () => {
         console.log(model)
         try {

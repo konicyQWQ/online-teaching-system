@@ -18,7 +18,7 @@
                 :disabled-date="disabledDate"
                 :show-time="{
                   hideDisabledOptions: true,
-                  defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
+                  defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
                 }"
                 format="YYYY-MM-DD HH:mm:ss"
             />
@@ -169,7 +169,7 @@ export default {
     })
 
     const disabledDate = (current) => {
-      return current && current <= moment().subtract(1, "days");
+      return current && current <= moment();
     }
 
     return {navTab, visible, model, fields, form, disabledDate, moment, courseInfo, notGuestAndStudent}

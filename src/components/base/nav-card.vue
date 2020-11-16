@@ -12,7 +12,7 @@
     </div>
     <div v-else>
       <div v-for="tab in tabList"
-           class="tab"
+           class="tab tab-click"
            style="cursor: pointer">
         <div v-if="tab.confirm">
           <confirm-delete @confirm="tab.handleClick" :hint="tab.hint" :button="tab.button"/>
@@ -75,6 +75,13 @@ export default {
   &.router-link-active {
     border-left-color: var(--choose-color);
     background: var(--hover-background);
+  }
+}
+
+.tab-click {
+  padding: 0;
+  > * {
+    padding: .5em 1em;
   }
 }
 </style>

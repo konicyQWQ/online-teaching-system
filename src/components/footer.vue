@@ -30,7 +30,7 @@ export default {
         title: '技术支持',
         linkList: [{name: 'Vue', link: 'https://cn.vuejs.org/'},
           {name: 'Ant Design Vue', link: 'https://2x.antdv.com/docs/vue/introduce-cn/'},
-          {name: '.NET Core', link: 'https://docs.microsoft.com/zh-cn/dotnet/core/about'},]
+          {name: '.NET Core', link: 'https://docs.microsoft.com/zh-cn/aspnet/core/?view=aspnetcore-3.1'},]
       }
     ])
     return { category }

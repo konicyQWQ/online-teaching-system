@@ -6,7 +6,7 @@
       </template>
       <a-table :columns="columns" :data-source="state.data.stuHomeworkList" :loading="state.loading">
         <template #mark="{ text, record }">
-          {{ text ? text.mark || '未打分' : '未提交' }}
+          {{ record.userHomework === null ? '未提交' : (text.mark !== null ? text.mark : '未打分') }}
         </template>
         <template #action="{ text, record }">
           <div v-if="record.userHomework">

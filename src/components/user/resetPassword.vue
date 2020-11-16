@@ -24,8 +24,14 @@ export default {
       confirm: ''
     })
     const fields = reactive({
-      oldPassword: PasswordField,
-      newPassword: PasswordField,
+      oldPassword: {
+        ...PasswordField,
+        label: '旧密码'
+      },
+      newPassword: {
+        ...PasswordField,
+        label: '新密码'
+      },
       confirm: {
         type: 'password',
         label: '重复新密码',
