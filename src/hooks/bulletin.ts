@@ -29,7 +29,7 @@ export function useBulletin(courseID): BulletinState {
             })
     }
 
-    fetchBulletin();
+    // fetchBulletin();
 
     return {
         state,

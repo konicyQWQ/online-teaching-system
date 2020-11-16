@@ -38,6 +38,7 @@ import {useRoute} from "vue-router";
 import {useBulletin} from "../hooks/bulletin";
 import {useCourseware} from "../hooks/courseware";
 import {useAllHomework} from "../hooks/homework";
+import {useAllExam} from "../components/exam/exam";
 
 export default {
   name: 'courses',
@@ -88,6 +89,10 @@ export default {
     const homeworkInfo = useAllHomework(route.params.cid);
     provide('homeworkState', homeworkInfo.state)
     provide('fetchHomeworkData', homeworkInfo.fetchData)
+
+    const examInfo = useAllExam(route.params.cid);
+    provide('examState', examInfo.state)
+    provide('fetchExamData', examInfo.fetchData)
 
     return {courseInfo: courseInfo.course, tabList, StaticPreviewUrl}
   }

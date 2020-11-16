@@ -43,7 +43,7 @@ import {useRoute} from 'vue-router'
 import {useStore} from 'vuex'
 import {message} from "ant-design-vue";
 import moment from 'moment'
-import {addNewHomework} from "../../../api/homework";
+import {addNewHomework, exportAllHomework} from "../../../api/homework";
 import {HomeworkFileField, HWContentField, HWTitleField, PercentageField, TotalMarkField} from "../../../type/homework";
 import {HomeworkUploadData} from "../../../type/file";
 
@@ -67,6 +67,12 @@ export default {
         name: '发布作业',
         handleClick: () => {
           visible.value = true
+        }
+      },
+      {
+        name: '导出所有作业成绩',
+        handleClick: () => {
+          exportAllHomework({courseID: route.params.cid})
         }
       }
     ])

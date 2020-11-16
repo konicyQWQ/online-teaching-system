@@ -29,7 +29,7 @@ export function useCourseware(cid: number): CoursewareState {
             })
     }
 
-    fetchCourseware();
+    // fetchCourseware();
 
     return {
         state,

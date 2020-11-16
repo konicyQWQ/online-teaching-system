@@ -65,7 +65,7 @@ export function checkFileSize(file: AntFileInfo, size = 1024 * 2): boolean {
 // 下载文件(mode 为 true 则下载)
 export enum FileMode { preview, download }
 
-const FileModeToBool = (mode: FileMode) => mode ? true : false; // 这一步转换是必要的
+export const FileModeToBool = (mode: FileMode) => mode ? true : false; // 这一步转换是必要的
 
 // 下载文件用的地址
 export function CoursewareDownloadUrl(coursewareId: number, fileId: number, mode: FileMode = FileMode.preview): string {

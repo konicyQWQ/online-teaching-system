@@ -77,6 +77,8 @@ export default {
     const route = useRoute()
     const store = useStore()
 
+    fetchCourseware()
+
     // 删除
     async function clickDelete(courseware) {
       try {

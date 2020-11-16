@@ -54,6 +54,8 @@ export default {
     const fetchBulletin = inject('fetchBulletin')
     const courseInfo = inject('courseInfo')
 
+    fetchBulletin()
+
     const delBulletin = async (id) => {
       try {
         await deleteBulletin({bulletinID: id.bulletinId})

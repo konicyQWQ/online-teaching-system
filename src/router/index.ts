@@ -93,8 +93,26 @@ const router = createRouter({
                 {
                     /** 考试 */
                     path: 'exam',
-                    name: 'exam',
-                    component: () => import('../components/exam.vue')
+                    components: {
+                        default: () => import('../components/courses/examPN.vue'),
+                        extra: () => import('../components/courses/examExtraPN.vue')
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'exam',
+                            components: {
+                                default: () => import('../components/courses/exam.vue'),
+                                extra: () => import('../components/courses/edit/exam.vue')
+                            },
+                        },
+                        {
+                            path: ':examId',
+                            components: {
+                                default: () => import('../components/courses/exam/content.vue')
+                            }
+                        }
+                    ]
                 },
                 {
                     /** 讨论 */
@@ -181,6 +199,10 @@ const router = createRouter({
             /** 教师展示页 */
             path: '/teacher/:id',
             component: () => import('../views/teacher.vue')
+        },
+        {
+            path: '/exam/edit',
+            component: () => import('../components/exam/edit.vue')
         },
         {
             /** 404页面 */

@@ -37,7 +37,7 @@ export function useAllHomework(courseID): AllHomeworkState {
             })
     }
 
-    fetchData()
+    // fetchData()
 
     allHomeworkPool[courseID] = {
         state,

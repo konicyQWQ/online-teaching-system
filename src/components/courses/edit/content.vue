@@ -2,7 +2,10 @@
   <div v-if="notGuestAndStudent(courseInfo.role)">
     <nav-card :tab-list="navTab" :router="false">
       <template #title>
-        <h3><edit-two-tone twotonecolor="#eb2f96"/> 作业操作</h3>
+        <h3>
+          <edit-two-tone twotonecolor="#eb2f96"/>
+          作业操作
+        </h3>
       </template>
     </nav-card>
     <modal v-model:visible="visible">
@@ -28,21 +31,21 @@
 
 <script>
 import navCard from '../../base/nav-card.vue'
-import { readonly, ref, reactive, inject } from 'vue'
+import {readonly, ref, reactive, inject} from 'vue'
 import {EditTwoTone} from '@ant-design/icons-vue'
-import { useHomework, useAllHomework } from "../../../hooks/homework";
-import { useRoute, useRouter } from 'vue-router'
+import {useHomework, useAllHomework} from "../../../hooks/homework";
+import {useRoute, useRouter} from 'vue-router'
 import modal from "../../base/modal.vue";
 import createForm from "../../base/createForm.vue";
 import {
   FileMode,
   HomeworkUploadData, HomeworkDownloadUrl
 } from "../../../type/file";
-import { useStore } from 'vuex'
+import {useStore} from 'vuex'
 import moment from "moment";
-import { message } from 'ant-design-vue'
-import { modifyHomework, deleteHomework } from "../../../api/homework";
-import { notGuestAndStudent } from "../../../type/user";
+import {message} from 'ant-design-vue'
+import {modifyHomework, deleteHomework, exportHomework} from "../../../api/homework";
+import {notGuestAndStudent} from "../../../type/user";
 import {HomeworkFileField, HWContentField, HWTitleField, PercentageField, TotalMarkField} from "../../../type/homework";
 
 function range(start, end) {
@@ -55,12 +58,12 @@ function range(start, end) {
 
 export default {
   name: "content",
-  components: { navCard, EditTwoTone, modal, createForm },
+  components: {navCard, EditTwoTone, modal, createForm},
   setup() {
     const route = useRoute()
     const store = useStore()
     const router = useRouter()
-    const { state, fetchData } = useHomework(route.params.hwID)
+    const {state, fetchData} = useHomework(route.params.hwID)
     const allHomework = useAllHomework(route.params.cid)
     const courseInfo = inject('courseInfo')
 
@@ -69,14 +72,14 @@ export default {
         name: '编辑作业信息',
         handleClick: () => {
           Object.assign(model, state.data.homework.homework)
-          model.time = [model.startTime , model.endTime]
+          model.time = [model.startTime, model.endTime]
           model.files = state.data.homework.files.map((value) => {
             return {
               uid: value.id,
               name: value.name,
               status: 'done',
               response: {
-                fileList: [{ id: value.id }]
+                fileList: [{id: value.id}]
               },
               url: HomeworkDownloadUrl(route.params.hwID, value.id, FileMode.preview)
             }
@@ -85,10 +88,16 @@ export default {
         }
       },
       {
+        name: '导出本次作业数据',
+        handleClick: async () => {
+          exportHomework({hwID: route.params.hwID})
+        }
+      },
+      {
         name: '删除作业',
         handleClick: async () => {
           try {
-            await deleteHomework({ hwID: route.params.hwID })
+            await deleteHomework({hwID: route.params.hwID})
             message.success('删除成功')
             allHomework.fetchData();
             router.back()
@@ -163,7 +172,7 @@ export default {
       return current && current <= moment().subtract(1, "days");
     }
 
-    return { navTab, visible, model, fields, form, disabledDate, moment, courseInfo, notGuestAndStudent }
+    return {navTab, visible, model, fields, form, disabledDate, moment, courseInfo, notGuestAndStudent}
   }
 }
 </script>

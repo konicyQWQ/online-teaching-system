@@ -1,6 +1,8 @@
 import request from "./axios";
 import store from "../store";
 import {Homework, HomeworkDetail, StudentHomeworkOverview, UserHomework} from "../type/homework";
+import {APIUrl} from "../type/setting";
+import {FileMode, FileModeToBool} from "../type/file";
 
 /**
  * 获取hwID的作业详细信息
@@ -83,3 +85,12 @@ export async function setScoreHomework({stuID, hwID, score, comment}): Promise<s
     return ''
 }
 
+export function exportHomework({hwID}) {
+    const token = store.state.token
+    window.open(`${APIUrl}/homework/export?hwID=${hwID}&mode=${FileModeToBool(FileMode.download)}&token=${token}`);
+}
+
+export function exportAllHomework({courseID}) {
+    const token = store.state.token
+    window.open(`${APIUrl}/homework/exportAll?courseID=${courseID}&mode=${FileModeToBool(FileMode.download)}&token=${token}`);
+}

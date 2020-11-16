@@ -44,12 +44,15 @@ import {computed, inject} from 'vue'
 import {Role} from "../../type/user";
 import moment from 'moment'
 import {useRoute} from 'vue-router'
-import {HomeworkState_State} from "../../hooks/homework";
 
 export default {
   setup() {
     const courseInfo = inject('courseInfo');
     const homeworkState = inject('homeworkState')
+    const fetchData = inject('fetchHomeworkData')
+
+    fetchData();
+
     const route = useRoute()
     const columns = computed(() => {
       if (courseInfo.role === Role.student)
