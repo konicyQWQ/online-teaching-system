@@ -25,15 +25,18 @@
         {{ record.statistics.totalCount - record.statistics.submitCount }}
       </template>
       <template #status="{ text, record }">
-        <a-tag v-if="new Date(record.homework.startTime) > new Date()">
+        <a-tag v-if="text===HomeworkStatus.pending">
           未开始
         </a-tag>
-        <a-tag v-else-if="new Date(record.homework.endTime) < new Date()" color="#f50">
+        <a-tag v-else-if="text===HomeworkStatus.finished" color="#f50">
           已结束
         </a-tag>
         <a-tag v-else color="#108ee9">
           进行中
         </a-tag>
+      </template>
+      <template #type="{text, record}">
+        {{text === HomeworkType.individual ? '个人作业' : '小组作业'}}
       </template>
     </a-table>
   </a-card>
@@ -44,6 +47,7 @@ import {computed, inject} from 'vue'
 import {Role} from "../../type/user";
 import moment from 'moment'
 import {useRoute} from 'vue-router'
+import {HomeworkStatus, HomeworkType} from "../../type/homework";
 
 export default {
   setup() {
@@ -60,22 +64,24 @@ export default {
           {dataIndex: 'homework.title', title: '作业名称', slots: {customRender: 'hwTitle'}},
           {dataIndex: 'homework.endTime', title: '截止日期', slots: {customRender: 'time'}},
           {dataIndex: 'homework.totalMark', title: '总分'},
+          {dataIndex: 'homework.type', title: '作业类型', slots: {customRender: 'type'}},
           {dataIndex: 'userHomework.mark', title: '我的得分', slots: {customRender: 'myMark'}},
           {dataIndex: 'userHomework', title: '是否提交', slots: {customRender: 'isSubmit'}},
-          {dataIndex: 'status', title: '状态', slots: {customRender: 'status'}}
+          {dataIndex: 'homework.status', title: '状态', slots: {customRender: 'status'}}
         ]
       else
         return [
           {dataIndex: 'homework.title', title: '作业名称', slots: {customRender: 'hwTitle'}},
           {dataIndex: 'homework.endTime', title: '截止日期', slots: {customRender: 'time'}},
           {dataIndex: 'homework.totalMark', title: '总分'},
+          {dataIndex: 'homework.type', title: '作业类型', slots: {customRender: 'type'}},
           {dataIndex: 'statistics', title: '总共/已交/未交', slots: {customRender: 'statistics'}},
           {dataIndex: 'statistics.scoredCount', title: '已批阅人数'},
-          {dataIndex: 'status', title: '状态', slots: {customRender: 'status'}}
+          {dataIndex: 'homework.status', title: '状态', slots: {customRender: 'status'}}
         ]
     })
 
-    return {columns, homeworkState, moment, route}
+    return {columns, homeworkState, moment, route, HomeworkStatus, HomeworkType}
   }
 }
 </script>
