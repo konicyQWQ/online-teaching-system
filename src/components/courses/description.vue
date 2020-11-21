@@ -17,13 +17,16 @@
         <a-descriptions-item label="开课院系">
           {{ courseInfo.course.institute }}
         </a-descriptions-item>
+        <a-descriptions-item label="开课教师">
+          <router-link :to="`/teacher/${courseInfo.teachers[0].id}`">{{courseInfo.teachers[0].name}}</router-link>
+        </a-descriptions-item>
         <a-descriptions-item label="学年期">
           {{ courseInfo.course.year }}
         </a-descriptions-item>
         <a-descriptions-item label="开始日期">
           {{ new Date(courseInfo.course.startTime).toLocaleDateString() }}
         </a-descriptions-item>
-        <a-descriptions-item label="课程属性">
+        <a-descriptions-item label="课程属性" :span = "3">
           一般课程
         </a-descriptions-item>
         <a-descriptions-item label="开课情况">
@@ -77,7 +80,7 @@ export default {
   setup() {
     const courseInfo =  inject('courseInfo')
     const loading = computed(() => courseInfo.loading)
-    return { courseInfo, loading }
+    return { courseInfo, loading}
   }
 }
 </script>

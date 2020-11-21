@@ -150,7 +150,7 @@ export default {
       introduction: IntroductionField
     })
     const form = reactive({
-      submitHint: '修改',
+      submitHint: '更改完成',
       finish: async () => {
         try {
           await modifyUserInfo(model)

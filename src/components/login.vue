@@ -73,6 +73,7 @@ export default {
         await login(form)
         message.success('登录成功')
         closeLogin()
+        router.push('/')
       } catch (e) {
         message.error(e.toString())
       } finally {

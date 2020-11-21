@@ -12,6 +12,8 @@
         <a-avatar :src="StaticPreviewUrl(avatarId, 'user')"/>
       </router-link>
       <router-link v-if="role === Role.administrator" to="/administrator">管理员配置页</router-link>
+      <!-- <router-link v-if="role === Role.teacher" @click="router.push(`/teacher/${3180103766}`)">教师主页</router-link> -->
+      <router-link v-if="role === Role.teacher" :to="`/teacher/${id}`">教师主页</router-link>
       <a v-if="token" @click="logout">
         <PoweroffOutlined/>
         退出登录</a>
@@ -44,7 +46,7 @@ export default {
     // 用户信息
     const store = useStore()
     const router = useRouter()
-    const {token, avatarId, role} = toRefs(store.state)
+    const {token, avatarId, role, id} = toRefs(store.state)
     // 登录框处理
     const visible = ref(false)
     const clickLogin = () => visible.value = true
@@ -53,7 +55,7 @@ export default {
       message.success('退出登录成功!')
       router.push('/')
     }
-    return {scrollTop, token, avatarId, visible, clickLogin, logout, StaticPreviewUrl, role, Role}
+    return {scrollTop, token, avatarId, visible, clickLogin, logout, StaticPreviewUrl, role, Role, id}
   }
 }
 </script>

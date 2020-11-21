@@ -198,7 +198,32 @@ const router = createRouter({
         {
             /** 教师展示页 */
             path: '/teacher/:id',
-            component: () => import('../views/teacher.vue')
+            // path: '/teacher',
+            component: () => import('../views/teacher.vue'),
+            children: [
+                {
+                    /** 教师展示页首页 */
+                    path: '',
+                    redirect: to => {
+                        return to.path + '/index'
+                    }
+                },
+                {
+                    /** 教师展示页*/
+                    path: 'index',
+                    component: () => import('../components/teachers/index.vue')
+                },
+                {
+                    /** 教师开设课程页*/
+                    path: 'courses',
+                    component: () => import('../components/teachers/courses.vue')
+                },
+                {
+                    /** 教师学生评价页*/
+                    path: 'comments',
+                    component: () => import('../components/teachers/student_comment.vue')
+                }
+            ]    
         },
         {
             path: '/exam/edit',

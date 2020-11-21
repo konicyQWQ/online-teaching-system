@@ -42,6 +42,7 @@ async function modifyUserInfo(user: User): Promise<string> {
     return ''
 }
 
+
 interface SearchUser {
     keyword: string, // 搜索关键字
     limit: number // 结果数量上限
