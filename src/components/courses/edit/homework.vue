@@ -44,14 +44,7 @@ import {useStore} from 'vuex'
 import {message} from "ant-design-vue";
 import moment from 'moment'
 import {addNewHomework, exportAllHomework} from "../../../api/homework";
-import {
-  HomeworkFileField,
-  HWContentField,
-  HWTitleField,
-  HWTypeField,
-  PercentageField,
-  TotalMarkField
-} from "../../../type/homework";
+import {HomeworkFileField, HWContentField, HWTitleField, PercentageField, TotalMarkField} from "../../../type/homework";
 import {HomeworkUploadData} from "../../../type/file";
 
 function range(start, end) {
@@ -93,7 +86,6 @@ export default {
       time: [],
       content: '',
       totalMark: 100,
-      type: 0,
       percentage: 0,
       files: []
     })
@@ -106,7 +98,6 @@ export default {
       },
       totalMark: TotalMarkField,
       percentage: PercentageField,
-      type: HWTypeField,
       files: {
         ...HomeworkFileField,
         file: {

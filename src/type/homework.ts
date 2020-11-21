@@ -3,14 +3,6 @@ import {User} from "./user";
 import {Field} from "./form";
 import {HomeworkUploadData} from "./file";
 
-export enum HomeworkStatus {
-    pending, active, finished
-}
-
-export enum HomeworkType {
-    individual, group
-}
-
 export declare interface Homework {
     hwId: number,
     courseId: string,
@@ -19,18 +11,7 @@ export declare interface Homework {
     endTime: Date,
     content: string,
     totalMark: number,
-    percentage: number,
-    status: HomeworkStatus,
-    type: HomeworkType
-}
-
-export const HWTypeField: Field = {
-    type: "radio",
-    label: '类型',
-    radios: [
-        {value: HomeworkType.individual, hint: '个人作业'},
-        {value: HomeworkType.group, hint: '小组作业'}
-    ]
+    percentage: number
 }
 
 export const HWTitleField: Field = {
