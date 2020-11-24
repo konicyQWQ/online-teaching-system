@@ -8,7 +8,7 @@
       <a-input-password v-if="field.type === 'password'" v-model:value="model[name]" :disabled="field.disabled"/>
       <a-input-number v-if="field.type === 'number'" v-model:value="model[name]" :min="field.min" :max="field.max"
                       :disabled="field.disabled"/>
-      <a-textarea v-if="field.type === 'textarea'" v-model:value="model[name]" :disabled="field.disabled"/>
+      <a-textarea v-if="field.type === 'textarea'" v-model:value="model[name]" :disabled="field.disabled" autosize/>
       <a-radio-group v-if="field.type === 'radio'" v-model:value="model[name]" :disabled="field.disabled">
         <a-radio v-for="radio in field.radios"
                  :value="radio.value">
@@ -177,7 +177,7 @@ export default {
             } catch (e) {
               message.error(e);
             }
-          }, 300),
+          }, 200),
           onSearch: (search) => {
             CopyFields[x].__SEARCH.searchV = search
             CopyFields[x].__SEARCH.loading = !!search
