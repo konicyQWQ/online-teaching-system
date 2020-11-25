@@ -1,10 +1,4 @@
 <template>
-  <a-button @click="handleCreate">我要发贴</a-button>
-  <!-- <a-form :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
-    <a-form-item label="发帖主题">
-      <a-input v-model:value="form.name" />
-    </a-form-item>
-  </a-form> -->
   <a-list item-layout="horizontal" :data-source="data">
     <template #renderItem="{ item, index }">
       <a-list-item>
@@ -12,21 +6,46 @@
           :title="item.title"
           style="width: 800px"
           hoverable="true"
-          @click="enter_discussion(item.diss_id)"
+          @click="enterDiscussion(item.diss_id)"
         >
           发起人：{{ item.creator }}
         </a-card>
       </a-list-item>
     </template>
   </a-list>
+  <div v-show="notGuest(courseInfo.role)">
+    <a-form :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-item label="发贴标题">
+        <a-input v-model:value="form.title" type="textarea" />
+      </a-form-item>
+      <a-form-item label="贴子描述">
+        <a-textarea
+          v-model:value="form.topic"
+          showCount
+          :maxlength="114"
+          :rows="4"
+          style="width: 600px"
+        />
+      </a-form-item>
+    </a-form>
+    <a-button @click="handleCreate">我要发贴</a-button>
+  </div>
 </template>
 
 <script>
-import { inject, defineComponent, reactive, readonly } from "vue";
-import { List, Card, Button } from "ant-design-vue";
-import modal from "../../base/modal";
+import {
+  inject,
+  defineComponent,
+  reactive,
+  readonly,
+  computed,
+  onMounted,
+} from "vue";
+import { List, Card, Button, message } from "ant-design-vue";
+import modal from "../../base/modal.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { notGuest } from "../../../type/user";
 
 import {
   createDiscuss,
@@ -44,8 +63,10 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const courseID = route.params.cid;
+    const allDiscussion = getDiscussion(route.params.cid);
     const userInfo = useStore();
+    const courseInfo = inject("courseInfo");
+
     // userInfo.state.token 目前登录用户的token
     // userInfo.state.avatarId 目前登录用户的头像ID
     // userInfo.state.role 登录用户的身份(跟课程不是对应关系的)
@@ -67,17 +88,57 @@ export default {
         diss_id: "3",
       },
     ]);
-    //const allDiscussion = getDiscussion(courseID);
-    const enter_discussion = (diss_id) => {
-      //console.log(allDiscussion);
-      /* alert(diss_id);
+    const form = reactive({
+      title: "",
+      topic: "",
+    });
+
+    const enterDiscussion = (diss_id) => {
+      console.log(allDiscussion);
+      console.log(courseInfo);
+      console.log(form);
+
+      /* alert(diss_id);*/
       router.push({
-        path: "./page",
-      }); */
+        path: "./discuss/" + diss_id,
+      });
     };
 
-    const handleCreate = () => {};
-    return { data, enter_discussion,  handleCreate };
+    onMounted(() => {
+      createDiscuss(
+        route.params.cid,
+        form.title,
+        userInfo.state.id,
+        form.topic
+      ).then((res) => {
+        message.success("success");
+      });
+    });
+    const handleCreate = () => {
+      createDiscuss(route.params.cid, form.title, userInfo.state.id, form.topic)
+        .then((res) => {
+          message.success("success");
+        })
+        .catch((e) => {
+          message.error("error");
+          console.log(
+            route.params.cid,
+            form.title,
+            userInfo.state.id,
+            form.topic
+          );
+        });
+    };
+
+    return {
+      data,
+      enterDiscussion,
+      allDiscussion,
+      handleCreate,
+      form,
+      courseInfo,
+      notGuest,
+    };
   },
 };
 </script>

@@ -1,8 +1,4 @@
 <template>
-  <a-card title="Default size card" style="width: 300px">
-    <p>发起人：{{}}</p>
-    <p>发布时间：{{}}</p>
-  </a-card>
   <a-list
     class="comment-list"
     :header="`${data.length} replies`"
@@ -18,50 +14,64 @@
             </p>
           </template>
           <template #datetime>
-            <!-- <a-tooltip :title="item.datetime.format('YYYY-MM-DD HH:mm:ss')">
+            <a-tooltip :title="item.datetime.format('YYYY-MM-DD HH:mm:ss')">
               <span>{{ item.datetime.fromNow() }}</span>
-            </a-tooltip> -->
-            {{ item.datetime.format("YYYY-MM-DD HH:mm:ss") }}
+            </a-tooltip>
           </template>
         </a-comment>
       </a-list-item>
     </template>
   </a-list>
-  <a-comment>
-    <template #avatar>
-      <a-avatar
-        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-        alt="Han Solo"
-      />
-    </template>
-    <template #content>
-      <a-form-item>
-        <a-textarea :rows="4" v-model:value="value" />
-      </a-form-item>
-      <a-form-item>
-        <a-button
-          html-type="submit"
-          :loading="submitting"
-          type="primary"
-          @click="handleSubmit"
-        >
-          提交
-        </a-button>
-      </a-form-item>
-    </template>
-  </a-comment>
+  <a-button @click="handleSubmit"></a-button>
 </template>
 
 <script>
 import { useRoute } from "vue-router";
+import { List } from "ant-design-vue";
+import {
+  createDiscuss,
+  getDiscussion,
+  getDiscussDetail,
+  submitDiscuss,
+  updateDiscuss,
+  removeDiscuss,
+  withdrawDiscuss,
+} from "../../../api/discuss";
+import moment from "moment";
+import { readonly } from "vue";
 export default {
   setup() {
     const route = useRoute();
-    //const disId = route.params.disId;
+    const disId = route.params.disId;
+    const disDetail = getDiscussDetail(disId);
 
-    const handleSubmit = () => {};
+    const handleSubmit = () => {
+      console.log(disDetail);
+    };
 
-    return { handleSubmit };
+    const data = readonly([
+      {
+        actions: ["Reply to"],
+        author: "Han Solo",
+        avatar:
+          "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+        content:
+          "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+        datetime: moment().subtract(1, "days"),
+      },
+      {
+        actions: ["Reply to"],
+        author: "Han Solo",
+        avatar:
+          "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+        content:
+          "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+        datetime: moment().subtract(2, "days"),
+      },
+    ]);
+
+    
+    return { handleSubmit, data, moment };
   },
 };
 </script>
