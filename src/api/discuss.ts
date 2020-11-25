@@ -39,7 +39,7 @@ interface DiscussDetail {
  * @param creatorID 发帖人ID
  * @param description 帖子简介
  */
-async function createDiscuss({ courseId, title, creatorID, description } : Discuss) {
+export async function createDiscuss({ courseId, title, creatorID, description } : Discuss) {
     const token = store.state.token
     const res = await request.post('/course/discussion', {
         discuss: {
@@ -57,7 +57,7 @@ async function createDiscuss({ courseId, title, creatorID, description } : Discu
  * 传入课程ID，返回课程所有帖子的数组
  * @param courseID
  */
-async function getDiscussion(courseID: number) : Promise<Discuss[]> {
+export async function getDiscussion(courseID: number) : Promise<Discuss[]> {
     const res = await request.get('/course/discussion', {
         params: {
             courseID
@@ -70,7 +70,7 @@ async function getDiscussion(courseID: number) : Promise<Discuss[]> {
  * 传入帖子ID，返回帖子信息和所有回帖信息
  * @param disID
  */
-async function getDiscussDetail(disID: number) : Promise<DiscussDetail> {
+export async function getDiscussDetail(disID: number) : Promise<DiscussDetail> {
     const res = await request.get('/course/discussion', {
         params: {
             disID
@@ -84,7 +84,7 @@ async function getDiscussDetail(disID: number) : Promise<DiscussDetail> {
  * @param userId 回帖人ID
  * @param content 回帖人内容
  */
-async function submitDiscuss({ userId, content }) {
+export async function submitDiscuss({ userId, content }) {
     const token = store.state.token
     const res = await request.post('/course/discussion/submit', {
         token,
@@ -102,7 +102,7 @@ async function submitDiscuss({ userId, content }) {
  * @param title 新的标题
  * @param description 新的简介
  */
-async function updateDiscuss({ discussionId, title, description } : Discuss) {
+export async function updateDiscuss({ discussionId, title, description } : Discuss) {
     const token = store.state.token
     const res = await request.post('/course/discussion/update', {
         token,
@@ -119,7 +119,7 @@ async function updateDiscuss({ discussionId, title, description } : Discuss) {
  * 删除整个帖子, 成功返回空字符串
  * @param disID 帖子的ID
  */
-async function removeDiscuss({ disID }) {
+export async function removeDiscuss({ disID }) {
     const token = store.state.token
     const res = await request.post('/course/discussion/remove', {
         token,
@@ -133,7 +133,7 @@ async function removeDiscuss({ disID }) {
  * @param disID 帖子ID
  * @param level 第几楼
  */
-async function withdrawDiscuss({ disID, level }) {
+export async function withdrawDiscuss({ disID, level }) {
     const token = store.state.token
     const res = await request.post('/course/discussion/withdraw', {
         token,

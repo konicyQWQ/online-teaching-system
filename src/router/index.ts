@@ -119,7 +119,11 @@ const router = createRouter({
                     /** 讨论 */
                     path: 'discuss',
                     name: 'discuss',
-                    component: () => import('../components/courses/discuss/index.tsx')
+                    component: () => import('../components/courses/discuss/index.vue')
+                },
+                {
+                    path: 'discuss/:disId',
+                    component: () => import('../components/courses/discuss/page.vue')
                 },
                 {
                     path: 'studentList',
