@@ -109,13 +109,10 @@ export default {
         })
         .catch((e) => {
           message.error("error");
-          console.log(
-            route.params.cid,
-            form.title,
-            userInfo.state.id,
-            form.topic
-          );
         });
+      getDiscussion(route.params.cid).then((res) => {
+        allDiscussion.data = res;
+      });
     };
 
     const deleteDiscussion = (disID) => {
@@ -126,7 +123,9 @@ export default {
         .catch((e) => {
           message.error("error");
         });
-      console.log(allDiscussion.data);
+      getDiscussion(route.params.cid).then((res) => {
+        allDiscussion.data = res;
+      });
     };
 
     return {

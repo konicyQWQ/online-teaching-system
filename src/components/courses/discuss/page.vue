@@ -1,36 +1,55 @@
 <template>
-  <!-- <a-card :title="disDetail.discussion.creatorInfo.name">
-    {{ disDetail.discussion.discussion.title }}
-  </a-card> -->
+  <a-card :title="disDetail.data.discussion.discussion.title">
+    {{ disDetail.data.discussion.discussion.description }}
+  </a-card>
   <a-list
     class="comment-list"
-    :header="`${data.length} replies`"
+    :header="`共${disDetail.data.userDiscussionList.length}条回复`"
     item-layout="horizontal"
-    :data-source="data"
+    :data-source="disDetail.data.userDiscussionList"
   >
     <template #renderItem="{ item, index }">
       <a-list-item>
-        <a-comment :author="item.author" :avatar="item.avatar">
+        <a-comment :author="item.userInfo.name" :avatar="getAvatar(item.userInfo.id)">
           <template #content>
             <p>
-              {{ item.content }}
+              {{ item.userDiscussion.content }}
             </p>
           </template>
           <template #datetime>
-            <a-tooltip :title="item.datetime.format('YYYY-MM-DD HH:mm:ss')">
-              <span>{{ item.datetime.fromNow() }}</span>
+            <a-tooltip>
+              <span>第{{ item.userDiscussion.level }}楼</span>
+              <span>{{ item.userDiscussion.submitTime }}</span>
             </a-tooltip>
           </template>
         </a-comment>
+        <a-button
+          v-show="canDelete(item.userDiscussion.userId)"
+          @click="handleDelete(item.userDiscussion.level)"
+          >删除</a-button
+        >
       </a-list-item>
     </template>
   </a-list>
-  <a-button @click="handleSubmit"></a-button>
+  <a-form :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <a-form-item label="回帖">
+      <a-textarea
+        v-model:value="form.comment"
+        showCount
+        :maxlength="114"
+        :rows="4"
+        style="width: 600px"
+      />
+    </a-form-item>
+  </a-form>
+  <a-button @click="handleSubmit(form)">评论</a-button>
 </template>
 
 <script>
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
 import { List, message } from "ant-design-vue";
+import { StaticPreviewUrl } from "../../../type/file";
 import {
   createDiscuss,
   getDiscussion,
@@ -42,15 +61,48 @@ import {
 } from "../../../api/discuss";
 import moment from "moment";
 import { readonly, inject, reactive, onMounted } from "vue";
+import { isAdmin } from "../../../type/user";
 export default {
   setup() {
     const route = useRoute();
     const disId = route.params.disId;
-    const disDetail = reactive({ data: {} });
+    const userInfo = useStore();
+    const courseInfo = inject("courseInfo");
+    const disDetail = reactive({
+      data: {
+        discussion: {
+          creatorInfo: "",
+          discussion: "",
+        },
+        userDiscussionList: [],
+      },
+    });
 
     const handleSubmit = () => {
-      console.log(disDetail);
+      submitDiscuss({
+        userId: userInfo.state.id,
+        content: form.comment,
+        discussionId: route.params.disId,
+      })
+        .then((res) => {
+          message.success("success");
+        })
+        .catch((e) => {
+          message.error("error");
+        });
+      form.comment = "";
+      getDiscussDetail(route.params.disId)
+        .then((res) => {
+          disDetail.data = res;
+        })
+        .catch((e) => {
+          message.error("error");
+        });
     };
+
+    const form = reactive({
+      comment: "",
+    });
 
     onMounted(() => {
       getDiscussDetail(route.params.disId)
@@ -60,31 +112,46 @@ export default {
         .catch((e) => {
           message.error("error");
         });
-      console.log(disDetail.data);
+      console.log(disDetail);
     });
 
-    const data = readonly([
-      {
-        actions: ["Reply to"],
-        author: "Han Solo",
-        avatar:
-          "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-        content:
-          "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-        datetime: moment().subtract(1, "days"),
-      },
-      {
-        actions: ["Reply to"],
-        author: "Han Solo",
-        avatar:
-          "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-        content:
-          "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-        datetime: moment().subtract(2, "days"),
-      },
-    ]);
+    const canDelete = (id) => {
+      return userInfo.state.id == id || isAdmin(courseInfo.role);
+    };
 
-    return { handleSubmit, data, moment, disDetail };
+    const handleDelete = (level) => {
+      withdrawDiscuss({
+        disID: route.params.disId,
+        level: level,
+      })
+        .then((res) => {
+          message.success("success");
+        })
+        .catch((e) => {
+          message.error("error");
+        });
+      getDiscussDetail(route.params.disId)
+        .then((res) => {
+          disDetail.data = res;
+        })
+        .catch((e) => {
+          message.error("error");
+        });
+    };
+
+    const getAvatar = (id) => {
+      return StaticPreviewUrl(id, "user");
+    };
+
+    return {
+      handleSubmit,
+      moment,
+      disDetail,
+      form,
+      canDelete,
+      handleDelete,
+      getAvatar,
+    };
   },
 };
 </script>

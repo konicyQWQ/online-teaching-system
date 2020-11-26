@@ -29,7 +29,7 @@ interface DiscussDetail {
         creatorInfo: User,
         discussion: Discuss
     },
-    UserDiscussionList: UserDiscussionWithUserInfo[]
+    userDiscussionList: UserDiscussionWithUserInfo[]
 }
 
 /**
@@ -84,13 +84,14 @@ export async function getDiscussDetail(disID: number) : Promise<DiscussDetail> {
  * @param userId 回帖人ID
  * @param content 回帖人内容
  */
-export async function submitDiscuss({ userId, content }) {
+export async function submitDiscuss({ userId, content, discussionId }) {
     const token = store.state.token
     const res = await request.post('/course/discussion/submit', {
         token,
         userDiscussion: {
             userId,
-            content
+            content,
+            discussionId
         }
     })
     return ''
