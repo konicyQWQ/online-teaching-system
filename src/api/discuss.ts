@@ -42,7 +42,7 @@ interface DiscussDetail {
 export async function createDiscuss({ courseId, title, creatorID, description } : Discuss) {
     const token = store.state.token
     const res = await request.post('/course/discussion', {
-        discuss: {
+        discussion: {
             courseId,
             title,
             creatorID,
@@ -71,7 +71,7 @@ export async function getDiscussion(courseID: number) : Promise<Discuss[]> {
  * @param disID
  */
 export async function getDiscussDetail(disID: number) : Promise<DiscussDetail> {
-    const res = await request.get('/course/discussion', {
+    const res = await request.get('/course/discussion/detail', {
         params: {
             disID
         }

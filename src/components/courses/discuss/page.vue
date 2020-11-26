@@ -1,4 +1,7 @@
 <template>
+  <!-- <a-card :title="disDetail.discussion.creatorInfo.name">
+    {{ disDetail.discussion.discussion.title }}
+  </a-card> -->
   <a-list
     class="comment-list"
     :header="`${data.length} replies`"
@@ -27,7 +30,7 @@
 
 <script>
 import { useRoute } from "vue-router";
-import { List } from "ant-design-vue";
+import { List, message } from "ant-design-vue";
 import {
   createDiscuss,
   getDiscussion,
@@ -38,16 +41,27 @@ import {
   withdrawDiscuss,
 } from "../../../api/discuss";
 import moment from "moment";
-import { readonly } from "vue";
+import { readonly, inject, reactive, onMounted } from "vue";
 export default {
   setup() {
     const route = useRoute();
     const disId = route.params.disId;
-    const disDetail = getDiscussDetail(disId);
+    const disDetail = reactive({ data: {} });
 
     const handleSubmit = () => {
       console.log(disDetail);
     };
+
+    onMounted(() => {
+      getDiscussDetail(route.params.disId)
+        .then((res) => {
+          disDetail.data = res;
+        })
+        .catch((e) => {
+          message.error("error");
+        });
+      console.log(disDetail.data);
+    });
 
     const data = readonly([
       {
@@ -70,8 +84,7 @@ export default {
       },
     ]);
 
-    
-    return { handleSubmit, data, moment };
+    return { handleSubmit, data, moment, disDetail };
   },
 };
 </script>

@@ -1,4 +1,4 @@
-import {Field} from "./form";
+import { Field } from "./form";
 
 export enum Gender { male, female }
 
@@ -83,7 +83,7 @@ export const PhoneField: Field = {
 export const GenderField: Field = {
     type: "radio",
     label: '性别',
-    radios: [{value: Gender.male, hint: '男'}, {value: Gender.female, hint: '女'}]
+    radios: [{ value: Gender.male, hint: '男' }, { value: Gender.female, hint: '女' }]
 }
 export const GradeField: Field = {
     type: "number",
@@ -107,12 +107,13 @@ export const RoleField: Field = {
     type: 'radio',
     label: '身份',
     radios: [
-        {value: Role.student, hint: '学生'},
-        {value: Role.teacher, hint: '老师'},
-        {value: Role.administrator, hint: '管理员'}
+        { value: Role.student, hint: '学生' },
+        { value: Role.teacher, hint: '老师' },
+        { value: Role.administrator, hint: '管理员' }
     ]
 }
 
 export const notGuest = (role: Role) => role != Role.guest
 export const notGuestAndStudent = (role: Role) => role != Role.guest && role != Role.student
 export const isStudent = (role: Role) => role === Role.student
+export const isAdmin = (role: Role) => role == Role.administrator
