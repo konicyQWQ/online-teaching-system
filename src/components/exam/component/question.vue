@@ -154,7 +154,7 @@
       </a-tag>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.True_False">
-      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled>
+      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true">
         <a-radio :value="'T'">对</a-radio>
         <a-radio :value="'F'">错</a-radio>
       </a-radio-group>
@@ -166,7 +166,7 @@
       </a-alert>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Single_Choice">
-      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled>
+      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true">
         <a-radio v-for="item in options" :value="item">
           <span v-if="questiondetail[`option${item}`] !== null">
             {{ item }}:
@@ -182,7 +182,7 @@
       </a-alert>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Multi_Choice">
-      <a-checkbox-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled>
+      <a-checkbox-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true">
         <a-checkbox v-for="item in options" :value="item">
           <span v-if="questiondetail[`option${item}`] !== null">
             {{ item }}:
@@ -199,7 +199,7 @@
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Fill_In_Blanks">
       <div style="display: inline-block; margin-right: 1em" v-for="item, index in input">
-        <a-input v-model:value="input[index]" @change="blankChange" :disabled/>
+        <a-input v-model:value="input[index]" @change="blankChange" :disabled="true"/>
       </div>
       <a-alert type="success" style="margin-top: 1em">
         <template #message>
@@ -209,7 +209,7 @@
       </a-alert>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Sub_Question">
-      <a-textarea v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled/>
+      <a-textarea v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true"/>
     </div>
   </div>
   <div class="question" v-if="mode==='score'">
@@ -225,7 +225,7 @@
       </a-tag>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.True_False">
-      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled>
+      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true">
         <a-radio :value="'T'">对</a-radio>
         <a-radio :value="'F'">错</a-radio>
       </a-radio-group>
@@ -237,7 +237,7 @@
       </a-alert>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Single_Choice">
-      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled>
+      <a-radio-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true">
         <a-radio v-for="item in options" :value="item">
           <span v-if="questiondetail[`option${item}`] !== null">
             {{ item }}:
@@ -253,7 +253,7 @@
       </a-alert>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Multi_Choice">
-      <a-checkbox-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled>
+      <a-checkbox-group v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true">
         <a-checkbox v-for="item in options" :value="item">
           <span v-if="questiondetail[`option${item}`] !== null">
             {{ item }}:
@@ -270,7 +270,7 @@
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Fill_In_Blanks">
       <div style="display: inline-block; margin-right: 1em" v-for="item, index in input">
-        <a-input v-model:value="input[index]" @change="blankChange" :disabled/>
+        <a-input v-model:value="input[index]" @change="blankChange" :disabled="true"/>
       </div>
       <a-alert type="success" style="margin-top: 1em">
         <template #message>
@@ -280,7 +280,7 @@
       </a-alert>
     </div>
     <div style="margin: 1em 0" v-if="questiondetail.type === QuestionType.Sub_Question">
-      <a-textarea v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled/>
+      <a-textarea v-model:value="state.userExam.answers[questiondetail.questionId-1].answer" :disabled="true"/>
       <a-alert type="info" style="margin-top: 1em">
         <template #message>
           <span class="right">本题打分：</span>
@@ -368,10 +368,6 @@ export default {
 
   .right {
     font-weight: 600;
-  }
-
-  * {
-    outline: none;
   }
 }
 </style>

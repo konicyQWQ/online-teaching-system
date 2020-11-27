@@ -45,7 +45,7 @@
                        v-model:value="model[name]"
                        :data-source="CopyFields[name].__AUTOCOMPLETE.acList"
                        @search="CopyFields[name].__AUTOCOMPLETE.handleSearch">
-        {{ field }}
+        <!-- {{ field }} -->
         <template #default>
           <a-input/>
         </template>

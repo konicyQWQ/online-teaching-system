@@ -32,6 +32,11 @@ interface DiscussDetail {
     userDiscussionList: UserDiscussionWithUserInfo[]
 }
 
+interface DiscussionWithCreator {
+    discussion: Discuss,
+    creatorInfo: User
+}
+
 /**
  * 创建帖子，成功返回空字符串，失败会以error的形式被抛出
  * @param courseId 课程ID
@@ -57,7 +62,7 @@ export async function createDiscuss({ courseId, title, creatorID, description } 
  * 传入课程ID，返回课程所有帖子的数组
  * @param courseID
  */
-export async function getDiscussion(courseID: number) : Promise<Discuss[]> {
+export async function getDiscussion(courseID: number) : Promise<DiscussionWithCreator[]> {
     const res = await request.get('/course/discussion', {
         params: {
             courseID

@@ -70,7 +70,7 @@ export default {
       }
     })
     const form = reactive({
-      submitHint: '修改',
+      submitHint: '上传',
       cancel: () => modalVisible.value = false,
       finish: async () => {
         model.fileList = model.fileList.map((value) => {
@@ -81,6 +81,10 @@ export default {
           message.success('上传成功')
           fetchCourseware();
           modalVisible.value = false
+          model.description = ''
+          model.title = ''
+          model.fileList = []
+          model.privilege = 0
         } catch (e) {
           message.error(e)
         }
