@@ -3,7 +3,7 @@
     <Header />
     <main>
       <fade>
-        <router-view>
+        <router-view></router-view>
       </fade>
     </main>
     <m-footer />

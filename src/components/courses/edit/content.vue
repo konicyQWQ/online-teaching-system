@@ -148,8 +148,8 @@ export default {
       submitHint: '修改',
       finish: async () => {
         try {
-          model.startTime = model.time[0];
-          model.endTime = model.time[1];
+          model.startTime = new Date(model.time[0].toString()).toJSON();
+          model.endTime = new Date(model.time[1].toString()).toJSON();
           await modifyHomework({
             homework: {
               ...model,

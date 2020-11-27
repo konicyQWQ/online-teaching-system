@@ -69,8 +69,7 @@
 
       <modal v-model:visible="visible">
         
-      <a-card style="width: 600px; margin: 0 2em;" :body-style="{ overflowY: 'auto', maxHeight: '600px' }"
-              :loading="modalLoading">
+      <a-card style="width: 600px; margin: 0 2em;" :body-style="{ overflowY: 'auto', maxHeight: '600px' }" :loading="modalLoading">
         <template #title><h3 style="text-align: center">修改教师信息</h3></template>
         <a-form :model="form" :label-col="labelCol" :wrapper-col="wrapperCol" :layout="horizontal">
           <a-form-item label="姓名">
@@ -107,12 +106,12 @@
           </a-button>
           </a-form-item>
         </a-form>
+      </a-card>
     </modal>
 
 </a-card> 
-
-
 </template>
+
 <script lang="ts">
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -214,25 +213,20 @@ export default {
       this.visible = false
       message.success('修改成功')
     },
-    cancel(){
-      this.form = {}
-      this.visible = false
-    }
-  },
 };
 </script>
 <style>
 .avatar-uploader > .ant-upload {
-  width: 200px;
-  height: 270px;
+    width: 200px;
+    height: 270px;
 }
 .ant-upload-select-picture-card i {
-  font-size: 32px;
-  color: #999;
+    font-size: 32px;
+    color: #999;
 }
 
 .ant-upload-select-picture-card .ant-upload-text {
-  margin-top: 8px;
-  color: #666;
+    margin-top: 8px;
+    color: #666;
 }
 </style>
