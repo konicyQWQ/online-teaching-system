@@ -32,8 +32,7 @@ export default {
     const a = 1
     const tabList1 = readonly([
       {key: 'index', name:'首页'},
-      {key: 'courses', name:'开设课程'},
-      {key: 'comments', name:'学生评语'}
+      {key: 'courses', name:'开设课程'}
     ])
     const tabList2 = readonly([
       {key: 'index', name:'首页'},

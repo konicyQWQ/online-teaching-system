@@ -217,11 +217,6 @@ const router = createRouter({
                     /** 教师开设课程页*/
                     path: 'courses',
                     component: () => import('../components/teachers/courses.vue')
-                },
-                {
-                    /** 教师学生评价页*/
-                    path: 'comments',
-                    component: () => import('../components/teachers/student_comment.vue')
                 }
             ]    
         },
