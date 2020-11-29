@@ -124,6 +124,7 @@ export default {
       modalLoading.value = true
       try {
         const {userInfo} = await newGetUserInfo({userID: record.id})
+        console.log(userInfo)
         Object.assign(model, userInfo)
         modalLoading.value = false
       } catch (e) {
@@ -158,6 +159,7 @@ export default {
           visible.value = false
           message.success('修改成功')
         } catch (e) {
+          console.log(e)
           message.error(e.toString())
         }
       },

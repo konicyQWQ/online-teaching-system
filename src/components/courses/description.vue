@@ -18,7 +18,11 @@
           {{ courseInfo.course.institute }}
         </a-descriptions-item>
         <a-descriptions-item label="开课教师">
-          <router-link :to="`/teacher/${courseInfo.teachers[0].id}`">{{courseInfo.teachers[0].name}}</router-link>
+          <router-link v-for="teacher in courseInfo.teachers"
+                       :to="`/teacher/${teacher.id}`"
+                       style="margin-right: 1em"  >
+            {{teacher.name}}
+          </router-link>
         </a-descriptions-item>
         <a-descriptions-item label="学年期">
           {{ courseInfo.course.year }}

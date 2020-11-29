@@ -14,7 +14,9 @@
               <template v-slot:title>
                 {{ teacher.name }}
               </template>
-              <a-avatar style="float: right;" :src="StaticPreviewUrl(teacher.avatarId)"/>
+              <a style="float: right;" @click="goToTeacherPage(teacher.id)">
+                <a-avatar :src="StaticPreviewUrl(teacher.avatarId)"/>
+              </a>
             </a-tooltip>
           </h3>
         </template>
@@ -33,8 +35,8 @@ import fade from "../components/base/fade.vue";
 import {provide, computed, readonly} from 'vue';
 import {useCourse} from "../hooks/courses";
 import {StaticPreviewUrl} from "../type/file";
-import {notGuestAndStudent} from "../type/user";
-import {useRoute} from "vue-router";
+import {notGuestAndStudent, Role} from "../type/user";
+import {useRoute, useRouter} from "vue-router";
 import {useBulletin} from "../hooks/bulletin";
 import {useCourseware} from "../hooks/courseware";
 import {useAllHomework} from "../hooks/homework";
@@ -60,7 +62,7 @@ export default {
           {key: 'group', name: '分组', keyByName: true},
           {key: 'studentList', name: '课程名单', keyByName: true},
         ]
-      } else {
+      } else if(Role.student === courseInfo.course.role) {
         return [
           {key: 'description', name: '课程简介', keyByName: true},
           {key: 'bulletin', name: '公告', keyByName: true},
@@ -70,9 +72,17 @@ export default {
           {key: 'discuss', name: '讨论', keyByName: true},
           {key: 'group', name: '分组', keyByName: true},
         ]
+      } else if(Role.guest === courseInfo.course.role) {
+        return [
+          {key: 'description', name: '课程简介', keyByName: true},
+          {key: 'bulletin', name: '公告', keyByName: true},
+          {key: 'courseware', name: '课件', keyByName: true},
+          {key: 'discuss', name: '讨论', keyByName: true},
+        ]
       }
     });
     const route = useRoute()
+    const router = useRouter()
 
     const courseInfo = useCourse(route.params.cid)
     provide('courseInfo', courseInfo.course);
@@ -94,7 +104,12 @@ export default {
     provide('examState', examInfo.state)
     provide('fetchExamData', examInfo.fetchData)
 
-    return {courseInfo, tabList, StaticPreviewUrl, notGuestAndStudent}
+    const goToTeacherPage = (id) => {
+      console.log(id)
+      router.push(`/teacher/${id}`)
+    }
+
+    return {courseInfo, tabList, StaticPreviewUrl, notGuestAndStudent, goToTeacherPage}
   }
 }
 </script>

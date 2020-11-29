@@ -202,7 +202,6 @@ const router = createRouter({
         {
             /** 教师展示页 */
             path: '/teacher/:id',
-            // path: '/teacher',
             component: () => import('../views/teacher.vue'),
             children: [
                 {

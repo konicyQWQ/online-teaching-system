@@ -70,6 +70,16 @@ export default {
     }
     async function finish() {
       try {
+        await submitExam(state.userExam.answers.map((value) => {
+          if(value.answer instanceof Array) {
+            return {
+              ...value,
+              answer: value.answer.sort().join('')
+            }
+          }
+          return value
+        }))
+        message.success('保存成功')
         await finishExam(state.header.examId);
         message.success('结束考试成功')
         router.push(`/courses/${route.query.courseID}/exam`);

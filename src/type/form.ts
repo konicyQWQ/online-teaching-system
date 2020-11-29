@@ -14,7 +14,7 @@ export declare interface Model {
 }
 
 export declare interface Field {
-    type?: 'input' | 'textarea' | 'number' | 'upload' | 'autocomplete' | 'radio' | 'password' | 'time' | 'avatar' | 'search',
+    type?: 'input' | 'textarea' | 'number' | 'upload' | 'autocomplete' | 'radio' | 'password' | 'time' | 'avatar' | 'search' | 'select',
     label: string,
     disabled?: boolean,
     min?: number,
@@ -43,8 +43,10 @@ export declare interface Field {
     },
     customRender?: {
         slot: string
-    }
+    },
+    select?: string[]
 }
+
 
 export declare interface Fields {
     [property: string]: Field

@@ -25,19 +25,13 @@
                   <span>{{ new Date(item.userDiscussion.submitTime).toLocaleString() }}</span>
                 </a-tooltip>
               </template>
+              <confirm-delete @confirm="handleDelete(item.userDiscussion.level)" v-if="canDelete(item.userDiscussion.userId)"></confirm-delete>
             </a-comment>
-            <a-button
-                v-show="canDelete(item.userDiscussion.userId)"
-                @click="handleDelete(item.userDiscussion.level)"
-                type="danger"
-            >
-              删除
-            </a-button>
           </a-list-item>
         </template>
       </a-list>
       <a-divider :dashed="true"></a-divider>
-      <create-form :model="model" :fields="fields" :form="form" style="width: 70%">
+      <create-form :model="model" :fields="fields" :form="form" style="width: 70%" v-if="notGuest(courseInfo.role)">
         <template #comment>
           <a-textarea
               v-model:value="model.comment"
@@ -79,11 +73,12 @@ import {
 } from "../../../api/discuss";
 import moment from "moment";
 import {readonly, inject, reactive, onMounted} from "vue";
-import {isAdmin} from "../../../type/user";
+import {isAdmin, notGuest} from "../../../type/user";
 import createForm from "../../base/createForm.vue";
+import confirmDelete from "../../base/confirmDelete.vue";
 
 export default {
-  components: {createForm},
+  components: {createForm, confirmDelete},
   setup() {
     const route = useRoute();
     const disId = route.params.disId;
@@ -177,7 +172,9 @@ export default {
       handleDelete,
       StaticPreviewUrl,
       fields,
-      model
+      model,
+      courseInfo,
+      notGuest
     };
   },
 };

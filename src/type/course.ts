@@ -25,12 +25,13 @@ export const CourseNameField:Field = {
     }
 }
 export const InstituteField:Field = {
-    type: "input",
+    type: "select",
     label: '开课院系',
     rule: {
         required: true,
         trigger: "blur"
-    }
+    },
+    select: ['计算机科学与技术学院', '体育学院', '信息与电子工程学院', '艺术学院', '管理学院', '经济学院']
 }
 export const StatusField:Field = {
     type: 'radio',
@@ -90,12 +91,16 @@ export const TeachersSearchField: Field = {
     type: 'search',
     label: '教师',
     search: {
-        placeholder: '输入 @名字 来搜索教师',
+        placeholder: '输入名字来搜索教师',
         role: Role.teacher
     },
     rule: {
-        required: true,
-        trigger: "blur"
+        trigger: "blur",
+        validator: async (rule, value) => {
+            if(value.length === 0)
+                return Promise.reject('至少选择一位老师')
+            return Promise.resolve('')
+        }
     }
 }
 

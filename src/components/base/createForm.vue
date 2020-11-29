@@ -8,13 +8,16 @@
       <a-input-password v-if="field.type === 'password'" v-model:value="model[name]" :disabled="field.disabled"/>
       <a-input-number v-if="field.type === 'number'" v-model:value="model[name]" :min="field.min" :max="field.max"
                       :disabled="field.disabled"/>
-      <a-textarea v-if="field.type === 'textarea'" v-model:value="model[name]" :disabled="field.disabled" autosize/>
+      <a-textarea v-if="field.type === 'textarea'" v-model:value="model[name]" :disabled="field.disabled" autoSize/>
       <a-radio-group v-if="field.type === 'radio'" v-model:value="model[name]" :disabled="field.disabled">
         <a-radio v-for="radio in field.radios"
                  :value="radio.value">
           {{ radio.hint }}
         </a-radio>
       </a-radio-group>
+      <a-select v-if="field.type === 'select'" v-model:value="model[name]" :disabled="field.disabled">
+        <a-select-option v-for="item in field.select" :value="item">{{item}}</a-select-option>
+      </a-select>
       <a-upload v-if="field.type === 'upload'"
                 v-model:fileList="model[name]"
                 :multiple="field.file.multiple || false"
@@ -36,7 +39,7 @@
                 list-type="picture-card"
                 :show-upload-list="false"
                 @change="CopyFields[name].__AVATAR.handleChange"
-                :before-upload="checkImg">
+                :before-upload="checkImgAndSize">
         <img alt="上传图片"
              :src="StaticPreviewUrl(model[name])"
              style="cursor: pointer; width: 300px;"/>
@@ -51,17 +54,38 @@
         </template>
       </a-auto-complete>
       <a-date-picker v-if="field.type === 'time'" v-model:value="model[name]" format="YYYY-MM-DD"/>
-      <a-mentions v-if="field.type === 'search'"
-                  v-model:value="model[name]"
-                  :loading="CopyFields[name].__SEARCH.loading"
-                  @search="CopyFields[name].__SEARCH.onSearch"
-                  :placeholder="field.search.placeholder">
-        <a-mentions-option v-for="{ id, name, avatarId } in CopyFields[name].__SEARCH.users" :key="id"
-                           :value="`${name},${id}`">
-          <a-avatar :src="StaticPreviewUrl(avatarId)" :size="20" style="margin-right: 8px"/>
-          <span>{{ id }} : {{ name }}</span>
-        </a-mentions-option>
-      </a-mentions>
+
+
+<!--      <a-mentions v-if="field.type === 'search'"-->
+<!--                  v-model:value="model[name]"-->
+<!--                  :loading="CopyFields[name].__SEARCH.loading"-->
+<!--                  @search="CopyFields[name].__SEARCH.onSearch"-->
+<!--                  :placeholder="field.search.placeholder">-->
+<!--        <a-mentions-option v-for="{ id, name, avatarId } in CopyFields[name].__SEARCH.users" :key="id"-->
+<!--                           :value="`${name},${id}`">-->
+<!--          <a-avatar :src="StaticPreviewUrl(avatarId)" :size="20" style="margin-right: 8px"/>-->
+<!--          <span>{{ id }} : {{ name }}</span>-->
+<!--        </a-mentions-option>-->
+<!--      </a-mentions>-->
+
+      <a-select v-if="field.type === 'search'"
+                mode="multiple"
+                label-in-value
+                v-model:value="model[name]"
+                :placeholder="field.search.placeholder"
+                :filter-option="false"
+                @search="CopyFields[name].__SEARCH.loadUsers">
+        <template v-if="CopyFields[name].__SEARCH.loading">
+          <a-spin size="small" />
+        </template>
+        <a-select-option v-for="{id, name, avatarId} in CopyFields[name].__SEARCH.users" :key="id" title="123">
+          <div>
+            <a-avatar :src="StaticPreviewUrl(avatarId)" :size="20" style="margin-right: 8px"/>
+            <span>{{ id }} : {{ name }}</span>
+          </div>
+        </a-select-option>
+      </a-select>
+
       <slot v-if="field.customRender"
             :name="field.customRender.slot"
             :field="field">
@@ -163,27 +187,14 @@ export default {
         CopyFields[x].__SEARCH = reactive({
           loading: false,
           users: [],
-          searchV: '',
-          loadUsers: debounce(async (key) => {
-            if (!key) {
-              CopyFields[x].__SEARCH.users = []
-              return;
-            }
+          loadUsers: debounce(async (value) => {
             try {
-              if (CopyFields[x].__SEARCH.searchV !== key)
-                return;
-              CopyFields[x].__SEARCH.users = await searchUser({keyword: key, limit: 10, role: field.search.role})
+              CopyFields[x].__SEARCH.users = await searchUser({keyword: value, limit: 10, role: field.search.role})
               CopyFields[x].__SEARCH.loading = false
+              console.log(props.model)
             } catch (e) {
-              message.error(e);
             }
           }, 200),
-          onSearch: (search) => {
-            CopyFields[x].__SEARCH.searchV = search
-            CopyFields[x].__SEARCH.loading = !!search
-            CopyFields[x].__SEARCH.users = []
-            CopyFields[x].__SEARCH.loadUsers(search)
-          }
         })
       }
     }
@@ -216,7 +227,7 @@ export default {
       StaticUploadName,
       StaticUploadUrl,
       checkImgAndSize,
-      StaticPreviewUrl
+      StaticPreviewUrl,
     }
   }
 }

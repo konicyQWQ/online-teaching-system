@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import createForm from "../../base/createForm.vue";
-import { reactive, inject, watch } from 'vue'
+import { reactive, inject, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { HomeworkUploadUrl, HomeworkUploadName, HomeworkUploadData } from "../../../type/file";
 import { useStore } from 'vuex'
@@ -61,9 +61,14 @@ export default {
         }
       }
     })
+
+
+
     const form = reactive({
-      canSubmit: state.data.homework.homework.status == 1,
-      submitHint: state.data.homework.homework.status == 0 ? '作业未开始' : state.data.homework.homework.status == 1 ? '提交' : '作业已结束',
+      canSubmit: computed(() => {
+        return state.data.homework.homework.status == 1 || state.data.homework.homework.status == 2
+      }),
+      submitHint: computed(() => state.data.homework.homework.status == 0 ? '作业未开始' : state.data.homework.homework.status != 3 ? '提交' : '作业已结束'),
       finish: async () => {
         console.log(model)
         try {

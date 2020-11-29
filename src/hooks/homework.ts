@@ -2,6 +2,7 @@ import {getAllHomework, getHomework} from "../api/homework";
 import {reactive} from 'vue'
 import {message} from "ant-design-vue";
 import {HomeworkDetail, StudentHomeworkOverview} from "../type/homework";
+import store from "../store";
 
 // 下面这个做缓存处理，同时也解决组件之间无法靠inject，provide同步修改的问题
 interface AllHomeworkState {
@@ -26,18 +27,18 @@ export function useAllHomework(courseID): AllHomeworkState {
     })
 
     function fetchData() {
-        state.loading = true
-        getAllHomework({courseID})
-            .then(res => {
-                state.loading = false
-                state.data = res
-            })
-            .catch(e => {
-                message.error(e)
-            })
+        if(store.state.token) {
+            state.loading = true
+            getAllHomework({courseID})
+                .then(res => {
+                    state.loading = false
+                    state.data = res
+                })
+                .catch(e => {
+                    message.error(e)
+                })
+        }
     }
-
-    // fetchData()
 
     allHomeworkPool[courseID] = {
         state,

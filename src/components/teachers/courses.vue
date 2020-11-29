@@ -3,7 +3,7 @@
     <template #title><h3>TA的课程</h3></template>
     <a-list item-layout="horizontal" :data-source="teacher" :loading="loading">
       <template #renderItem="{ item,index}">
-        <a-list-item @click="router.push(`/courses/${item.course.id}`)" class="course-list-item">
+        <a-list-item @click="goToCourse(item.course.id)" class="course-list-item">
           <a-list-item-meta>
             <template #title>
               <h3>{{ item.course.name }}</h3>
@@ -54,7 +54,9 @@ export default {
   },
   methods:{
     StaticPreviewUrl,
-
+    goToCourse(id) {
+      this.$router.push(`/courses/${id}`);
+    }
   }
 }  
 

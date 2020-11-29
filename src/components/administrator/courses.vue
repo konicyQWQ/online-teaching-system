@@ -11,6 +11,7 @@
                :data-source="state.data"
                :loading="state.loading"
                :pagination="pagination"
+               :row-key="(record) => record.course.id"
                @change="handleTableChange">
         <template #teachers="{ text:teachers }">
           <a-tag v-for="teacher in teachers">
@@ -97,22 +98,25 @@ export default {
       scoringMethod: '',
       iconId: undefined,
       textbook: '',
-      teachers: ''
+      teachers: []
     })
     const openModifyModal = (record) => {
       Object.assign(modifyCoursesModel, record.course)
-      modifyCoursesModel.teachers = record.teachers.map((value) => `@${value.name}, ${value.id}`).join(' ');
+      modifyCoursesModel.teachers = record.teachers.map((value) => {
+        return {
+          key: value.id,
+          label: `${value.id}:${value.name}`,
+          value: value.id
+        }
+      })
+      console.log(modifyCoursesModel.teachers)
       modifyModalVisible.value = true
     }
     const modifyForm = reactive({
       submitHint: '修改',
       finish: async () => {
         try {
-          let teacherArray = modifyCoursesModel.teachers.split('@').map((value, index) => {
-            if (!index) return undefined;
-            return value.split(',')[1].trim()
-          });
-          await modifyCourses(modifyCoursesModel, teacherArray.slice(1));
+          await modifyCourses(modifyCoursesModel, modifyCoursesModel.teachers.map((value) => value.value));
           message.success('修改成功')
           modifyModalVisible.value = false
           await fetchData({})
@@ -135,7 +139,7 @@ export default {
       scoringMethod: '',
       iconId: null,
       textbook: '',
-      teachers: ''
+      teachers: []
     })
     const fields = reactive({
       name: CourseNameField,
@@ -153,11 +157,8 @@ export default {
       submitHint: '新建',
       finish: async () => {
         try {
-          let teacherArray = newCourseModel.teachers.split('@').map((value, index) => {
-            if (!index) return undefined;
-            return value.split(',')[1].trim()
-          });
-          await newCourses(newCourseModel, teacherArray.slice(1));
+          console.log(newCourseModel)
+          await newCourses(newCourseModel, modifyCoursesModel.teachers.map((value) => value.value));
           message.success('新建成功')
           addModalVisible.value = false
           await fetchData({})
@@ -181,7 +182,7 @@ export default {
       modifyModalVisible,
       openModifyModal,
       modifyForm,
-      modifyCoursesModel
+      modifyCoursesModel,
     }
   }
 }

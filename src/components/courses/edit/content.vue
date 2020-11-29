@@ -46,7 +46,14 @@ import moment from "moment";
 import {message} from 'ant-design-vue'
 import {modifyHomework, deleteHomework, exportHomework} from "../../../api/homework";
 import {notGuestAndStudent} from "../../../type/user";
-import {HomeworkFileField, HWContentField, HWTitleField, PercentageField, TotalMarkField} from "../../../type/homework";
+import {
+  HomeworkFileField,
+  HWContentField,
+  HWTitleField,
+  HWTypeField,
+  PercentageField,
+  TotalMarkField
+} from "../../../type/homework";
 
 function range(start, end) {
   const result = [];
@@ -120,6 +127,7 @@ export default {
       time: [],
       content: '',
       totalMark: 100,
+      type: 0,
       percentage: 0,
       files: []
     })
@@ -136,6 +144,7 @@ export default {
       },
       totalMark: TotalMarkField,
       percentage: PercentageField,
+      type: HWTypeField,
       files: {
         ...HomeworkFileField,
         file: {

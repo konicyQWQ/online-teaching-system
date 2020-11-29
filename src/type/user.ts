@@ -19,12 +19,13 @@ export declare interface User {
 }
 
 export const DepartmentField: Field = {
-    type: 'input',
+    type: 'select',
     label: '院系',
     rule: {
         required: true,
         trigger: "blur"
-    }
+    },
+    select: ['计算机科学与技术学院', '体育学院', '信息与电子工程学院', '艺术学院', '管理学院', '经济学院']
 }
 export const EmailField: Field = {
     type: 'autocomplete',

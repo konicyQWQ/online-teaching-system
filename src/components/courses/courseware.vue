@@ -20,7 +20,7 @@
         </div>
         <show-file :files="courseware.fileList"
                    :download-file-fun="CoursewareDownloadUrl.bind(null, courseware.id)"
-                   :can-download="courseware.privilege === 0 ? notGuestAndStudent(courseInfo.role) : true"/>
+                   :can-download="courseware.privilege === 0 ? notGuest(courseInfo.role) : true"/>
       </collapse-panel>
     </collapse>
 
@@ -36,14 +36,14 @@
 <script lang="ts">
 import {FileTwoTone, FilePdfTwoTone, DownloadOutlined, EyeOutlined, UploadOutlined} from '@ant-design/icons-vue'
 import {inject, reactive, ref} from 'vue'
-import {modifyCourseware, deleteCourseware} from "../../api/courseware";
+import {modifyCourseware, deleteCourseware } from "../../api/courseware";
 import collapse from "../base/collapse.vue";
 import collapsePanel from "../base/collapsePanel.vue";
 import {message} from "ant-design-vue";
 import {useRoute} from "vue-router";
 import {useStore} from "vuex";
 import modal from "../base/modal.vue";
-import {Role, notGuestAndStudent} from "../../type/user";
+import {Role, notGuest, notGuestAndStudent} from "../../type/user";
 import confirmDelete from "../base/confirmDelete.vue";
 import createForm from "../base/createForm.vue";
 import showFile from "../base/showFile.vue";
@@ -153,6 +153,7 @@ export default {
       fields,
       modalVisible,
       CoursewareDownloadUrl,
+      notGuest,
       notGuestAndStudent
     }
   }
