@@ -4,7 +4,7 @@ import store from "./store";
 import App from './App.vue'
 
 // import antd from 'ant-design-vue'
-// import 'ant-design-vue/dist/antd.css'
+ import 'ant-design-vue/dist/antd.css'
 
 import {
     Button, Row, Col, Space, Pagination, Steps, AutoComplete, Checkbox,

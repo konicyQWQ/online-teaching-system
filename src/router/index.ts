@@ -196,6 +196,10 @@ const router = createRouter({
                 {
                     path: 'other',
                     component: () => import('../components/administrator/other.vue')
+                },
+                {
+                    path: 'home',
+                    component: () => import('../components/administrator/home.vue')
                 }
             ]
         },

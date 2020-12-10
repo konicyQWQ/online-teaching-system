@@ -23,7 +23,8 @@ export default {
     const tabList = readonly([
       {key: 'courses', name: '课程管理'},
       {key: 'users', name: '用户管理'},
-      {key: 'other', name: '系统公告'}
+      {key: 'other', name: '系统公告'},
+      {key: 'home', name: '主页展示'}
     ])
 
     return { tabList }

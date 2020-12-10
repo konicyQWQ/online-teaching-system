@@ -35,7 +35,7 @@ export default {
     const stuId = route.query.stuId
     const {state, addNewQuestion, fetchData, fetchStuData} = useExam(parseInt(examId), parseInt(courseID), parseInt(stuId))
 
-    if(mode === 'edit' || mode === 'score') {
+    if(mode === 'edit' || mode === 'score' || mode === 'previewTeacher') {
       fetchData()
     }
     if(mode === 'write' || mode === 'preview') {

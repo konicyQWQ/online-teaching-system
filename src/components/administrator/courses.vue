@@ -157,8 +157,7 @@ export default {
       submitHint: '新建',
       finish: async () => {
         try {
-          console.log(newCourseModel)
-          await newCourses(newCourseModel, modifyCoursesModel.teachers.map((value) => value.value));
+          await newCourses({...newCourseModel, startTime: newCourseModel.startTime.toDate()}, newCourseModel.teachers.map((value) => value.value));
           message.success('新建成功')
           addModalVisible.value = false
           await fetchData({})

@@ -100,6 +100,99 @@
       _____________________________
     </div>
   </div>
+  <div class="question" v-if="mode==='previewTeacher'">
+    <div>
+      {{ questiondetail.question.questionId }}:
+      <span v-html="questiondetail.question.content"></span>
+      <span class="right" style="float: right">
+        本题分值：{{questiondetail.question.mark}} 分
+      </span>
+    </div>
+    <div style="margin: 1em 0" v-if="questiondetail.question.type === QuestionType.True_False">
+      <div>
+        <span style="margin-right: 1em">T: 对</span>
+        <span style="margin-right: 1em">F: 错</span>
+      </div>
+      <a-alert type="success" style="margin-top: 1em">
+        <template #message>
+          <span class="right">正确答案：</span>
+          <a-radio-group v-model:value="questiondetail.question.rightAnswer" :disabled="true">
+            <a-radio :value="'T'">
+              对
+            </a-radio>
+            <a-radio :value="'F'">
+              错
+            </a-radio>
+          </a-radio-group>
+        </template>
+      </a-alert>
+    </div>
+    <div style="margin: 1em 0" v-if="questiondetail.question.type === QuestionType.Single_Choice">
+      <div>
+        <span v-for="item, index in questiondetail.question.options" :value="['A','B','C','D','E','F','G'][index]"
+              style="margin-right: 2em">
+          {{ ['A', 'B', 'C', 'D', 'E', 'F', 'G'][index] }}:
+          <span :contenteditable="true"
+                @blur="questiondetail.question.options[index]=$event.target.innerText"
+                v-html="questiondetail.question.options[index]"></span>
+        </span>
+      </div>
+      <a-alert type="success" style="margin-top: 1em">
+        <template #message>
+          <span class="right">正确答案：</span>
+          <a-radio-group v-model:value="questiondetail.question.rightAnswer" :disabled="true">
+            <a-radio v-for="item, index in questiondetail.question.options"
+                     :value="['A','B','C','D','E','F','G'][index]">
+              {{ ['A', 'B', 'C', 'D', 'E', 'F', 'G'][index] }}
+            </a-radio>
+          </a-radio-group>
+        </template>
+      </a-alert>
+    </div>
+    <div style="margin: 1em 0" v-if="questiondetail.question.type === QuestionType.Multi_Choice">
+      <div>
+        <span v-for="item, index in questiondetail.question.options" :value="['A','B','C','D','E','F','G'][index]"
+              style="margin-right: 2em">
+          {{ ['A', 'B', 'C', 'D', 'E', 'F', 'G'][index] }}:
+          <span :contenteditable="true"
+                @blur="questiondetail.question.options[index]=$event.target.innerText"
+                v-html="questiondetail.question.options[index]"></span>
+        </span>
+      </div>
+      <a-alert type="success" style="margin-top: 1em">
+        <template #message>
+          <span class="right">正确答案：</span>
+          <a-checkbox-group v-model:value="questiondetail.question.rightAnswer" :disabled="true">
+            <a-checkbox v-for="item, index in questiondetail.question.options"
+                        :value="['A','B','C','D','E','F','G'][index]">
+              {{ ['A', 'B', 'C', 'D', 'E', 'F', 'G'][index] }}
+            </a-checkbox>
+          </a-checkbox-group>
+        </template>
+      </a-alert>
+    </div>
+    <div style="margin: 1em 0" v-if="questiondetail.question.type === QuestionType.Fill_In_Blanks">
+      <div>
+        <span v-for="item, index in questiondetail.question.options" :value="['A','B','C','D','E','F','G'][index]"
+              style="margin-right: 2em">
+          {{ ['A', 'B', 'C', 'D', 'E', 'F', 'G'][index] }}: ______
+        </span>
+      </div>
+      <a-alert type="success" style="margin-top: 1em;">
+        <template #message>
+          <span class="right">正确答案：</span>
+          <div style="display: inline-block; margin-right: 1em;" v-for="item, index in questiondetail.question.options">
+            <a-input :addon-before="['A', 'B', 'C', 'D', 'E', 'F', 'G'][index]"
+                     v-model:value="questiondetail.question.options[index]" 
+                     :disabled="true"/>
+          </div>
+        </template>
+      </a-alert>
+    </div>
+    <div style="margin: 1em 0" v-if="questiondetail.question.type === QuestionType.Sub_Question">
+      _____________________________
+    </div>
+  </div>
   <div class="question" v-if="mode==='write'">
     <div>
       {{ questiondetail.questionId }}:

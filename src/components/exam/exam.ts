@@ -213,6 +213,13 @@ export function useExam(examId: number, courseId: number, stuId: number) {
                 Object.assign(state.header, res1.examWithQuestions.exam)
 
                 state.userExam.answers = res2.answers
+                while(state.questions.length !== state.userExam.answers.length) {
+                    state.userExam.answers.push({
+                        mark: 0,
+                        answer: ''
+                    })
+                }
+                console.log(state)
                 state.userExam.userExam = res2.userExam
                 state.userExam.userInfo = res2.userInfo
 
