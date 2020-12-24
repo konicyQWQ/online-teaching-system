@@ -60,6 +60,7 @@ const store = createStore({
                     })
                     return Promise.resolve()
                 } catch (e) {
+                    
                     return Promise.reject(e)
                 }
             } else {

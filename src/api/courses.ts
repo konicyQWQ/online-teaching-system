@@ -33,6 +33,10 @@ export async function getCourses({id}): Promise<CourseWithTeachers> {
     const res = await request.get('/course', {
         params: {id}
     })
+    const course:Course = res.data.course;
+    course.description = course.description.replace(/\n/g, '<br/>');
+    course.scoringMethod = course.scoringMethod.replace(/\n/g, '<br/>');
+    course.textbook = course.textbook.replace(/\n/g, '<br/>');
     return res.data
 }
 

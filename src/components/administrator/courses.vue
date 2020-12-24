@@ -157,11 +157,12 @@ export default {
       submitHint: '新建',
       finish: async () => {
         try {
-          await newCourses({...newCourseModel, startTime: newCourseModel.startTime.toDate()}, newCourseModel.teachers.map((value) => value.value));
+          await newCourses({...newCourseModel, startTime: newCourseModel.startTime.toDate(), teachers: ''}, newCourseModel.teachers.map((value) => value.value));
           message.success('新建成功')
           addModalVisible.value = false
           await fetchData({})
         } catch (e) {
+          console.log(e)
           message.error(e.toString());
         }
       },

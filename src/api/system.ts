@@ -29,7 +29,7 @@ export async function updateSystemAnnouncement(id, title, content) {
     return ''
 }
 
-export enum EventType {
+ export enum EventType {
     SystemMessage = 0,
     CourseAnnouncement = 1,
     DiscussionCreated = 2,
@@ -43,7 +43,7 @@ export enum EventType {
     ExamGraded = 10
 }
 
-interface Event {
+export declare interface Event {
     eventID: number,
     eventType: EventType,
     ///     0: SystemMessage-> content: { title, content } !with relatedUser!x
@@ -64,7 +64,7 @@ interface Event {
     time: Date
 }
 
-interface EventList {
+export declare interface EventList {
     totalCount: number,
     eventList: Event[]
 }
@@ -76,7 +76,15 @@ export async function getSystemAnnouncement(start, limit) : Promise<EventList> {
             limit
         }
     })
-    return res.data.list;
+    return {
+        totalCount: res.data.list.totalCount,
+        eventList: res.data.list.eventList.map((value) => {
+            return {
+                ...value,
+                content: JSON.parse(value.content)
+            }
+        })
+    }
 }
 
 export async function getAllEvent(start, limit) : Promise<EventList> {

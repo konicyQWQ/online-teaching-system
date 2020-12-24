@@ -45,8 +45,7 @@
           课程简介
         </h3>
       </template>
-      <p>
-        {{ courseInfo.course.description }}
+      <p v-html="courseInfo.course.description">
       </p>
     </a-card>
     <a-card :bordered="false" id="scoreMethod" :loading="loading">
@@ -56,8 +55,8 @@
           课程评分方式
         </h3>
       </template>
-      <p>
-        {{ courseInfo.course.scoringMethod }}
+      <p v-html="courseInfo.course.scoringMethod">
+        
       </p>
     </a-card>
     <a-card :bordered="false" id="textbook" :loading="loading">
@@ -67,8 +66,7 @@
           课程教材
         </h3>
       </template>
-      <p>
-        {{ courseInfo.course.textbook }}
+      <p v-html="courseInfo.course.textbook">
       </p>
     </a-card>
   </a-card>

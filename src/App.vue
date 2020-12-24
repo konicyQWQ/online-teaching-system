@@ -29,8 +29,10 @@ export default {
           message.success('登录成功')
         })
         .catch((e) => {
-          if(e)
+          if(e) {
             message.error(e.toString())
+            console.log(e)
+          }
         })
     return {
       locale: zhCN

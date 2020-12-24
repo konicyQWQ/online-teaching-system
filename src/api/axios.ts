@@ -24,7 +24,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
     response => {
         if (response.data.res === false || response.data.error) {
-            if (response.data.error === 'Token is Invalid')
+            if (response.data.error === '请先登录')
                 store.commit('logout');
             return Promise.reject(response.data.error)
         }
