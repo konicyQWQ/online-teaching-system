@@ -6,16 +6,16 @@
   </template>
   <a-row>
     <a-col :span="6"> 
-      <a-card  hoverable style="height:300px;">
+      <a-card hoverable style="height:350px;">
         <template #cover>
-          <img  :src="StaticPreviewUrl(teacher.avatarId, 'user')" />
+          <img style="height:300px;width:auto;" :src="StaticPreviewUrl(teacher.avatarId, 'user')" />
         </template>
         <a-card-meta title="教师照片">
         </a-card-meta>
       </a-card>
     </a-col> 
     <a-col :span="18"> 
-      <a-card title="名师事迹" style="height:270px;">
+      <a-card title="名师事迹" style="height:350px;">
         <p>
           {{teacher.introduction}}
         </p>

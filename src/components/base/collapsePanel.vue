@@ -14,8 +14,8 @@
                 @before-leave="beforeLeave"
                 @leave="leave"
                 @after-leave="afterLeave"
-                :css="false">
-      <div v-show="active">
+                >
+      <div v-show="active" class="content">
         <slot></slot>
       </div>
     </transition>
@@ -51,8 +51,11 @@ export default {
       } else {
         el.style.height = ''
       }
-
       el.style.overflow = 'hidden'
+
+      setTimeout(() => {
+        done();
+      }, 300)
     }
 
     const afterEnter = (el) => {
@@ -91,6 +94,10 @@ export default {
 .collapse-panel {
   position: relative;
   margin: 0 1em;
+
+  .content {
+    overflow: auto;
+  }
 
   .tab {
     display: flex;
